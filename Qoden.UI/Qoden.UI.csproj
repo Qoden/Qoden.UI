@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Qoden.UI</RootNamespace>
+		<AssemblyName>Qoden.UI</AssemblyName>
+		<PackageId>Qoden.UI</PackageId>
+		<PackageVersion>1.0.0</PackageVersion>
+		<Authors>averbin</Authors>
+		<Description>Common Qoden UI classes</Description>
+		<ProjectGuid>{4C4CA549-EB91-484E-B93D-8DD449702429}</ProjectGuid>
+		<TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug</OutputPath>
+		<DefineConstants>DEBUG;</DefineConstants>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<NoStdLib>true</NoStdLib>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<Optimize>true</Optimize>
+		<OutputPath>bin\Release</OutputPath>
+		<ErrorReport>prompt</ErrorReport>
+		<WarningLevel>4</WarningLevel>
+		<NoStdLib>true</NoStdLib>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="src\Cleanup.cs" />
+		<Compile Include="src\FontAwesome.cs" />
+		<Compile Include="src\FontGlyph.cs" />
+		<Compile Include="src\FontIconTemplate.cs" />
+		<Compile Include="src\FontName.cs" />
+		<Compile Include="src\IFontIconGenerator.cs" />
+		<Compile Include="src\LayoutBox.cs" />
+		<Compile Include="src\Pool.cs" />
+		<Compile Include="src\RemoteImage.cs" />
+		<Compile Include="src\StackLayout.cs" />
+		<Compile Include="src\StackLayoutInfo.cs" />
+		<Compile Include="src\ViewHierarchy.cs" />
+		<Compile Include="src\Graphics\ColorFromString.cs" />
+		<Compile Include="src\Graphics\Image.cs" />
+		<Compile Include="src\Graphics\RGB.cs" />
+		<Compile Include="src\Font.cs" />
+		<Compile Include="src\IPlatformColorOperations.cs" />
+		<Compile Include="src\IPlatformFontOperations.cs" />
+		<Compile Include="src\IPlatformImageOperations.cs" />
+		<Compile Include="src\IPlatformViewOperations.cs" />
+		<Compile Include="src\Padding.cs" />
+		<Compile Include="src\PlatformColor.cs" />
+		<Compile Include="src\PlatformFont.cs" />
+		<Compile Include="src\PlatformImage.cs" />
+		<Compile Include="src\PlatformView.cs" />
+		<Compile Include="src\Plugin.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="project.json" />
+		<None Include="Qoden.UI.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="System.Runtime" />
+		<Reference Include="System.Collections" />
+		<Reference Include="System.ComponentModel" />
+	</ItemGroup>
+	<Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+</Project>
