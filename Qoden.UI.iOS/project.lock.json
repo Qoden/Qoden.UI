@@ -69,12 +69,12 @@
           "System.Xml.XDocument": "4.0.11"
         }
       },
-      "Qoden.Binding/1.0.0": {
+      "Qoden.Binding/1.0.0-b5": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
-          "Qoden.Reflection": "1.0.0",
-          "Qoden.Validation": "1.0.0"
+          "Qoden.Reflection": "1.0.0-b6",
+          "Qoden.Validation": "1.0.0-b5"
         },
         "compile": {
           "lib/netstandard1.6/Qoden.Binding.dll": {}
@@ -83,11 +83,11 @@
           "lib/netstandard1.6/Qoden.Binding.dll": {}
         }
       },
-      "Qoden.Format/1.0.0": {
+      "Qoden.Format/1.0.0-b3": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
-          "Qoden.Reflection": "1.0.0"
+          "Qoden.Reflection": "1.0.0-b6"
         },
         "compile": {
           "lib/netstandard1.6/Qoden.Format.dll": {}
@@ -96,7 +96,7 @@
           "lib/netstandard1.6/Qoden.Format.dll": {}
         }
       },
-      "Qoden.Reflection/1.0.0": {
+      "Qoden.Reflection/1.0.0-b6": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
@@ -110,13 +110,13 @@
           "lib/netstandard1.6/Qoden.Reflection.dll": {}
         }
       },
-      "Qoden.UI/1.0.0": {
+      "Qoden.UI/1.0.0-b2": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
-          "Qoden.Binding": "1.0.0",
-          "Qoden.Reflection": "1.0.0",
-          "Qoden.Validation": "1.0.0",
+          "Qoden.Binding": "1.0.0-b5",
+          "Qoden.Reflection": "1.0.0-b6",
+          "Qoden.Validation": "1.0.0-b5",
           "System.Drawing.Primitives": "4.3.0",
           "Xam.Plugin.DeviceInfo": "2.1.2"
         },
@@ -127,12 +127,12 @@
           "lib/netstandard1.6/Qoden.UI.dll": {}
         }
       },
-      "Qoden.Validation/1.0.0": {
+      "Qoden.Validation/1.0.0-b5": {
         "type": "package",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
-          "Qoden.Format": "1.0.0",
-          "Qoden.Reflection": "1.0.0"
+          "Qoden.Format": "1.0.0-b3",
+          "Qoden.Reflection": "1.0.0-b6"
         },
         "compile": {
           "lib/netstandard1.6/Qoden.Validation.dll": {}
@@ -677,53 +677,53 @@
         "dotnet_library_license.txt"
       ]
     },
-    "Qoden.Binding/1.0.0": {
-      "sha512": "oHtCJyphaC9+UZ/Lu4KvKbivsTogjmLFwty8/vRTBtwqmSWeTpJkgGbDDuYfCJVjtZas2gC/kx91dTT0At5maA==",
+    "Qoden.Binding/1.0.0-b5": {
+      "sha512": "eMemajNrTTwozHb90SRcFuXCcJA8haxu8N7IUD6R3u3qsUScVzVoNle0nnl801a1L/osaL2Fnpc4Ua6MM6u/eA==",
       "type": "package",
-      "path": "qoden.binding/1.0.0",
+      "path": "qoden.binding/1.0.0-b5",
       "files": [
         "lib/netstandard1.6/Qoden.Binding.dll",
-        "qoden.binding.1.0.0.nupkg.sha512",
+        "qoden.binding.1.0.0-b5.nupkg.sha512",
         "qoden.binding.nuspec"
       ]
     },
-    "Qoden.Format/1.0.0": {
-      "sha512": "Fm91PL4M5dtgv7SuqDXM+EEDYz2W81NXEcK0ivAz+cn2DugHYpudqPHJSn7Mh/cRaWs0MPwIBi+UKtZ8EYU2kw==",
+    "Qoden.Format/1.0.0-b3": {
+      "sha512": "ynOpvVd99IWBCeJd0yHxGFREX7tF/e1tNCEshAmLgKy0hcxFYIBbZ0MMUp57+fUdHis04uMpxPTu3UObO4RZrw==",
       "type": "package",
-      "path": "qoden.format/1.0.0",
+      "path": "qoden.format/1.0.0-b3",
       "files": [
         "lib/netstandard1.6/Qoden.Format.dll",
-        "qoden.format.1.0.0.nupkg.sha512",
+        "qoden.format.1.0.0-b3.nupkg.sha512",
         "qoden.format.nuspec"
       ]
     },
-    "Qoden.Reflection/1.0.0": {
-      "sha512": "XXw16yAqFKq+Vxl7dlUDYnwevhLbjAtWYtFUP83CBs6zQsgt++63gU+lqtVY/FoIDEnRIWI6qBHFyEV3IXKgkA==",
+    "Qoden.Reflection/1.0.0-b6": {
+      "sha512": "kF69a/PMtgaFK0z2TGwrk6TTIpb4T4dhvdU0w1npTYblN2VoqUG5dNa/hjiIeyHqE1mCq2PeXCCo3CGnX/hcwQ==",
       "type": "package",
-      "path": "qoden.reflection/1.0.0",
+      "path": "qoden.reflection/1.0.0-b6",
       "files": [
         "lib/netstandard1.6/Qoden.Reflection.dll",
-        "qoden.reflection.1.0.0.nupkg.sha512",
+        "qoden.reflection.1.0.0-b6.nupkg.sha512",
         "qoden.reflection.nuspec"
       ]
     },
-    "Qoden.UI/1.0.0": {
-      "sha512": "bD/l2iCFYZyiJ/RkBSbz6ghp7cgqmaNJIMCglvqxX6nzxYNWSIfJRdqemxR56uoZa8M7o2gPza3MUBMvtQeR5g==",
+    "Qoden.UI/1.0.0-b2": {
+      "sha512": "Q67vleqYMGZIVrqaTSuFt72ohAzocTqgn0JM+WGrhSuRkC6/nNQAE+T5hgIVyuL9Lpzf16EfL2uoHVhhIA0Ziw==",
       "type": "package",
-      "path": "qoden.ui/1.0.0",
+      "path": "qoden.ui/1.0.0-b2",
       "files": [
         "lib/netstandard1.6/Qoden.UI.dll",
-        "qoden.ui.1.0.0.nupkg.sha512",
+        "qoden.ui.1.0.0-b2.nupkg.sha512",
         "qoden.ui.nuspec"
       ]
     },
-    "Qoden.Validation/1.0.0": {
-      "sha512": "EOBC5R39MRYdvqGqjhH5GxpFKIajk8KKVOOR+d4Jw0gje8SwSg3BoIm3SDw43vwZMQPudy3PBdN3L0GIKx8e2w==",
+    "Qoden.Validation/1.0.0-b5": {
+      "sha512": "+ax/8uBwHMzb4Vlm2/GdPgmseN58GV4nZhLcT6Vh1OQFilQb+xxuxqpw7/xMSX4CrvwzR58GFAokdNXERk0pLg==",
       "type": "package",
-      "path": "qoden.validation/1.0.0",
+      "path": "qoden.validation/1.0.0-b5",
       "files": [
         "lib/netstandard1.6/Qoden.Validation.dll",
-        "qoden.validation.1.0.0.nupkg.sha512",
+        "qoden.validation.1.0.0-b5.nupkg.sha512",
         "qoden.validation.nuspec"
       ]
     },
@@ -3382,34 +3382,16 @@
   "projectFileDependencyGroups": {
     "": [
       "NETStandard.Library >= 1.6.0",
-      "Qoden.Binding >= 1.0.0-beta-*",
-      "Qoden.Reflection >= 1.0.0-beta-*",
-      "Qoden.UI >= 1.0.0-beta-*",
+      "Qoden.Binding >= 1.0.0-b*",
+      "Qoden.Reflection >= 1.0.0-b*",
+      "Qoden.UI >= 1.0.0-b*",
       "System.Drawing.Primitives >= 4.3.0"
     ],
     "Xamarin.iOS,Version=v1.0": []
   },
+  "tools": {},
+  "projectFileToolGroups": {},
   "packageFolders": {
     "/Users/averbin/.nuget/packages/": {}
-  },
-  "project": {
-    "version": "1.0.0",
-    "restore": {
-      "projectUniqueName": "/Users/averbin/Projects/Qoden/Qoden.UI/Qoden.UI.iOS/Qoden.UI.iOS.csproj",
-      "projectName": "Qoden.UI.iOS",
-      "projectPath": "/Users/averbin/Projects/Qoden/Qoden.UI/Qoden.UI.iOS/Qoden.UI.iOS.csproj",
-      "projectJsonPath": "/Users/averbin/Projects/Qoden/Qoden.UI/Qoden.UI.iOS/project.json",
-      "projectStyle": "ProjectJson"
-    },
-    "dependencies": {
-      "NETStandard.Library": "1.6.0",
-      "Qoden.Reflection": "1.0.0-beta-*",
-      "Qoden.Binding": "1.0.0-beta-*",
-      "System.Drawing.Primitives": "4.3.0",
-      "Qoden.UI": "1.0.0-beta-*"
-    },
-    "frameworks": {
-      "xamarinios10": {}
-    }
   }
 }

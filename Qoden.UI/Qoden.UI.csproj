@@ -16,9 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Qoden.Reflection" Version="1.0.0-beta-*" />
-    <PackageReference Include="Qoden.Binding" Version="1.0.0-beta-*" />
-    <PackageReference Include="Qoden.Validation" Version="1.0.0-beta-*" />
+    <PackageReference Include="Qoden.Reflection" Version="1.0.0-b*" />
+    <PackageReference Include="Qoden.Binding" Version="1.0.0-b*" />
+    <PackageReference Include="Qoden.Validation" Version="1.0.0-b*" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="2.1.2" />
   </ItemGroup>
