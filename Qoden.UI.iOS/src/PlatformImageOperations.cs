@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -7,7 +7,7 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace Qoden.UI.Platform.iOS
+namespace Qoden.UI.iOS
 {
 	public class PlatformImageOperations : IPlatformImageOperations
 	{

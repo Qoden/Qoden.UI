@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Drawing;
 using CoreGraphics;
 using UIKit;
-using Qoden.UI;
 
-namespace Qoden.UI.Platform.iOS
+namespace Qoden.UI.iOS
 {
 	public class PlatformViewOperations : IPlatformViewOperations
 	{

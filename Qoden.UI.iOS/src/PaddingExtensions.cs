@@ -1,6 +1,6 @@
-using UIKit;
+﻿using UIKit;
 
-namespace Qoden.UI.Platform.iOS
+namespace Qoden.UI.iOS
 {
 
 	public static class PaddingExtensions

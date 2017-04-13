@@ -1,8 +1,8 @@
-using CoreGraphics;
+﻿using CoreGraphics;
 using CoreText;
 using UIKit;
 
-namespace Qoden.UI.Platform.iOS
+namespace Qoden.UI.iOS
 {
 	public class PlatformFontOperations : IPlatformFontOperations
 	{

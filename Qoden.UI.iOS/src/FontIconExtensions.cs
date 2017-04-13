@@ -1,5 +1,4 @@
-using System;
-using Qoden.UI.Platform.iOS;
+﻿using System;
 using UIKit;
 
 namespace Qoden.UI.iOS

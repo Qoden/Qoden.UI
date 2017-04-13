@@ -2,7 +2,6 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using Qoden.UI.Platform.iOS;
 
 namespace Qoden.UI.iOS
 {

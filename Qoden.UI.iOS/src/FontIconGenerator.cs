@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using CoreText;
 using ObjCRuntime;
-using Qoden.UI.Platform.iOS;
 using UIKit;
 
 namespace Qoden.UI.iOS
