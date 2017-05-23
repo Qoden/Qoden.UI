@@ -1,13 +1,11 @@
 ﻿{
-  "version":"1.0.0",
-  "dependencies": {    
-  	"Qoden.Reflection": "1.0.0-b*",
-  	"Qoden.Binding": "1.0.0-b*",
-  	"System.Drawing.Primitives": "4.3.0",	
-    "Qoden.UI": "1.0.0-b*"
+  "version": "1.0.0",
+  "dependencies": {
+    "Qoden.Reflection": "1.0.0-b*",
+    "Qoden.Binding": "1.0.0-b*",
+    "System.Drawing.Primitives": "4.3.0"
   },
   "frameworks": {
-  	"xamarinios10":{
-  	}
+    "xamarinios10": {}
   }
 }

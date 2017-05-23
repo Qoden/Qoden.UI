@@ -67,5 +67,11 @@
 	<ItemGroup>
 	  <BundleResource Include="project.json" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Qoden.UI.Abstractions\Qoden.UI.Abstractions.csproj">
+	    <Project>{29C5A133-2157-475D-9BAC-FEF20116312E}</Project>
+	    <Name>Qoden.UI.Abstractions</Name>
+	  </ProjectReference>
+	</ItemGroup>
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
