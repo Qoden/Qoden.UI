@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <AssemblyName>Qoden.UI</AssemblyName>
-    <PackageId>Qoden.UI</PackageId>
+    <AssemblyName>Qoden.UI.Abstractions</AssemblyName>
+    <PackageId>Qoden.UI.Abstractions</PackageId>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
