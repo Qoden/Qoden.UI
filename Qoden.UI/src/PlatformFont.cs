@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Qoden.Util;
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
 namespace Qoden.UI
 {
@@ -33,7 +34,7 @@ namespace Qoden.UI
 
 		static PlatformFont()
 		{
-			Operations = Plugin.Load<IPlatformFontOperations>("PlatformFontOperations");
+			Operations = Util.Plugin.Load<IPlatformFontOperations>("Qoden.UI", "PlatformFontOperations");
 		}
 	}
 }

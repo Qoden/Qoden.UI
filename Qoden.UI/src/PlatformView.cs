@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Reflection;
+using Qoden.Util;
 
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
 namespace Qoden.UI
@@ -27,7 +28,7 @@ namespace Qoden.UI
 
 		static PlatformView()
 		{
-			Operations = Plugin.Load<IPlatformViewOperations>("PlatformViewOperations");
+			Operations = Util.Plugin.Load<IPlatformViewOperations>("Qoden.UI", "PlatformViewOperations");
 		}
 
 		public void Dispose()

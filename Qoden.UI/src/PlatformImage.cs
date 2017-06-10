@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Qoden.Util;
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
 namespace Qoden.UI
 {
@@ -29,7 +30,7 @@ namespace Qoden.UI
 
 		static PlatformImage()
 		{
-			Operations = Plugin.Load<IPlatformImageOperations>("PlatformImageOperations");
+			Operations = Util.Plugin.Load<IPlatformImageOperations>("Qoden.UI", "PlatformImageOperations");
 		}
 
 		public Size Size { get { return Operations.Size(this); } }

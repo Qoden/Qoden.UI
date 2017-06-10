@@ -1,4 +1,6 @@
 using System;
+using Qoden.Util;
+
 namespace Qoden.UI
 {
 	public struct PlatformColor
@@ -23,8 +25,8 @@ namespace Qoden.UI
 		}
 
 		static PlatformColor()
-		{
-			Operations = Plugin.Load<IPlatformColorOperations>("PlatformColorOperations");
+		{            
+			Operations = Util.Plugin.Load<IPlatformColorOperations>("Qoden.UI", "PlatformColorOperations");
 		}
 	}
 }
