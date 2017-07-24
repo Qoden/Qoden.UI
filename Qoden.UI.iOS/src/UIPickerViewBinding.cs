@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Linq;
 using Qoden.Validation;
 using Qoden.Binding;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	/// <summary>
 	/// Binding for UIPickerView DataSource and Delegate.

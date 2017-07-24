@@ -3,7 +3,7 @@ using Foundation;
 using UIKit;
 using CoreGraphics;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
     /// <summary>
     /// Helper component to auto scroll scroll view when keyboard popup's
@@ -118,7 +118,7 @@ namespace Qoden.UI.iOS
             // If active text field is hidden by keyboard, scroll it so it's visible
             // Your application might not need or want this behavior.
             var kbRect = args.FrameEnd;
-            if (ActiveView != null && ActiveView.Superview != null)
+            if (ActiveView != null && ActiveView.Superview != null && ScrollView != null)
             {
                 var keyboardRect = ActiveView.Window.ConvertRectToView(kbRect, ActiveView.Superview);
                 if (keyboardRect.IntersectsWith(ActiveView.Frame))

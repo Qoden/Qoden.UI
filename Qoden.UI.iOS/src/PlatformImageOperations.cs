@@ -7,7 +7,7 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	public class PlatformImageOperations : IPlatformImageOperations
 	{

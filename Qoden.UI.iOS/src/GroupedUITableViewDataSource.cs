@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using Foundation;
 using UIKit;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
     /// <summary>
     /// Implements UITableViewDataSource backed by groped list.

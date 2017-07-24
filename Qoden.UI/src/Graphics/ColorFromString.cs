@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
-namespace Qoden.View
+namespace Qoden.UI
 {
 	// from http://yinyangme.com/blog/post/ColorFromString-for-Silverlight-or-NET.aspx
 	public static class ColorFromString

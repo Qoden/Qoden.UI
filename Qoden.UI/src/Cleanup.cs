@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Qoden.Reflection;
 
-namespace Qoden.View
+namespace Qoden.UI
 {
 	public static class Cleanup
 	{

@@ -4,7 +4,7 @@ using Accelerate;
 using CoreGraphics;
 using UIKit;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	public static class UIImageExtensions
 	{

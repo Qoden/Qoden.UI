@@ -1,9 +1,9 @@
 ﻿{
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
-    "Qoden.Binding": "1.0.0",
+    "Qoden.Binding": "1.0.1",
     "Qoden.Reflection": "1.0.0",
-    "Qoden.UI": "1.0.0",
+    "Qoden.UI": "1.1.1",
     "System.Drawing.Primitives": "4.3.0"
   },
   "frameworks": {

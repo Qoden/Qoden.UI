@@ -1,0 +1,13 @@
+﻿{
+  "version": "1.0.0",
+  "dependencies": {
+    "System.Drawing.Primitives": "4.3.0",
+    "Qoden.UI": "1.1.1"
+  },
+  "frameworks": {
+    "xamarinios10": {}
+  },
+  "runtimes": {
+    "win": {}
+  }
+}

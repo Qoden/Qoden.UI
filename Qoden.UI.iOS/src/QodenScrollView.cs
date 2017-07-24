@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using UIKit;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	public class QodenScrollView : UIScrollView
 	{
@@ -24,7 +24,7 @@ namespace Qoden.UI.iOS
 
 		protected virtual void CreateView ()
 		{
-			hierarchy = new ViewHierarchy(new PlatformView(this));
+			hierarchy = new ViewHierarchy(this, ViewHierarchyBuilder.Instance);
 			BackgroundColor = UIColor.White;
 		}
 

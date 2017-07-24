@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
 	<Import Project="..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props')" />
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,7 +8,7 @@
 		<ProjectGuid>{FFE30417-BB9D-4669-9BE8-3866380BE603}</ProjectGuid>
 		<ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
 		<OutputType>Library</OutputType>
-		<RootNamespace>Qoden.UI.iOS</RootNamespace>
+		<RootNamespace>Qoden.UI</RootNamespace>
 		<AssemblyName>Qoden.UI.iOS</AssemblyName>
 		<IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
 		<PackageId>Qoden.UI.iOS</PackageId>
@@ -56,10 +57,58 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Resources\" />
+		<Folder Include="src\View\" />
+		<Folder Include="src\Graphics\" />
+		<Folder Include="src\Layout\" />
+		<Folder Include="src\Bindings\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="src\**\*.cs" />
 		<Compile Include="Properties\AssemblyInfo.cs" />
+		<Compile Include="src\GroupedUITableViewDataSource.cs" />
+		<Compile Include="src\KeyboardScroller.cs" />
+		<Compile Include="src\ListItemContext.cs" />
+		<Compile Include="src\NSNotificationCenterSubscription.cs" />
+		<Compile Include="src\PlainListBinding.cs" />
+		<Compile Include="src\PlatformImageOperations.cs" />
+		<Compile Include="src\QodenController.cs" />
+		<Compile Include="src\QodenScrollView.cs" />
+		<Compile Include="src\QodenTableViewCell.cs" />
+		<Compile Include="src\QodenView.cs" />
+		<Compile Include="src\RemoteImageView.cs" />
+		<Compile Include="src\TabsBuilder.cs" />
+		<Compile Include="src\UIImageExtensions.cs" />
+		<Compile Include="src\UIPickerViewBinding.cs" />
+		<Compile Include="src\UITableViewBindingBase.cs" />
+		<Compile Include="src\AssociatedObject.cs" />
+		<Compile Include="src\View\QTextView.cs" />
+		<Compile Include="src\Graphics\RGB.cs" />
+		<Compile Include="src\Graphics\Font.cs" />
+		<Compile Include="src\View\QEditText.cs" />
+		<Compile Include="src\Layout\ViewLayoutBox.cs" />
+		<Compile Include="src\View\QView.cs" />
+		<Compile Include="src\View\QButton.cs" />
+		<Compile Include="src\View\QListView.cs" />
+		<Compile Include="src\View\ViewHierarchyBuilder.cs" />
+		<Compile Include="src\Graphics\CGPathExtensions.cs" />
+		<Compile Include="src\Graphics\FontIconAppearance.cs" />
+		<Compile Include="src\Graphics\FontIconGenerator.cs" />
+		<Compile Include="src\View\FontIconExtensions.cs" />
+		<Compile Include="src\Layout\LayoutBoxExtensions.cs" />
+		<Compile Include="src\Graphics\PaddingExtensions.cs" />
+		<Compile Include="src\Graphics\Units.cs" />
+		<Compile Include="src\Bindings\UIControlBindings.cs" />
+		<Compile Include="src\Bindings\UIBarButtonItemBindings.cs" />
+		<Compile Include="src\Bindings\UITextFieldBindings.cs" />
+		<Compile Include="src\Bindings\UISegmentedControlBindings.cs" />
+		<Compile Include="src\Bindings\UITextViewBindings.cs" />
+		<Compile Include="src\Bindings\RemoteImageViewBindings.cs" />
+		<Compile Include="src\Bindings\UILabelBindings.cs" />
+		<Compile Include="src\Bindings\UIViewBindings.cs" />
+		<Compile Include="src\Bindings\UIActivityIndicatorViewBindings.cs" />
+		<Compile Include="src\Bindings\KVCBindingStrategy.cs" />
+		<Compile Include="src\View\PlainListContent.cs" />
+		<Compile Include="src\View\GroupedListContent.cs" />
+		<Compile Include="src\View\TableViewUtil.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Qoden.UI.iOS.csproj" />

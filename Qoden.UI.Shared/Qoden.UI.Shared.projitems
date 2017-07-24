@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{D5300C65-55EE-4881-90C3-E58F21190F75}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Qoden.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)LinkerTrick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\PlatformViewLayoutBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LinearLayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IListContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewHierarchyBuilderExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Layout\" />
+  </ItemGroup>
+</Project>

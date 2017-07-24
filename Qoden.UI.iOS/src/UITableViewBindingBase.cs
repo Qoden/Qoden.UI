@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Foundation;
@@ -7,20 +7,37 @@ using Qoden.Reflection;
 using Qoden.Validation;
 using Qoden.Binding;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
-	public interface IUITableViewBinding : IUITableViewDataSource, IBinding 
-	{
+    public interface IUITableViewBinding : IUITableViewDataSource, IBinding
+    {
         /// <summary>
         /// Occurs when item is selected
         /// </summary>
         event EventHandler ItemSelected;
+
+        /// <summary>
+        /// Returns unique id for cell with given index 
+        /// </summary>
+        Func<int, int> ItemViewType { get; set; }
     }
 
     public static class IUITableViewBindingProperties
     {
-		private static readonly Type t = typeof(IUITableViewBinding);
-        public static readonly RuntimeEvent ItemSelectedEvent = new RuntimeEvent(t, "ItemSelected");
+        static readonly Type t = typeof(IUITableViewBinding);
+        static readonly RuntimeEvent _ItemSelectedEvent = new RuntimeEvent(t, "ItemSelected");
+        public static RuntimeEvent ItemSelectedEvent
+        {
+            get
+            {
+                if (LinkerTrick.False)
+                {
+                    IUITableViewBinding aa = null;
+                    aa.ItemSelected += (sender, e) => { };
+                }
+                return _ItemSelectedEvent;
+            }
+        }
 
         public static EventHandlerSource<T> ItemSelectedTarget<T>(this T dataSource)
             where T : IUITableViewBinding
@@ -48,43 +65,33 @@ namespace Qoden.UI.iOS
 	/// binding for a list of groups of objects. 
 	/// </summary>
 	public abstract class UITableViewBindingBase<T> : NSObject, IUITableViewBinding
-	{
-		IList<T> dataSource;
-		INotifyCollectionChanged notifier;
-		UITableView tableView;
+    {
+        IList<T> dataSource;
+        INotifyCollectionChanged notifier;
+        UITableView tableView;
 
-		public UITableViewBindingBase()
-		{
-			AddAnimation = UITableViewRowAnimation.Automatic;
-			DeleteAnimation = UITableViewRowAnimation.Automatic;
-		}
+        public UITableViewBindingBase()
+        {
+            AddAnimation = UITableViewRowAnimation.Automatic;
+            DeleteAnimation = UITableViewRowAnimation.Automatic;
+        }
 
-		/// <summary>
-		/// When set, specifies which animation should be used when rows are added.
-		/// </summary>
-		public UITableViewRowAnimation AddAnimation
-		{
-			get;
-			set;
-		}
+        public Func<int, int> ItemViewType { get; set; } = p => 0;
 
-		/// <summary>
-		/// When set, specifieds which animation should be used when a row is deleted.
-		/// </summary>
-		public UITableViewRowAnimation DeleteAnimation
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// When set, specifies which animation should be used when rows are added.
+        /// </summary>
+        public UITableViewRowAnimation AddAnimation { get; set; }
+
+        /// <summary>
+        /// When set, specifieds which animation should be used when a row is deleted.
+        /// </summary>
+        public UITableViewRowAnimation DeleteAnimation { get; set; }
 
         /// <summary>
         /// When set to true, item selected returns list of selected indexes
         /// </summary>
-        public bool  MultipleSelection
-        {
-            get;
-            set;
-        }
+        public bool MultipleSelection { get; set; }
 
         /// <summary>
         /// Occurs when item is selected
@@ -100,30 +107,27 @@ namespace Qoden.UI.iOS
         /// The data source of this list controller.
         /// </summary>
         public IList<T> DataSource
-		{
-			get
-			{
-				return dataSource;
-			}
+        {
+            get { return dataSource; }
 
-			set
-			{
-				if (Bound) throw new InvalidOperationException("Cannot update bound DataSource");
+            set
+            {
+                if (Bound) throw new InvalidOperationException("Cannot update bound DataSource");
 
-				if (Equals(dataSource, value))
-				{
-					return;
-				}
+                if (Equals(dataSource, value))
+                {
+                    return;
+                }
 
-				dataSource = value;
-				notifier = value as INotifyCollectionChanged;
+                dataSource = value;
+                notifier = value as INotifyCollectionChanged;
 
-				if (tableView != null && Bound && Enabled)
-				{
-					UpdateTarget();
-				}
-			}
-		}
+                if (tableView != null && Bound && Enabled)
+                {
+                    UpdateTarget();
+                }
+            }
+        }
         #region Selection
 
         /// <summary>
@@ -180,7 +184,7 @@ namespace Qoden.UI.iOS
             TableView = tableView;
             if (PreserveSelection)
             {
-                if(MultipleSelection)
+                if (MultipleSelection)
                     InvokeItemsSelected(tableView.IndexPathsForSelectedRows);
                 else
                     InvokeItemSelected(indexPath);
@@ -222,90 +226,79 @@ namespace Qoden.UI.iOS
         #endregion
 
         public UITableView TableView
-		{
-			get
-			{
-				return tableView;
-			}
+        {
+            get { return tableView; }
 
-			set
-			{
-				Assert.Property(value).NotNull();
+            set
+            {
+                Assert.Property(value).NotNull();
 
-				if (value == tableView) return;
+                if (value == tableView) return;
 
-				bool rebind = false;
-				if (tableView != null)
-				{
-					tableView.WeakDataSource = null;
-					if (this is IUITableViewDelegate) tableView.WeakDelegate = null;
-					if (Bound)
-					{
-						Unbind();
-						rebind = true;
-					}
-				}
-				tableView = value;
-				tableView.WeakDataSource = this;
-				if (this is IUITableViewDelegate) tableView.WeakDelegate = this;
-				if (rebind)
-				{
-					Bind();
-					UpdateTarget();
-				}
-			}
-		}
+                bool rebind = false;
+                if (tableView != null)
+                {
+                    tableView.WeakDataSource = null;
+                    if (this is IUITableViewDelegate) tableView.WeakDelegate = null;
+                    if (Bound)
+                    {
+                        Unbind();
+                        rebind = true;
+                    }
+                }
+                tableView = value;
+                tableView.WeakDataSource = this;
+                if (this is IUITableViewDelegate) tableView.WeakDelegate = this;
+                if (rebind)
+                {
+                    Bind();
+                    UpdateTarget();
+                }
+            }
+        }
 
-		public bool Enabled
-		{
-			get;
-			set;
-		}
+        public bool Enabled { get; set; }
 
-		public bool Bound
-		{
-			get;
-			private set;
-		}
+        public bool Bound { get; private set; }
 
-		public virtual void Bind()
-		{
-			if (Bound) return;
-			if (notifier != null)
-			{
-				notifier.CollectionChanged += HandleCollectionChanged;
-			}
+        public virtual void Bind()
+        {
+            if (Bound) return;
+            if (notifier != null)
+            {
+                notifier.CollectionChanged += HandleCollectionChanged;
+            }
             Bound = true;
-		}
+        }
 
-		public virtual void Unbind()
-		{
-			if (!Bound) return;
-			if (notifier != null)
-			{
-				notifier.CollectionChanged -= HandleCollectionChanged;
-			}
+        public virtual void Unbind()
+        {
+            if (!Bound) return;
+            if (notifier != null)
+            {
+                notifier.CollectionChanged -= HandleCollectionChanged;
+            }
             Bound = false;
-		}
+        }
 
-		public void UpdateTarget()
-		{
-			if (Bound && tableView != null)
-			{
-				tableView.ReloadData();
-			}
-		}
+        public void UpdateTarget()
+        {
+            if (Bound && tableView != null)
+            {
+                tableView.ReloadData();
+            }
+        }
 
-		public void UpdateSource()
-		{
-			throw new NotSupportedException();
-		}
+        public void UpdateSource()
+        {
+            throw new NotSupportedException();
+        }
 
-		protected abstract void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e);
-		public abstract UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath);
-		public abstract nint RowsInSection(UITableView tableView, nint section);
+        protected abstract void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e);
+        public abstract UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath);
+        public abstract nint RowsInSection(UITableView tableView, nint section);
 
-		[Export("numberOfSectionsInTableView:")]
-		public abstract nint NumberOfSections(UITableView tableView);
-	}
+        [Export("numberOfSectionsInTableView:")]
+        public abstract nint NumberOfSections(UITableView tableView);
+    }
 }

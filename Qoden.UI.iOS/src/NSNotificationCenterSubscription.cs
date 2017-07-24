@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using UIKit;
 using Foundation;
 using Qoden.Validation;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	public class NSNotificationCenterSubscription : IDisposable
 	{

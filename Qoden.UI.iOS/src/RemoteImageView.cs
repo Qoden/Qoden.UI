@@ -2,128 +2,107 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Drawing;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
-	public class RemoteImageView : QodenView
-	{
-		[View]
-		public UIImageView ImageView { get; private set; }
+    public class RemoteImageView : QodenView, IPlatformRemoteImageView
+    {
+        RemoteImageViewModel _model;
 
-		public UIActivityIndicatorView Indicator { get; private set; }
+        [View]
+        public UIImageView ImageView { get; private set; }
 
-		public override void LayoutSubviews()
-		{
-			ImageView.Frame = this.LayoutBox()
-				.Top(0).Bottom(0).Left(0).Right(0).AsCGRect();
-			if (Indicator != null)
-			{
-				Indicator.SizeToFit();
-				Indicator.Frame = this.LayoutBox()
-				.CenterVertically().CenterHorizontally().Width(Indicator).Height(Indicator).AsCGRect();
-			}
-		}
+        public UIActivityIndicatorView Indicator { get; private set; }
 
-		public bool UseIndicator
-		{
-			get { return Indicator != null; }
-			set
-			{
-				if (value != UseIndicator)
-				{
-					if (value)
-					{
-						Indicator = new UIActivityIndicatorView();
-						AddSubview(Indicator);
-					}
-					else {
-						Indicator.RemoveFromSuperview();
-						Indicator.Dispose();
-						Indicator = null;
-					}
-				}
-			}
-		}
+        protected override void CreateView()
+        {
+            base.CreateView();
+            _model = new RemoteImageViewModel(this);
+        }
 
-		public event EventHandler ImageChanged;
+        protected override void OnLayout(LayoutBuilder layout)
+        {
+            layout.View(ImageView)
+                     .Top(0).Bottom(0).Left(0).Right(0);
+            if (Indicator != null)
+            {
+                layout.View(Indicator)
+                         .CenterVertically()
+                         .CenterHorizontally()
+                         .AutoSize();
+            }
+        }
 
-		RemoteImage image;
-		public CancellationTokenSource CancelTokenSource = new CancellationTokenSource();
+        public bool UseIndicator
+        {
+            get { return Indicator != null; }
+            set
+            {
+                if (value != UseIndicator)
+                {
+                    if (value)
+                    {
+                        Indicator = new UIActivityIndicatorView();
+                        AddSubview(Indicator);
+                    }
+                    else
+                    {
+                        Indicator.RemoveFromSuperview();
+                        Indicator.Dispose();
+                        Indicator = null;
+                    }
+                }
+            }
+        }
 
-		public RemoteImage Image
-		{
-			get { return image; }
-			set
-			{
-				if (value != image)
-				{
-					CancelTokenSource.Cancel();
-					CancelTokenSource = new CancellationTokenSource();
-					SetRemoteImage(value, CancelTokenSource.Token)
-						.ContinueWith(t =>
-						{
-							if (t.Exception != null)
-							{
-								ImageView.Image = placeholder;
-							}
-							image = value;
-							ImageChanged?.Invoke(this, EventArgs.Empty);
-						});
-				}
-			}
-		}
+        public event EventHandler ImageChanged;
 
-		UIImage placeholder;
 
-		public UIImage Placeholder
-		{
-			get { return placeholder; }
-			set
-			{
-				placeholder = value;
-				if (image == null || !image.IsLoaded)
-				{
-					ImageView.Image = placeholder;
-				}
-			}
-		}
+        public RemoteImage Image
+        {
+            get { return _model.Image; }
+            set
+            {
+                _model.Image = value;
+            }
+        }
 
-		public async Task SetRemoteImage(RemoteImage image, CancellationToken token)
-		{
-			if (image == null)
-				throw new ArgumentNullException();
-			if (this.image == image)
-			{
-				return;
-			}
-			this.image = image;
-			if (!this.image.IsLoaded)
-			{
-				try
-				{
-					ImageView.Image = placeholder;
-					if (UseIndicator)
-						Indicator.StartAnimating();
-					await image.Load(token);
-				}
-				catch (Exception e)
-				{
-					ImageView.Image = placeholder;
-					if (e is TaskCanceledException) return;
-					throw;
-				}
-			}
-			if (image.Bitmap.Native == null)
-			{
-				ImageView.Image = placeholder;
-			}
-			else
-			{
-				ImageView.Image = image.Bitmap.UIImage();
-			}
-			if (UseIndicator)
-				Indicator.StopAnimating();
-		}
-	}
+        public UIImage Placeholder
+        {
+            get { return _model.Placeholder.UIImage(); }
+            set
+            {
+                _model.Placeholder = new PlatformImage(value);
+            }
+        }
+
+        public async Task SetRemoteImage(RemoteImage image, CancellationToken token)
+        {
+            await _model.SetRemoteImage(image, token);
+        }
+
+        void IPlatformRemoteImageView.SetImage(PlatformImage image)
+        {
+            ImageView.Image = image.UIImage();
+        }
+
+        void IPlatformRemoteImageView.OnFireImageChanged()
+        {
+            ImageChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        void IPlatformRemoteImageView.OnLoadingStarted()
+        {
+            if (UseIndicator)
+                Indicator.StartAnimating();
+        }
+
+        void IPlatformRemoteImageView.OnLoadingFinished()
+        {
+            if (UseIndicator)
+                Indicator.StopAnimating();
+        }
+    }
 }
 

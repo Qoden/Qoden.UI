@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using UIKit;
 using Foundation;
 using Qoden.Binding;
+using System.Drawing;
 
-namespace Qoden.UI.iOS
+namespace Qoden.UI
 {
 	public class QodenTableViewCell : UITableViewCell
 	{
@@ -51,9 +52,24 @@ namespace Qoden.UI.iOS
 
 		protected virtual void CreateView()
 		{
-			hierarchy = new ViewHierarchy(new PlatformView(this));
+			hierarchy = new ViewHierarchy(this, ViewHierarchyBuilder.Instance);
 			BackgroundColor = UIColor.White;
 		}
+
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+            var layout = new LayoutBuilder((RectangleF)Bounds);
+            OnLayout(layout);
+            foreach (var v in layout.Views)
+            {
+                v.Layout();
+            }
+        }
+
+        protected virtual void OnLayout(LayoutBuilder layout)
+        {
+        }
 
 		protected override void Dispose(bool disposing)
 		{
@@ -93,68 +109,6 @@ namespace Qoden.UI.iOS
 					bindings = new BindingList();
 				return bindings;
 			}
-		}
-	}
-
-	public class QodenTableViewCell<ContentT> : QodenTableViewCell
-		where ContentT : UIView, new()
-	{
-		public QodenTableViewCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
-		{
-		}
-
-		public QodenTableViewCell(UITableViewCellStyle style, NSString reuseIdentifier) : base(style, reuseIdentifier)
-		{
-		}
-
-		public QodenTableViewCell()
-		{
-		}
-
-		public QodenTableViewCell(NSCoder coder) : base(coder)
-		{
-		}
-
-		public QodenTableViewCell(NSObjectFlag t) : base(t)
-		{
-		}
-
-		public QodenTableViewCell(IntPtr handle) : base(handle)
-		{
-		}
-
-		public QodenTableViewCell(CoreGraphics.CGRect frame) : base(frame)
-		{
-		}
-
-		protected override void CreateView()
-		{
-			base.CreateView();
-			Content = new ContentT();
-		}
-
-		private ContentT content;
-
-		public virtual ContentT Content
-		{
-			get { return content; }
-			set
-			{
-				if (content != null)
-				{
-					content.RemoveFromSuperview();
-				}
-				content = value;
-				ContentView.AddSubview(content);
-			}
-		}
-
-		public override void LayoutSubviews()
-		{
-			base.LayoutSubviews();
-			content.Frame = ContentView.LayoutBox()
-				.Left(0).Right(0).Top(0).Bottom(0)
-				.AsCGRect();
 		}
 	}
 }
