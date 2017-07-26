@@ -1,74 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Qoden.Binding;
 using UIKit;
 
 namespace Qoden.UI
 {
-    public interface IPlatformView<out T> : IQView<T>, IViewGeometry where T : UIView
-    {}
-
-    public class BaseView<T> : QView<T>, IPlatformView<T> where T : UIView
+    public partial class BaseView<T> : QView<T>, IPlatformView where T : UIView
     {
-        public BaseView()
+    }
+
+    public partial class QView : BaseView<UIView>
+    {
+    }
+
+    public partial class QViewGroup : BaseView<UIView>
+    {
+    }
+
+    public partial class QControl<T> : BaseView<T> where T : UIControl
+    {
+        public QControl()
         {
         }
 
-        public BaseView(T target) : base(target)
+        public QControl(T target) : base(target)
         {
         }
 
-        public RectangleF Frame 
+        public EventHandlerSource<T> ClickTarget()
         {
-            get => (RectangleF)PlatformView.Frame;
-            set => PlatformView.Frame = value;
-        }
-
-        public IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null)
-        {
-            return new PlatformViewLayoutBox(this, bounds, unit);
-        }
-
-        public SizeF SizeThatFits(SizeF bounds)
-        {
-            return (SizeF)PlatformView.SizeThatFits(bounds);
+            return PlatformView.ClickTarget();
         }
     }
 
-    public class QView : BaseView<UIView>
+    public static partial class QView_Extensions
     {
-        public QView()
-        {
-        }
-
-        public QView(UIView target) : base(target)
-        {
-        }
-    }
-
-    public class QViewGroup : BaseView<UIView>
-    {
-        public QViewGroup()
-        {
-        }
-
-        public QViewGroup(UIView target) : base(target)
-        {
-        }
-    }
-
-    public static class UIViewExtensions
-    {
-        public static QView<T> AsQView<T>(this T view) where T : UIView
-        {
-            return new QView<T> { PlatformView = view };
-        }
-
-        public static IEnumerable<UIView> Subviews(this IQView<UIView> view)
-        {
-            return view.PlatformView.Subviews();
-        }
-
         public static IEnumerable<UIView> Subviews(this UIView view)
         {
             foreach (var v in view.Subviews)
@@ -77,19 +44,9 @@ namespace Qoden.UI
             }
         }
 
-        public static void SetBackgroundColor(this IQView<UIView> view, RGB bgColor)
-        {
-            view.PlatformView.SetBackgroundColor(bgColor);
-        }
-
         public static void SetBackgroundColor(this UIView view, RGB bgColor)
         {
             view.BackgroundColor = bgColor.ToColor();
-        }
-
-        public static void SetPadding(this IQView<UIView> view, EdgeInset padding)
-        {
-            view.PlatformView.SetPadding(padding);
         }
 
         public static void SetPadding(this UIView view, EdgeInset padding)
@@ -100,19 +57,14 @@ namespace Qoden.UI
                                                   padding.Bottom);
         }
 
-        public static RectangleF Frame(this IQView<UIView> view)
-        {
-            return view.PlatformView.Frame();
-        }
-
         public static RectangleF Frame(this UIView view)
         {
             return (RectangleF)view.Frame;
         }
 
-        public static void SetVisibility(this IQView<UIView> view, bool visible)
+        public static void SetFrame(this UIView view, RectangleF frame)
         {
-            view.PlatformView.SetVisibility(visible);
+            view.Frame = frame;
         }
 
         public static void SetVisibility(this UIView view, bool visible)
@@ -120,14 +72,19 @@ namespace Qoden.UI
             view.Hidden = !visible;
         }
 
-        public static bool GetVisibility(this IQView<UIView> view)
-        {
-            return view.PlatformView.GetVisibility();
-        }
-
         public static bool GetVisibility(this UIView view)
         {
             return !view.Hidden;
+        }
+
+        public static void SetEnabled(this UIControl view, bool enabled)
+        {
+            view.Enabled = enabled;
+        }
+
+        public static SizeF SizeThatFits(this UIView view, SizeF bounds)
+        {
+            return (SizeF)view.SizeThatFits(bounds);
         }
     }
 }

@@ -15,6 +15,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)IListContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewHierarchyBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Units.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QTextView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QEditText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QListView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />

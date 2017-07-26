@@ -14,7 +14,7 @@ namespace Qoden.UI
         new T Create(IViewHierarchyBuilder builder);
     }
 
-    public class QView<T> : IQView<T>
+    public class QView<T> : IQView<T> where T : class
     {
         public QView()
         { }
@@ -46,7 +46,7 @@ namespace Qoden.UI
 
         public override string ToString()
         {
-            return PlatformView != null ? PlatformView.ToString() : "Empty QView";
+            return PlatformView != null ? "QView: " + PlatformView.ToString() : "Empty QView";
         }
     }
 }

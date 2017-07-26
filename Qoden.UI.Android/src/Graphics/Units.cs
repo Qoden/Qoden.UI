@@ -3,9 +3,10 @@ using Android.Content.Res;
 
 namespace Qoden.UI
 {
-    public class Units
+    public partial class Units
     {
         public static readonly IUnit Dp = new Dpi();
+        public static readonly IUnit PlatformDefault = Dp;
         public static readonly IUnit Px = IdentityUnit.Identity;
     }
 

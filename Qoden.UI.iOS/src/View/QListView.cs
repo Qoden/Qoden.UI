@@ -5,18 +5,11 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public class QListView : BaseView<UITableView>
+    public partial class QListView : BaseView<UITableView>
     {
-        public QListView()
-        {
-        }
-
-        public QListView(UITableView uITableView) : base(uITableView)
-        {
-        }
     }
 
-    public class QGroupedListView : BaseView<UITableView>
+    public partial class QGroupedListView : BaseView<UITableView>
     {
         public override UITableView Create(IViewHierarchyBuilder builder)
         {
@@ -24,9 +17,7 @@ namespace Qoden.UI
         }
     }
 
-
-
-    public static class ListView_Extensions
+    public static partial class QListView_Extensions
     {
         public static void SetContent(this UITableView view, IUITableViewDataSource adapter)
         {

@@ -20,12 +20,6 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ClickTarget<T>(this IQView<T> view)
-            where T : View
-        {
-            return view.PlatformView.ClickTarget();
-        }
-
         public static EventHandlerSource<T> ClickTarget<T>(this T view)
             where T : View
         {

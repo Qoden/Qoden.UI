@@ -88,6 +88,7 @@ namespace Qoden.UI
             get;
             set;
         }
+        public int AutoHideKeyboardOffset { get; set; }
 
         private void OnKeyboardWillShow(object sender, UIKeyboardEventArgs args)
         {
@@ -138,6 +139,32 @@ namespace Qoden.UI
                 UIEdgeInsets contentInsets = UIEdgeInsets.Zero;
                 ScrollView.ContentInset = contentInsets;
                 ScrollView.ScrollIndicatorInsets = contentInsets;
+            }
+        }
+
+        CGPoint _offset;
+        UIView _activeView;
+        public void ScrollViewDidScroll()
+        {
+            if (AutoHideKeyboardOffset > 0 && ScrollView != null)
+            {
+                if (_activeView != ActiveView)
+                {
+                    _offset = ScrollView.ContentOffset;
+                    _activeView = ActiveView;
+                }
+                else if (ActiveView != null)
+                {
+                    var currentOffset = ScrollView.ContentOffset;
+                    if (_offset.Y - currentOffset.Y > AutoHideKeyboardOffset)
+                    {
+                        var activeView = ActiveView;
+                        ScrollView.BeginInvokeOnMainThread(() =>
+                        {
+                            activeView.ResignFirstResponder();
+                        });
+                    }
+                }
             }
         }
     }

@@ -45,12 +45,6 @@ namespace Qoden.UI
             return control.GetProperty(_ => _.Enabled, KVCBindingStrategy.Instance);
         }
 
-        public static EventHandlerSource<T> ClickTarget<T>(this IQView<T> control)
-            where T : UIControl
-        {
-            return control.PlatformView.ClickTarget();
-        }
-
         public static EventHandlerSource<T> ClickTarget<T>(this T control)
             where T : UIControl
         {

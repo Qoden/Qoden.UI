@@ -7,9 +7,9 @@ namespace Qoden.UI
 {
     public class PlatformViewLayoutBox : ViewLayoutBox
     {
-        IPlatformView<View> _view;
+        IPlatformView _view;
 
-        public PlatformViewLayoutBox(IPlatformView<View> view, RectangleF r, IUnit unit) : base(r, unit)
+        public PlatformViewLayoutBox(IPlatformView view, RectangleF r, IUnit unit) : base(r, unit)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
         }
@@ -29,22 +29,6 @@ namespace Qoden.UI
                         (int)Math.Round(LayoutTop),
                         (int)Math.Round(LayoutRight),
                         (int)Math.Round(LayoutBottom));
-        }
-    }
-
-    public static partial class ViewLayoutExtensions
-    {
-        public static SizeF SizeThatFits(this View v, SizeF parentBounds)
-        {
-            var ws = AndroidView.MeasureSpec.MakeMeasureSpec((int)Math.Round(parentBounds.Width), MeasureSpecMode.AtMost);
-            var hs = AndroidView.MeasureSpec.MakeMeasureSpec((int)Math.Round(parentBounds.Height), MeasureSpecMode.AtMost);
-            v.Measure(ws, hs);
-            return new SizeF(v.MeasuredWidth, v.MeasuredHeight);
-        }
-
-        public static SizeF SizeThatFits(this View v, RectangleF box)
-        {
-            return v.SizeThatFits(box.Size);
         }
     }
 }

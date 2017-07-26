@@ -19,7 +19,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Qoden.Reflection" Version="1.0.0" />
-		<PackageReference Include="Qoden.Binding" Version="1.0.1" />
 		<PackageReference Include="Qoden.Util" Version="1.0.4" />
 		<PackageReference Include="Qoden.Validation" Version="1.0.2" />
 		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
@@ -30,5 +29,8 @@
 	<ItemGroup>
 	  <Folder Include="src\Layout\" />
 	  <Folder Include="src\View\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj" />
 	</ItemGroup>
 </Project>

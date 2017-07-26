@@ -1,4 +1,5 @@
-﻿using Qoden.UI;
+﻿using CoreGraphics;
+using Qoden.UI;
 using UIKit;
 
 namespace Example
@@ -7,7 +8,7 @@ namespace Example
     {
         [View]
         [Theme("Tabs")]
-        public UITabBar Tabs { get; private set; }
+        public UITabBar Tabs { get; private set; } = new UITabBar(CGRect.Empty);
         [View]
         public ProfileForm ProfileForm { get; private set; }
         [View]

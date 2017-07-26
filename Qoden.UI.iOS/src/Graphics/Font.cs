@@ -8,7 +8,11 @@ namespace Qoden.UI
         public static UIFont ToFont(this Font font)
         {
             var nsFont = UIFont.FromName(font.Name, font.Size);
-            UIFontDescriptorSymbolicTraits trait;
+            if (nsFont == null) return null;
+
+            if (font.Style == FontStyle.Unknown) return nsFont;
+
+            UIFontDescriptorSymbolicTraits trait = UIFontDescriptorSymbolicTraits.ClassUnknown;
             switch (font.Style)
             {
                 case FontStyle.Bold:

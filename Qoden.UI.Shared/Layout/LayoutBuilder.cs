@@ -21,9 +21,9 @@ namespace Qoden.UI
 
         public RectangleF Bounds { get; private set; }
 
-        public PlatformViewLayoutBox View(IPlatformView<View> v, IUnit units = null)
+        public PlatformViewLayoutBox View(IPlatformView v, IUnit units = null)
         {
-            var box = new PlatformViewLayoutBox(v, Bounds, units);
+            var box = new PlatformViewLayoutBox(v, Bounds, units ?? Units.PlatformDefault);
             _boxes.Add(box);
             return box;
         }

@@ -10,12 +10,16 @@
 		<None Include="Example.Model.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Qoden.Binding" Version="1.0.1" />
 		<PackageReference Include="Qoden.Reflection" Version="1.0.0" />
 		<PackageReference Include="Qoden.UI" Version="1.1.1" />
 		<PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.3.3" />
+		<PackageReference Include="libphonenumber-csharp" Version="8.7.0.1" />
 	</ItemGroup>
 	<ItemGroup>		
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Qoden.UI\Qoden.UI.csproj" />
+	  <ProjectReference Include="..\..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj" />
 	</ItemGroup>
 </Project>

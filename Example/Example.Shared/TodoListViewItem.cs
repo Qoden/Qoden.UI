@@ -12,7 +12,6 @@ namespace Example
         protected override void CreateView()
         {
             base.CreateView();
-            this.SetBackgroundColor(new RGB(0, 255, 0));
             this.SetPadding(new EdgeInset(10, 10, 10, 10));
             TitleLabel.SetBackgroundColor(new RGB(255, 0, 0));
             TitleLabel.SetTextColor(new RGB(0, 0, 0));

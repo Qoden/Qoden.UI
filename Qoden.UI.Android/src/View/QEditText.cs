@@ -1,33 +1,27 @@
-﻿using System;
-using Android.Content;
-using Android.Runtime;
-using Android.Util;
-using Android.Widget;
+﻿using Android.Widget;
 
 namespace Qoden.UI
 {
-    public class QEditText : BaseView<EditText>
+    public partial class QEditText : BaseView<EditText>
     {
-        public QEditText()
-        {
-        }
-
-        public QEditText(EditText target) : base(target)
-        {
-        }
     }
 
-    public static class EditTextExtensions
+    public static partial class QEditTextExtensions
     {
-        public static void SetFont(this IQView<EditText> view, Font font)
-        {
-            view.PlatformView.SetFont(font);
-        }
-
         public static void SetFont(this EditText view, Font font)
         {
             view.Typeface = TypefaceCollection.Get(font.Name, font.Style);
             view.TextSize = font.Size;
+        }
+
+        public static void SetHintText(this EditText field, string text)
+        {
+            field.Hint = text;
+        }
+
+        public static void SetTextColor(this EditText field, RGB color)
+        {
+            field.SetTextColor(color.ToColor());
         }
     }
 }

@@ -1,25 +1,27 @@
-﻿using System;
-using Android.Content;
-using Android.Runtime;
-using Android.Util;
-using Android.Widget;
+﻿using Android.Widget;
 
 namespace Qoden.UI
 {
-    public class QButton : BaseView<Button>
+    public partial class QButton : BaseView<Button>
     {
     }
 
-    public static class ButtonExtensions
+    public static partial class QButtonExtensions
     {
-        public static void SetText(this IQView<Button> view, string text)
-        {
-            view.PlatformView.SetText(text);
-        }
-
         public static void SetText(this Button view, string text)
         {
             view.Text = text;
+        }
+
+        public static void SetFont(this Button view, Font font)
+        {
+            view.Typeface = TypefaceCollection.Get(font.Name, font.Style);
+            view.TextSize = font.Size;
+        }
+
+        public static void SetTextColor(this Button view, RGB color)
+        {
+            view.SetTextColor(color.ToColor());
         }
     }
 }

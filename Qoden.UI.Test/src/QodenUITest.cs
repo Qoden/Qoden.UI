@@ -5,7 +5,6 @@ namespace Qoden.UI.Test
     {
         public QodenUITest()
         {
-            Qoden.Util.Plugin.AddPlugin("Qoden.UI.PlatformViewOperations", new FakePlatformViewOperations());
         }
     }
 }

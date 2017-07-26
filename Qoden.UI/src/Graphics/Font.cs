@@ -3,7 +3,7 @@ namespace Qoden.UI
 {
     public struct Font
     {
-        public Font(string name, float size = 10, FontStyle style = FontStyle.Normal)
+        public Font(string name, float size = 14, FontStyle style = FontStyle.Unknown)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Size = size;
@@ -20,6 +20,7 @@ namespace Qoden.UI
         Bold = 1,
         BoldItalic = 3,
         Italic = 2,
-        Normal = 0
+        Normal = 0,
+        Unknown = -1
     }
 }

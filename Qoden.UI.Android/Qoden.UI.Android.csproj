@@ -58,7 +58,6 @@
 		<Compile Include="src\View\QView.cs" />
 		<Compile Include="src\Graphics\RGB.cs" />
 		<Compile Include="src\Graphics\TypefaceCollection.cs" />
-		<Compile Include="src\View\QViewGroup.cs" />
 		<Compile Include="src\View\QTextView.cs" />
 		<Compile Include="src\Layout\ViewLayoutBox.cs" />
 		<Compile Include="src\View\QButton.cs" />
@@ -93,6 +92,16 @@
 		<None Include="project.json" />
 	</ItemGroup>
 	<ItemGroup>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
+	    <Project>{5D196C87-1190-434D-ADBE-0D2291C71856}</Project>
+	    <Name>Qoden.Binding</Name>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
+	    <Project>{29C5A133-2157-475D-9BAC-FEF20116312E}</Project>
+	    <Name>Qoden.UI</Name>
+	  </ProjectReference>
 	</ItemGroup>
 	<Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

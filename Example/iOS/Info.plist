@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>Example.iOS</string>
 	<key>CFBundleIdentifier</key>
-	<string>qoden.tech.example-ios</string>
+	<string>ru.studiomobile.example-ios</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
@@ -36,5 +36,9 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>proveo_ios.ttf</string>
+	</array>
 </dict>
 </plist>

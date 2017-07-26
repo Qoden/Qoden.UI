@@ -9,7 +9,7 @@ using Android.Widget;
 
 namespace Qoden.UI
 {
-    public class QodenView : Android.Views.ViewGroup
+    public class QodenView : ViewGroup
     {
         private ViewHierarchy hierarchy;
 
@@ -66,15 +66,12 @@ namespace Qoden.UI
         {
         }
 
-        protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
+        protected sealed override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
             var width = MeasureSpec.GetSize(widthMeasureSpec);
             var height = MeasureSpec.GetSize(heightMeasureSpec);
             var widthMode = MeasureSpec.GetMode(widthMeasureSpec);
             var heightMode = MeasureSpec.GetMode(heightMeasureSpec);
-
-            //width = widthMode == MeasureSpecMode.Unspecified ? int.MaxValue : width;
-            //height = heightMode == MeasureSpecMode.Unspecified ? int.MaxValue : height;
 
             var size = SizeThatFits(new System.Drawing.SizeF(width, height));
             width = (int)Math.Round(size.Width);
@@ -181,5 +178,14 @@ namespace Qoden.UI
                 base.OnRestoreInstanceState(state);
             }
         }
+
+        //public View PlatformView => this;
+
+        //RectangleF IViewGeometry.Frame { get => this.Frame(); set => this.SetFrame(value); }
+
+        //public IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null)
+        //{
+        //    return new PlatformViewLayoutBox(this, bounds, unit);
+        //}
     }
 }

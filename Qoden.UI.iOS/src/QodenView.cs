@@ -40,15 +40,15 @@ namespace Qoden.UI
             CreateView();
         }
 
+        public ViewHierarchyBuilder Builder { get => ViewHierarchyBuilder.Instance; }
+
         protected virtual void CreateView()
         {
-            hierarchy = new ViewHierarchy(this, ViewHierarchyBuilder.Instance);
+            hierarchy = new ViewHierarchy(this, Builder);
             BackgroundColor = UIColor.White;
         }
 
-        public ViewHierarchyBuilder Builder { get => ViewHierarchyBuilder.Instance; }
-
-        public override void LayoutSubviews()
+        public sealed override void LayoutSubviews()
         {
             var layoutBuilder = new LayoutBuilder((RectangleF)Bounds);
             OnLayout(layoutBuilder);
@@ -71,7 +71,7 @@ namespace Qoden.UI
             base.Dispose(disposing);
         }
 
-        public override CGSize SizeThatFits(CGSize size)
+        public sealed override CGSize SizeThatFits(CGSize size)
         {
             return SizeThatFits((SizeF)size);
         }
@@ -91,5 +91,14 @@ namespace Qoden.UI
             }
             return new SizeF(Math.Abs(r - l), Math.Abs(b - t));
         }
+
+        //public UIView PlatformView => this;
+
+        //RectangleF IViewGeometry.Frame { get => (RectangleF)Frame; set => Frame = value; }
+
+        //public IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null)
+        //{
+        //    return new PlatformViewLayoutBox(this, bounds, unit);
+        //}
     }
 }

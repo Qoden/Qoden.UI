@@ -5,32 +5,29 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public static class UIButtonExtensions
+    public partial class QButton : QControl<UIButton>
     {
-        public static void SetText(this IQView<UIButton> view, string text)
+        public override UIButton Create(IViewHierarchyBuilder builder)
         {
-            view.PlatformView.SetText(text);
+            return new UIButton(UIButtonType.Custom);
         }
+    }
 
+    public static partial class QButtonExtensions
+    {
         public static void SetText(this UIButton view, string text)
         {
             view.SetTitle(text, UIControlState.Normal);
         }
-    }
 
-    public class QButton : BaseView<UIButton>
-    {
-        public QButton()
+        public static void SetTextColor(this UIButton view, RGB color)
         {
+            view.SetTitleColor(color.ToColor(), UIControlState.Normal);
         }
 
-        public QButton(UIButton target) : base(target)
+        public static void SetFont(this UIButton view, Font font)
         {
-        }
-
-        public override UIButton Create(IViewHierarchyBuilder builder)
-        {
-            return new UIButton(UIButtonType.Custom);
+            view.Font = font.ToFont();
         }
     }
 }

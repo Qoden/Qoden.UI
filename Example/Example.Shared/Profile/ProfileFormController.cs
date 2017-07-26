@@ -14,7 +14,10 @@ namespace Example
             base.ViewDidLoad();
             _model = this.GetViewModelStore().Get(() => new ProfileModel());
 
-            //Bindings.Command(_model.UpdateCommand).To(View.Update.ClickTarget());
+            Bindings.Command(_model.UpdateCommand).To(View.Title.Done.ClickTarget());
+            Bindings.Command(_model.CancelCommand)
+                    .To(View.Title.Cancel.ClickTarget())
+                    .WhenFinished(HideKeyboard);
 
             Bindings.Property(_model, x => x.FirstName)
                     .To(View.FirstName.Text.TextProperty())
@@ -29,23 +32,35 @@ namespace Example
                     .To(View.PhoneNumber.Text.TextProperty())
                     .AfterSourceUpdate(ProcessError<string>());
             Bindings.Property(_model, x => x.BirthDate)
-                    .Convert(x => x.ToString())
-                    .To(View.BirthDate.Text.TextProperty())
-                    .AfterSourceUpdate(ProcessError<string>());
+                    .To(View.BirthDate.DateProperty())
+                    .AfterSourceUpdate(ProcessDateTimeError);
+        }
+
+        private void ProcessDateTimeError(IProperty<DateTime> target, IProperty<DateTime> source)
+        {
+            var dtView = (DateTimeTextField)target.Owner;
+            if (source.HasErrors)
+            {
+                dtView.Text.SetTextColor(Theme.Colors.Error);
+            }
+            else
+            {
+                dtView.Text.SetTextColor(Theme.Colors.TableFieldText);
+            }
         }
 
         private BindingAction<T> ProcessError<T>()
         {
             return (t, s) =>
             {
-                //var ui = new PlatformView(t.Owner);
+                var view = QView.Wrap<QEditText>(t.Owner);
                 if (s.HasErrors)
                 {
-                    //ui.GetView().SetBackgroundColor(new RGB(255, 0, 0));
+                    view.SetTextColor(Theme.Colors.Error);
                 }
                 else 
                 {
-                    //ui.GetView().SetBackgroundColor(RGB.DarkGray);
+                    view.SetTextColor(Theme.Colors.TableFieldText);
                 }
             };
         }

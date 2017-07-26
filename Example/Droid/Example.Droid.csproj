@@ -52,14 +52,17 @@
 		<Compile Include="Properties\AssemblyInfo.cs" />
 		<Compile Include="TodoListView.cs" />
 		<Compile Include="TodoListViewItem.cs" />
-		<Compile Include="MainMenu.cs" />
-		<Compile Include="MainMenuController.cs" />
 		<Compile Include="ExampleApplication.cs" />
-		<Compile Include="ProfileForm.cs" />
-		<Compile Include="ProfileFormController.cs" />
-		<Compile Include="Theme.cs" />
-		<Compile Include="ButtonField.cs" />
-		<Compile Include="TextField.cs" />
+		<Compile Include="Common\ButtonField.cs" />
+		<Compile Include="Common\TextField.cs" />
+		<Compile Include="Common\FormHeaderView.cs" />
+		<Compile Include="Common\Theme.cs" />
+		<Compile Include="MainMenu\MainMenu.cs" />
+		<Compile Include="MainMenu\MainMenuController.cs" />
+		<Compile Include="Profile\ProfileFormController.cs" />
+		<Compile Include="Profile\ProfileForm.cs" />
+		<Compile Include="Common\DateTimeTextField.cs" />
+		<Compile Include="Common\PhoneNumberField.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Resources\AboutResources.txt" />
@@ -79,6 +82,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Resources\drawable\" />
+		<Folder Include="Common\" />
+		<Folder Include="Profile\" />
+		<Folder Include="MainMenu\" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Qoden.UI.Android\Qoden.UI.Android.csproj">
@@ -93,6 +99,13 @@
 		  <Project>{29C5A133-2157-475D-9BAC-FEF20116312E}</Project>
 		  <Name>Qoden.UI</Name>
 		</ProjectReference>
+		<ProjectReference Include="..\..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
+		  <Project>{5D196C87-1190-434D-ADBE-0D2291C71856}</Project>
+		  <Name>Qoden.Binding</Name>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <AndroidAsset Include="Assets\fonts\proveo_ios.ttf" />
 	</ItemGroup>
 	<Import Project="..\Example.Shared\Example.Shared.projitems" Label="Shared" Condition="Exists('..\Example.Shared\Example.Shared.projitems')" />
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

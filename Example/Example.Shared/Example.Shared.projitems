@@ -11,12 +11,22 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)TodoListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TodoListViewItem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainMenu.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProfileForm.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ProfileFormController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainMenuController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Theme.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TextField.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TextViewWithIcon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\FormHeaderView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Icons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\TextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\TextViewWithIcon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\Theme.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainMenu\MainMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainMenu\MainMenuController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Profile\ProfileForm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Profile\ProfileFormController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ILabeledField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\DateTimeTextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\PhoneNumberField.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Profile\" />
+    <Folder Include="$(MSBuildThisFileDirectory)MainMenu\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Common\" />
   </ItemGroup>
 </Project>

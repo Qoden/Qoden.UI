@@ -10,14 +10,16 @@ namespace Example
 
         [View]
         public QTextView Title { get; private set; }
+        public int VerticalAdjustment { get; set; } = 0;
+        public int IconSpacing { get; set; } = 16;
 
         protected override void OnLayout(LayoutBuilder layout)
         {
             var icon = layout.View(Icon)
-                .AutoSize().Left(15).CenterVertically();
+                .AutoSize().Left(15).CenterVertically(VerticalAdjustment);
 
             layout.View(Title)
-                 .After(icon.LayoutBounds, 16).Right(16).CenterVertically().AutoHeight();
+                 .After(icon.LayoutBounds, IconSpacing).Right(16).CenterVertically(VerticalAdjustment).AutoHeight();
         }
     }
 }

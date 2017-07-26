@@ -17,7 +17,7 @@ namespace Qoden.UI
             return new PlatformViewLayoutBox(new QView(view), r, unit ?? Units.Dp);
         }
 
-        public static PlatformViewLayoutBox LayoutBox(this IPlatformView<View> view, IUnit unit = null)
+        public static PlatformViewLayoutBox LayoutBox(this IPlatformView view, IUnit unit = null)
         {
             var rect = new RectangleF(0, 0, float.MaxValue, float.MaxValue);
             return new PlatformViewLayoutBox(view, rect, unit ?? Units.Dp); 

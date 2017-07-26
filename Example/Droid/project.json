@@ -2,7 +2,6 @@
   "version": "1.0.0",
   "dependencies": {
     "Microsoft.EntityFrameworkCore.Sqlite": "1.1.2",
-    "Qoden.UI": "1.1.1",
     "System.ComponentModel.Annotations": "4.3.0",
     "System.Drawing.Primitives": "4.3.0",
     "Xamarin.Android.Support.Design": "25.3.1",
