@@ -13,6 +13,8 @@ namespace Qoden.UI
         }
 
         public static Pixel Val(float v) { return new Pixel(v); }
+
+        public int IntValue => (int)Math.Round(Value);
     }
 
     public interface IUnit

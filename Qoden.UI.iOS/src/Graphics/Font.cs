@@ -1,10 +1,20 @@
 ﻿using System;
+using CoreGraphics;
+using CoreText;
 using UIKit;
 
 namespace Qoden.UI
 {
     public static class FontExtensions
     {
+        public static CTFont ToCTFont(this Font font)
+        {
+            using (var cgFont = CGFont.CreateWithFontName(font.Name))
+            {
+                return new CTFont(cgFont, font.Size, CGAffineTransform.MakeIdentity());
+            }
+        }
+
         public static UIFont ToFont(this Font font)
         {
             var nsFont = UIFont.FromName(font.Name, font.Size);

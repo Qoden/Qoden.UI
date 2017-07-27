@@ -11,36 +11,59 @@ namespace Qoden.UI
 	{
         FontIconAppearance _iconAppearance;
 
-        private IconGenerator(FontIconAppearance appearance)
+        public IconGenerator(FontIconAppearance appearance)
 		{
             _iconAppearance = appearance ?? throw new ArgumentNullException(nameof(appearance));
 		}
 
         public PlatformImage CreateIcon(char icon)
         {
-            using (var path = CreatePath(_iconAppearance.Font, icon))
+            return CreateIcon(icon, UIEdgeInsets.Zero);   
+        }
+
+        public PlatformImage CreateIcon(char icon, UIEdgeInsets insets)
+        {
+            getGlyphCharBuffer[0] = icon;
+            getGlyphGlyphBuffer[0] = 0;
+            var ctfont = _iconAppearance.Font;
+            CTFontGetGlyphsForCharacters(ctfont.Handle, getGlyphCharBuffer, getGlyphGlyphBuffer, 1);
+
+            using (var path = ctfont.GetPathForGlyph(getGlyphGlyphBuffer[0]))
             {
-                var image = CreateIconFromPath(path, _iconAppearance);
-                return new PlatformImage(image);
+                var glyphBoundingBox = ctfont.BoundingBox;
+                var width = _iconAppearance.Font.GetAdvancesForGlyphs(CTFontOrientation.Default, getGlyphGlyphBuffer);
+                var height = glyphBoundingBox.Height;
+                var imageSize = new CGSize(width + insets.Left + insets.Right, height + insets.Top + insets.Bottom);
+
+                //NOTE: glyph bounds has negative Y origin which absolute value is equal to baseline.
+                //this is why traslate and scale is used to convert context coordinates into glyph coordinates.
+                var baseLineY = path.BoundingBox.Y;
+                UIGraphics.BeginImageContextWithOptions(imageSize, false, 0f);
+                try
+                {
+                    using (var context = UIGraphics.GetCurrentContext())
+                    {
+                        context.TranslateCTM(insets.Left, imageSize.Height + baseLineY - insets.Bottom);
+                        context.ScaleCTM(1, -1);
+                        path.RenderInContext(context, _iconAppearance.Colors, _iconAppearance.StrokeColor, _iconAppearance.StrokeWidth);
+                        var image = UIGraphics.GetImageFromCurrentImageContext();
+                        UIGraphics.EndImageContext();
+                        if (image.RenderingMode != _iconAppearance.RenderingMode)
+                        {
+                            image = image.ImageWithRenderingMode(_iconAppearance.RenderingMode);
+                        }
+                        return new PlatformImage(image);
+                    }
+                }
+                finally
+                {
+                    UIGraphics.EndImageContext();
+                }
             }
         }
-		
-		public CGPath CreatePath(CTFont ctfont, char icon)
-		{
-			var transform = CGAffineTransform.MakeIdentity();
-			return ctfont.GetPathForGlyph(GlyphForIcon(ctfont, icon), ref transform);
-		}
 
 		readonly char[] getGlyphCharBuffer = new char[1];
 		readonly ushort[] getGlyphGlyphBuffer = new ushort[1];
-
-		public ushort GlyphForIcon(CTFont ctfont, char icon)
-		{
-			getGlyphCharBuffer[0] = icon;
-			getGlyphGlyphBuffer[0] = 0;
-			CTFontGetGlyphsForCharacters(ctfont.Handle, getGlyphCharBuffer, getGlyphGlyphBuffer, 1);
-			return getGlyphGlyphBuffer[0];
-		}
 
 		[DllImport(Constants.CoreTextLibrary)]
 		static extern bool CTFontGetGlyphsForCharacters(
@@ -48,36 +71,5 @@ namespace Qoden.UI
 			[In, MarshalAs(UnmanagedType.LPWStr)] char[] characters,
 			[Out] ushort[] glyphs,
 			nint count);
-
-		//float strokeWidth, RGB strokeColor
-		static public UIImage CreateIconFromPath(CGPath path, FontIconAppearance appearance)
-		{
-			//NOTE: glyph bounds are has negative Y origin which absolute value is equal to baseline.
-			//this is why traslate and scale is used to convert context coordinates into glyph coordinates.
-			var bounds = path.BoundingBox;
-			var baseLineY = bounds.Y;
-			var imageSize = new CGSize(bounds.Width + appearance.StrokeWidth * 2, bounds.Height + appearance.StrokeWidth * 2);
-			UIGraphics.BeginImageContextWithOptions(imageSize, false, 0f);
-			try
-			{
-				using (var context = UIGraphics.GetCurrentContext())
-				{
-					context.TranslateCTM(0, imageSize.Height + baseLineY);
-					context.ScaleCTM(1, -1);
-					path.RenderInContext(context, appearance.Colors, appearance.StrokeColor, appearance.StrokeWidth);
-					var image = UIGraphics.GetImageFromCurrentImageContext();
-					UIGraphics.EndImageContext();
-					if (image.RenderingMode != appearance.RenderingMode)
-					{
-						image = image.ImageWithRenderingMode(appearance.RenderingMode);
-					}
-					return image;
-				}
-			}
-			finally
-			{
-				UIGraphics.EndImageContext();
-			}
-		}
     }
 }

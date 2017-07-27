@@ -73,6 +73,7 @@
 		<Compile Include="src\Bindings\AdapterViewBindings.cs" />
 		<Compile Include="src\View\PlainListContent.cs" />
 		<Compile Include="src\View\GroupedListContent.cs" />
+		<Compile Include="src\Graphics\FontIconDrawable.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Resources\AboutResources.txt" />
@@ -95,11 +96,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
-	    <Project>{5D196C87-1190-434D-ADBE-0D2291C71856}</Project>
+	    <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
 	    <Name>Qoden.Binding</Name>
 	  </ProjectReference>
 	  <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
-	    <Project>{29C5A133-2157-475D-9BAC-FEF20116312E}</Project>
+	    <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
 	    <Name>Qoden.UI</Name>
 	  </ProjectReference>
 	</ItemGroup>
