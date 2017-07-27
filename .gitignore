@@ -3,6 +3,8 @@ project.lock.json
 # Autosave files
 *~
 
+Qoden.UI.*.nuget.*
+
 # build
 [Oo]bj/
 [Bb]in/

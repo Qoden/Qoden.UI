@@ -4,6 +4,13 @@ namespace Qoden.UI
 {
     public partial class QButton : BaseView<Button>
     {
+        public override Button Create(IViewHierarchyBuilder builder)
+        {
+            //This is to mimic iOS UIButton behavior which makes more sense as a default
+            var button = (Button)base.Create(builder);
+            button.SetAllCaps(false);
+            return button;
+        }
     }
 
     public static partial class QButtonExtensions
