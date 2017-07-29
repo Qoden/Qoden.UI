@@ -112,6 +112,9 @@
 		<Compile Include="src\DateUtil.cs" />
 		<Compile Include="src\PhoneAsYouTypeFormatter.cs" />
 		<Compile Include="src\PhoneNumberFormatter.cs" />
+		<Compile Include="src\View\QImageView.cs" />
+		<Compile Include="src\Graphics\QImage.cs" />
+		<Compile Include="src\QodenDialog.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Qoden.UI.iOS.csproj" />
@@ -121,11 +124,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
-	    <Project>{29C5A133-2157-475D-9BAC-FEF20116312E}</Project>
+	    <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
 	    <Name>Qoden.UI</Name>
 	  </ProjectReference>
 	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
-	    <Project>{5D196C87-1190-434D-ADBE-0D2291C71856}</Project>
+	    <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
 	    <Name>Qoden.Binding</Name>
 	  </ProjectReference>
 	</ItemGroup>

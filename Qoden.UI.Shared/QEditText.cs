@@ -39,5 +39,10 @@ namespace Qoden.UI
         {
             view.PlatformView.SetText(text);
         }
+
+        public static string GetText(this IQView<EditText> view)
+        {
+            return view.PlatformView.GetText();
+        }
     }
 }

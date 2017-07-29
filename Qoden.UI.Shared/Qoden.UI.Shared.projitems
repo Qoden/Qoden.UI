@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)QButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QEditText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QListView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QImageView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />

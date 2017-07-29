@@ -50,5 +50,10 @@ namespace Qoden.UI
         {
             field.PlatformView.SetText(text);
         }
+
+        public static string GetText(this UITextField view)
+        {
+            return view.Text;
+        }
     }
 }

@@ -23,5 +23,10 @@ namespace Qoden.UI
         {
             field.SetTextColor(color.ToColor());
         }
+
+        public static string GetText(this EditText field)
+        {
+            return field.Text;
+        }
     }
 }

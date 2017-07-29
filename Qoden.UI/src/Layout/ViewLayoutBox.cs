@@ -26,32 +26,36 @@ namespace Qoden.UI
             }
         }
 
-        public IViewLayoutBox AutoWidth()
+        private SizeF BoundingSize(float? maxWidth = null, float? maxHeight = null)
         {
-            EnsureMeasured();
+            float w = maxWidth.GetValueOrDefault(Bounds.Width);
+            float h = maxHeight.GetValueOrDefault(Bounds.Height);
+            return new SizeF(Unit.ToPixels(w).Value, Unit.ToPixels(h).Value);
+        }
+
+        public IViewLayoutBox AutoWidth(float? maxWidth = null)
+        {
+            var size = BoundingSize(maxWidth);
+            MeasuredSize = View.SizeThatFits(size);
             this.Width(MeasuredSize.Width);
             return this;
         }
 
-        public IViewLayoutBox AutoHeight()
+        public IViewLayoutBox AutoHeight(float? maxHeight = null)
         {
-            EnsureMeasured();
+            var size = BoundingSize(null, maxHeight);
+            MeasuredSize = View.SizeThatFits(size);
             this.Height(MeasuredSize.Height);
             return this;
         }
 
-        public IViewLayoutBox AutoSize()
+        public IViewLayoutBox AutoSize(float? maxWidth = null, float? maxHeight = null)
         {
-            EnsureMeasured();
-            return AutoWidth().AutoHeight();
-        }
-
-        void EnsureMeasured()
-        {
-            if (!_measuredSize.HasValue)
-            {
-                MeasuredSize = View.SizeThatFits(Bounds.Size);
-            }
+            var size = BoundingSize(maxWidth, maxHeight);
+            MeasuredSize = View.SizeThatFits(size);
+            this.Width(MeasuredSize.Width);
+            this.Height(MeasuredSize.Height);
+            return this;
         }
 
         public abstract void Layout();

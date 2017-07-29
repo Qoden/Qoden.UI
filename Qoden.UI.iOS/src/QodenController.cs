@@ -111,7 +111,6 @@ namespace Qoden.UI
             {
                 childController = factory();
                 childController.SetTag(key);
-                AddChildViewController(childController);
             }
             return childController;
         }

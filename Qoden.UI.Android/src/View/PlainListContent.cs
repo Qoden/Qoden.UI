@@ -8,7 +8,6 @@ namespace Qoden.UI
     public abstract class PlainListContent : BaseAdapter<object>
     {
         QView _item = new QView();
-        IViewHierarchyBuilder _builder;
 
         public PlainListContent(IViewHierarchyBuilder builder)
         {

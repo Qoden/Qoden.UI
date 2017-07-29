@@ -20,6 +20,14 @@ namespace Qoden.UI
 			Alpha = alpha;
 		}
 
+        public RGB(byte red, byte green, byte blue, float alpha) : this()
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+            Alpha = (byte)Math.Round(255 * alpha);
+        }
+
         public static RGB RGBA(byte red, byte green, byte blue, float alpha)
         {
             return new RGB(red, green, blue, (byte)Math.Round(255 * alpha));

@@ -74,6 +74,15 @@
 		<Compile Include="src\View\PlainListContent.cs" />
 		<Compile Include="src\View\GroupedListContent.cs" />
 		<Compile Include="src\Graphics\FontIconDrawable.cs" />
+		<Compile Include="src\Graphics\QImage.cs" />
+		<Compile Include="src\View\QImageView.cs" />
+		<Compile Include="src\QodenDialog.cs" />
+		<Compile Include="src\ChildViewControllersList.cs" />
+		<Compile Include="src\IControllerHost.cs" />
+		<Compile Include="src\ViewHolder.cs" />
+		<Compile Include="src\IViewHost.cs" />
+		<Compile Include="src\QodenApplication.cs" />
+		<Compile Include="src\IDetachedController.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Resources\AboutResources.txt" />

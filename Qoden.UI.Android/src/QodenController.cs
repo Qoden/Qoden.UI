@@ -1,13 +1,30 @@
 ﻿using System;
 using Android.OS;
+using Android.Runtime;
+using Android.Support.V4.App;
 using Android.Views;
 using Qoden.Binding;
-using AndroidView = Android.Views.View;
-using AndroidViewGroup = Android.Views.ViewGroup;
 namespace Qoden.UI
 {
-    public class QodenController : Android.Support.V4.App.Fragment
+    public class QodenController : Fragment, IControllerHost, IViewHost
     {
+        ViewHolder _view;
+
+        protected QodenController(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+            Initialize();
+        }
+
+        public QodenController()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            _view = new ViewHolder(this);
+        }
+
         BindingListHolder bindings;
         public BindingList Bindings
         {
@@ -15,24 +32,30 @@ namespace Qoden.UI
             set { bindings.Value = value; }
         }
 
-        public override void OnViewCreated(AndroidView view, Bundle savedInstanceState)
+        public override void OnAttach(Android.Content.Context context)
+        {
+            base.OnAttach(context);
+            ChildControllers = new ChildViewControllersList(context, ChildFragmentManager);
+        }
+
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        {
+            return _view.Value;
+        }
+
+        public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
         }
 
-        public bool IsViewLoaded => View != null;
-
-        public object ParentViewController 
+        public new View View
         {
-            get 
-            {
-                object parent = ParentFragment;
-                if (parent == null)
-                    parent = Activity;
-                return parent;
-            }
+            get => _view.Value;
+            set => _view.Value = value;
         }
+
+        public ChildViewControllersList ChildControllers { get; private set; }
 
         public virtual void ViewDidLoad()
         {                        
@@ -50,27 +73,27 @@ namespace Qoden.UI
             base.OnStop();
             Bindings.Unbind();
         }
+
+        public virtual void LoadView()
+        {
+        }
     }
 
-    public class QodenController<T> : QodenController where T : AndroidView
+    public class QodenController<T> : QodenController where T : View
     {
-        public override AndroidView OnCreateView(LayoutInflater inflater, AndroidViewGroup container, Bundle savedInstanceState)
-        {
-            if (_view == null)
-                _view = (T)Activator.CreateInstance(typeof(T), Activity);
-            return _view;
-        }
-
-        T _view;
         public new T View
         {
-            get => _view;
-            set 
+            get => (T)base.View;
+            set => base.View = value;
+        }
+
+        public override void LoadView()
+        {
+            if (Context == null)
             {
-                if (_view != null)
-                    throw new InvalidOperationException();
-                _view = value ?? throw new ArgumentNullException();
+                throw new InvalidOperationException("Cannot access View before controller added to parent Activity/Fragment");
             }
+            base.View = (T)Activator.CreateInstance(typeof(T), Context);
         }
     }
 }

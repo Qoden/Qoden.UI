@@ -29,6 +29,11 @@ namespace Qoden.UI
             view.PlatformView.SetText(text);
         }
 
+        public static string GetText(this UILabel view)
+        {
+            return view.Text;
+        }
+
         public static void SetFont(this UILabel view, Font font)
         {
             view.Font = font.ToFont();

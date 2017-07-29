@@ -30,5 +30,10 @@ namespace Qoden.UI
         {
             view.Text = text;
         }
+
+        public static string GetText(this TextView view)
+        {
+            return view.Text;
+        }
     }
 }
