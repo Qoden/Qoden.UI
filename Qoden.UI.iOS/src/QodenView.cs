@@ -44,8 +44,8 @@ namespace Qoden.UI
 
         protected virtual void CreateView()
         {
-            hierarchy = new ViewHierarchy(this, Builder);
             BackgroundColor = UIColor.White;
+            hierarchy = new ViewHierarchy(this, Builder);
         }
 
         public sealed override void LayoutSubviews()

@@ -40,6 +40,9 @@ namespace Qoden.UI
 		private void Build()
 		{
 			Build(_root);
+            var rootType = _root.GetType();
+            var decoratorAttribute = rootType.GetTypeInfo().GetCustomAttribute<DecoratorAttribute>();
+            decoratorAttribute?.Decorate(_root);
 		}
 
         void Build(object view)
