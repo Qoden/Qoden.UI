@@ -53,6 +53,12 @@ namespace Qoden.UI
             ViewDidLoad();
         }
 
+        public override void OnDismiss(IDialogInterface dialog)
+        {
+            base.OnDismiss(dialog);
+            IsDisplayed = false;
+        }
+
         public new View View
         {
             get => _view.Value;

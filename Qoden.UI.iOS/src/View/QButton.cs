@@ -7,6 +7,16 @@ namespace Qoden.UI
 {
     public partial class QButton : QControl<UIButton>
     {
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static QButton()
+        {
+            if (LinkerTrick.False)
+            {
+                new UIButton(UIButtonType.Custom);
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new'
+
         public override UIButton Create(IViewHierarchyBuilder builder)
         {
             return new UIButton(UIButtonType.Custom);

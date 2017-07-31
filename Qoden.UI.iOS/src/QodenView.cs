@@ -2,6 +2,7 @@
 using System.Drawing;
 using CoreGraphics;
 using Foundation;
+using Qoden.Binding;
 using UIKit;
 
 namespace Qoden.UI
@@ -90,6 +91,17 @@ namespace Qoden.UI
                 b = Math.Max(frame.Bottom, b);
             }
             return new SizeF(Math.Abs(r - l), Math.Abs(b - t));
+        }
+
+        IEventSource _clickTarget;
+
+        public IEventSource ClickTarget()
+        {
+            if (_clickTarget == null)
+            {
+                _clickTarget = new UIViewClickEventSource(this);
+            }
+            return _clickTarget;
         }
 
         //public UIView PlatformView => this;

@@ -5,6 +5,15 @@ namespace Qoden.UI
 {
     public partial class QTextView : BaseView<UILabel>
     {
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static QTextView()
+        {
+            if (LinkerTrick.False)
+            {
+                new UILabel();
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new'
     }
 
     public static partial class TextViewExtensions

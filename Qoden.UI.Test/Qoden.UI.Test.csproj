@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj" />
+    <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

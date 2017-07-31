@@ -8,6 +8,16 @@ namespace Qoden.UI
 {
     public partial class BaseView<T> : QView<T>, IPlatformView where T : UIView
     {
+
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static BaseView()
+        {
+            if (LinkerTrick.False)
+            {
+                new UIView();
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new' 
     }
 
     public partial class QView : BaseView<UIView>

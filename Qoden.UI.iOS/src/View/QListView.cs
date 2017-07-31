@@ -7,10 +7,29 @@ namespace Qoden.UI
 {
     public partial class QListView : BaseView<UITableView>
     {
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static QListView()
+        {
+            if (LinkerTrick.False)
+            {
+                new UITableView();
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new'    
     }
 
     public partial class QGroupedListView : BaseView<UITableView>
     {
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static QGroupedListView()
+        {
+            if (LinkerTrick.False)
+            {
+                new UITableView(CGRect.Empty, UITableViewStyle.Plain);
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new'  
+
         public override UITableView Create(IViewHierarchyBuilder builder)
         {
             return new UITableView(CGRect.Empty, UITableViewStyle.Grouped);

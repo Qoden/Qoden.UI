@@ -16,20 +16,20 @@ namespace Qoden.UI.Test
         {
         }
 
-        public IViewLayoutBox AutoHeight()
+        public IViewLayoutBox AutoHeight(float? maxHeight = null)
         {
-            SetHeight(View.Frame.Height);
+            SetHeight(Math.Max(View.Frame.Height, maxHeight.GetValueOrDefault()));
             return this;
         }
 
-        public IViewLayoutBox AutoSize()
+        public IViewLayoutBox AutoSize(float? maxWidth = null, float? maxHeight = null)
         {
-            return AutoWidth().AutoHeight();
+            return AutoWidth(maxWidth).AutoHeight(maxHeight);
         }
 
-        public IViewLayoutBox AutoWidth()
+        public IViewLayoutBox AutoWidth(float? maxWidth = null)
         {
-            SetWidth(View.Frame.Width);
+            SetWidth(Math.Max(View.Frame.Width, maxWidth.GetValueOrDefault()));
             return this;
         }
 

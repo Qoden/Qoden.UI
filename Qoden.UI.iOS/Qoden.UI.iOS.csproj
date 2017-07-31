@@ -115,6 +115,7 @@
 		<Compile Include="src\View\QImageView.cs" />
 		<Compile Include="src\Graphics\QImage.cs" />
 		<Compile Include="src\QodenDialog.cs" />
+		<Compile Include="src\Bindings\UIViewClickEventSource.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Qoden.UI.iOS.csproj" />
@@ -130,6 +131,18 @@
 	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
 	    <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
 	    <Name>Qoden.Binding</Name>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\Qoden.Format\Qoden.Format\Qoden.Format.csproj">
+	    <Project>{94E3A418-2C3D-4BD8-9A0A-5408BE35BCF2}</Project>
+	    <Name>Qoden.Format</Name>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\Qoden.Reflection\Qoden.Reflection\Qoden.Reflection.csproj">
+	    <Project>{60E5307F-842C-405D-BD34-1ADE30B5D7CD}</Project>
+	    <Name>Qoden.Reflection</Name>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj">
+	    <Project>{2FDBE806-5C80-467B-83C6-AF4707ED7FC6}</Project>
+	    <Name>Qoden.Validation</Name>
 	  </ProjectReference>
 	</ItemGroup>
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

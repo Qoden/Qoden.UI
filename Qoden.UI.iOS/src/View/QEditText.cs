@@ -7,6 +7,15 @@ namespace Qoden.UI
 {
     public partial class QEditText : QControl<UITextField>
     {
+#pragma warning disable RECS0026 // Possible unassigned object created by 'new'
+        static QEditText()
+        {
+            if (LinkerTrick.False)
+            {
+                new UITextField();
+            }
+        }
+#pragma warning restore RECS0026 // Possible unassigned object created by 'new'
     }
 
     public static partial class QEditTextExtensions
