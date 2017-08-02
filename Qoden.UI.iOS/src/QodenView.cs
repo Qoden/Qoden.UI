@@ -7,7 +7,7 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public class QodenView : UIView
+    public class QodenView : UIView, ILayoutable
     {
         ViewHierarchy hierarchy;
 
@@ -21,17 +21,17 @@ namespace Qoden.UI
             Initialize();
         }
 
-        public QodenView(NSCoder coder) : base (coder)
+        public QodenView(NSCoder coder) : base(coder)
         {
             Initialize();
         }
 
-        public QodenView(NSObjectFlag t) : base (t)
+        public QodenView(NSObjectFlag t) : base(t)
         {
             Initialize();
         }
 
-        public QodenView(CGRect frame) : base (frame)
+        public QodenView(CGRect frame) : base(frame)
         {
             Initialize();
         }
@@ -58,6 +58,11 @@ namespace Qoden.UI
             }
         }
 
+        void ILayoutable.OnLayout(LayoutBuilder layout)
+        {
+            OnLayout(layout);
+        }
+
         protected virtual void OnLayout(LayoutBuilder layout)
         {
         }
@@ -78,18 +83,7 @@ namespace Qoden.UI
 
         public virtual SizeF SizeThatFits(SizeF bounds)
         {
-            var layout = new LayoutBuilder(new RectangleF(PointF.Empty, bounds));
-            OnLayout(layout);
-            float l = int.MaxValue, t = int.MaxValue, r = int.MinValue, b = int.MinValue;
-            foreach (var v in layout.Views)
-            {
-                var frame = v.LayoutBounds;
-                l = Math.Min(frame.Left, l);
-                r = Math.Max(frame.Right, r);
-                t = Math.Min(frame.Top, t);
-                b = Math.Max(frame.Bottom, b);
-            }
-            return new SizeF(Math.Abs(r - l), Math.Abs(b - t));
+            return ViewLayoutUtil.SizeThatFits(this, bounds);
         }
 
         IEventSource _clickTarget;

@@ -1,149 +1,146 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
-	<Import Project="..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props')" />
-	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProjectGuid>{FFE30417-BB9D-4669-9BE8-3866380BE603}</ProjectGuid>
-		<ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-		<OutputType>Library</OutputType>
-		<RootNamespace>Qoden.UI</RootNamespace>
-		<AssemblyName>Qoden.UI.iOS</AssemblyName>
-		<IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-		<PackageId>Qoden.UI.iOS</PackageId>
-		<Authors>Andrew Verbin</Authors>
-		<Description>iOS specific Qoden UI utilities</Description>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-		<Optimize>false</Optimize>
-		<OutputPath>bin\Debug</OutputPath>
-		<DefineConstants>DEBUG;</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<CodesignKey>iPhone Developer</CodesignKey>
-		<MtouchDebug>true</MtouchDebug>
-		<MtouchFastDev>true</MtouchFastDev>
-		<MtouchProfiling>true</MtouchProfiling>
-		<IOSDebuggerPort>16303</IOSDebuggerPort>
-		<DeviceSpecificBuild>false</DeviceSpecificBuild>
-		<MtouchLink>
-		</MtouchLink>
-		<MtouchHttpClientHandler>
-		</MtouchHttpClientHandler>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<DebugType>pdbonly</DebugType>
-		<Optimize>true</Optimize>
-		<OutputPath>bin\Release</OutputPath>
-		<DefineConstants>
-		</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<CodesignKey>iPhone Developer</CodesignKey>
-		<MtouchLink>SdkOnly</MtouchLink>
-		<MtouchHttpClientHandler>
-		</MtouchHttpClientHandler>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<ItemGroup>
-		<Reference Include="System" />
-		<Reference Include="System.Xml" />
-		<Reference Include="System.Core" />
-		<Reference Include="Xamarin.iOS" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Resources\" />
-		<Folder Include="src\View\" />
-		<Folder Include="src\Graphics\" />
-		<Folder Include="src\Layout\" />
-		<Folder Include="src\Bindings\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="Properties\AssemblyInfo.cs" />
-		<Compile Include="src\GroupedUITableViewDataSource.cs" />
-		<Compile Include="src\KeyboardScroller.cs" />
-		<Compile Include="src\ListItemContext.cs" />
-		<Compile Include="src\NSNotificationCenterSubscription.cs" />
-		<Compile Include="src\PlainListBinding.cs" />
-		<Compile Include="src\PlatformImageOperations.cs" />
-		<Compile Include="src\QodenController.cs" />
-		<Compile Include="src\QodenScrollView.cs" />
-		<Compile Include="src\QodenTableViewCell.cs" />
-		<Compile Include="src\QodenView.cs" />
-		<Compile Include="src\RemoteImageView.cs" />
-		<Compile Include="src\TabsBuilder.cs" />
-		<Compile Include="src\UIImageExtensions.cs" />
-		<Compile Include="src\UIPickerViewBinding.cs" />
-		<Compile Include="src\UITableViewBindingBase.cs" />
-		<Compile Include="src\AssociatedObject.cs" />
-		<Compile Include="src\View\QTextView.cs" />
-		<Compile Include="src\Graphics\RGB.cs" />
-		<Compile Include="src\Graphics\Font.cs" />
-		<Compile Include="src\View\QEditText.cs" />
-		<Compile Include="src\Layout\ViewLayoutBox.cs" />
-		<Compile Include="src\View\QView.cs" />
-		<Compile Include="src\View\QButton.cs" />
-		<Compile Include="src\View\QListView.cs" />
-		<Compile Include="src\View\ViewHierarchyBuilder.cs" />
-		<Compile Include="src\Graphics\CGPathExtensions.cs" />
-		<Compile Include="src\Graphics\FontIconAppearance.cs" />
-		<Compile Include="src\Graphics\FontIconGenerator.cs" />
-		<Compile Include="src\View\FontIconExtensions.cs" />
-		<Compile Include="src\Layout\LayoutBoxExtensions.cs" />
-		<Compile Include="src\Graphics\PaddingExtensions.cs" />
-		<Compile Include="src\Graphics\Units.cs" />
-		<Compile Include="src\Bindings\UIControlBindings.cs" />
-		<Compile Include="src\Bindings\UIBarButtonItemBindings.cs" />
-		<Compile Include="src\Bindings\UITextFieldBindings.cs" />
-		<Compile Include="src\Bindings\UISegmentedControlBindings.cs" />
-		<Compile Include="src\Bindings\UITextViewBindings.cs" />
-		<Compile Include="src\Bindings\RemoteImageViewBindings.cs" />
-		<Compile Include="src\Bindings\UILabelBindings.cs" />
-		<Compile Include="src\Bindings\UIViewBindings.cs" />
-		<Compile Include="src\Bindings\UIActivityIndicatorViewBindings.cs" />
-		<Compile Include="src\Bindings\KVCBindingStrategy.cs" />
-		<Compile Include="src\View\PlainListContent.cs" />
-		<Compile Include="src\View\GroupedListContent.cs" />
-		<Compile Include="src\View\TableViewUtil.cs" />
-		<Compile Include="src\DateUtil.cs" />
-		<Compile Include="src\PhoneAsYouTypeFormatter.cs" />
-		<Compile Include="src\PhoneNumberFormatter.cs" />
-		<Compile Include="src\View\QImageView.cs" />
-		<Compile Include="src\Graphics\QImage.cs" />
-		<Compile Include="src\QodenDialog.cs" />
-		<Compile Include="src\Bindings\UIViewClickEventSource.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="Qoden.UI.iOS.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <BundleResource Include="project.json" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
-	    <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
-	    <Name>Qoden.UI</Name>
-	  </ProjectReference>
-	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
-	    <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
-	    <Name>Qoden.Binding</Name>
-	  </ProjectReference>
-	  <ProjectReference Include="..\..\Qoden.Format\Qoden.Format\Qoden.Format.csproj">
-	    <Project>{94E3A418-2C3D-4BD8-9A0A-5408BE35BCF2}</Project>
-	    <Name>Qoden.Format</Name>
-	  </ProjectReference>
-	  <ProjectReference Include="..\..\Qoden.Reflection\Qoden.Reflection\Qoden.Reflection.csproj">
-	    <Project>{60E5307F-842C-405D-BD34-1ADE30B5D7CD}</Project>
-	    <Name>Qoden.Reflection</Name>
-	  </ProjectReference>
-	  <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj">
-	    <Project>{2FDBE806-5C80-467B-83C6-AF4707ED7FC6}</Project>
-	    <Name>Qoden.Validation</Name>
-	  </ProjectReference>
-	</ItemGroup>
-	<Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.157-dev\build\NuGet.Build.Packaging.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FFE30417-BB9D-4669-9BE8-3866380BE603}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Qoden.UI</RootNamespace>
+    <AssemblyName>Qoden.UI.iOS</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <PackageId>Qoden.UI.iOS</PackageId>
+    <Authors>Andrew Verbin</Authors>
+    <Description>iOS specific Qoden UI utilities</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchProfiling>true</MtouchProfiling>
+    <IOSDebuggerPort>16303</IOSDebuggerPort>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
+    <MtouchLink></MtouchLink>
+    <MtouchHttpClientHandler></MtouchHttpClientHandler>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchHttpClientHandler></MtouchHttpClientHandler>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="src\View\" />
+    <Folder Include="src\Graphics\" />
+    <Folder Include="src\Layout\" />
+    <Folder Include="src\Bindings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\GroupedUITableViewDataSource.cs" />
+    <Compile Include="src\KeyboardScroller.cs" />
+    <Compile Include="src\ListItemContext.cs" />
+    <Compile Include="src\NSNotificationCenterSubscription.cs" />
+    <Compile Include="src\PlainListBinding.cs" />
+    <Compile Include="src\PlatformImageOperations.cs" />
+    <Compile Include="src\QodenController.cs" />
+    <Compile Include="src\QodenScrollView.cs" />
+    <Compile Include="src\QodenTableViewCell.cs" />
+    <Compile Include="src\QodenView.cs" />
+    <Compile Include="src\RemoteImageView.cs" />
+    <Compile Include="src\TabsBuilder.cs" />
+    <Compile Include="src\UIImageExtensions.cs" />
+    <Compile Include="src\UIPickerViewBinding.cs" />
+    <Compile Include="src\UITableViewBindingBase.cs" />
+    <Compile Include="src\AssociatedObject.cs" />
+    <Compile Include="src\View\QTextView.cs" />
+    <Compile Include="src\Graphics\RGB.cs" />
+    <Compile Include="src\Graphics\Font.cs" />
+    <Compile Include="src\View\QEditText.cs" />
+    <Compile Include="src\Layout\ViewLayoutBox.cs" />
+    <Compile Include="src\View\QView.cs" />
+    <Compile Include="src\View\QButton.cs" />
+    <Compile Include="src\View\QListView.cs" />
+    <Compile Include="src\View\ViewHierarchyBuilder.cs" />
+    <Compile Include="src\Graphics\CGPathExtensions.cs" />
+    <Compile Include="src\Graphics\FontIconAppearance.cs" />
+    <Compile Include="src\Graphics\FontIconGenerator.cs" />
+    <Compile Include="src\View\FontIconExtensions.cs" />
+    <Compile Include="src\Layout\LayoutBoxExtensions.cs" />
+    <Compile Include="src\Graphics\PaddingExtensions.cs" />
+    <Compile Include="src\Graphics\Units.cs" />
+    <Compile Include="src\Bindings\UIControlBindings.cs" />
+    <Compile Include="src\Bindings\UIBarButtonItemBindings.cs" />
+    <Compile Include="src\Bindings\UITextFieldBindings.cs" />
+    <Compile Include="src\Bindings\UISegmentedControlBindings.cs" />
+    <Compile Include="src\Bindings\UITextViewBindings.cs" />
+    <Compile Include="src\Bindings\RemoteImageViewBindings.cs" />
+    <Compile Include="src\Bindings\UILabelBindings.cs" />
+    <Compile Include="src\Bindings\UIViewBindings.cs" />
+    <Compile Include="src\Bindings\UIActivityIndicatorViewBindings.cs" />
+    <Compile Include="src\Bindings\KVCBindingStrategy.cs" />
+    <Compile Include="src\View\PlainListContent.cs" />
+    <Compile Include="src\View\GroupedListContent.cs" />
+    <Compile Include="src\View\TableViewUtil.cs" />
+    <Compile Include="src\DateUtil.cs" />
+    <Compile Include="src\PhoneAsYouTypeFormatter.cs" />
+    <Compile Include="src\PhoneNumberFormatter.cs" />
+    <Compile Include="src\View\QImageView.cs" />
+    <Compile Include="src\Graphics\QImage.cs" />
+    <Compile Include="src\QodenDialog.cs" />
+    <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
+    <Compile Include="src\Layout\ViewLayoutUtil.cs" />
+    <Compile Include="src\Layout\ILayoutable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Qoden.UI.iOS.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
+      <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
+      <Name>Qoden.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
+      <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
+      <Name>Qoden.Binding</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Qoden.Format\Qoden.Format\Qoden.Format.csproj">
+      <Project>{94E3A418-2C3D-4BD8-9A0A-5408BE35BCF2}</Project>
+      <Name>Qoden.Format</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Qoden.Reflection\Qoden.Reflection\Qoden.Reflection.csproj">
+      <Project>{60E5307F-842C-405D-BD34-1ADE30B5D7CD}</Project>
+      <Name>Qoden.Reflection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj">
+      <Project>{2FDBE806-5C80-467B-83C6-AF4707ED7FC6}</Project>
+      <Name>Qoden.Validation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

@@ -3,58 +3,59 @@ using UIKit;
 using Foundation;
 using Qoden.Binding;
 using System.Drawing;
+using CoreGraphics;
 
 namespace Qoden.UI
 {
-	public class QodenTableViewCell : UITableViewCell
-	{
-		ViewHierarchy hierarchy;
+    public class QodenTableViewCell : UITableViewCell, ILayoutable
+    {
+        ViewHierarchy hierarchy;
 
-		public QodenTableViewCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell()
-		{
-			Initialize();
-		}
+        public QodenTableViewCell()
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell(NSCoder coder) : base(coder)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(NSCoder coder) : base(coder)
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell(NSObjectFlag t) : base(t)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(NSObjectFlag t) : base(t)
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell(IntPtr handle) : base(handle)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(IntPtr handle) : base(handle)
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell(CoreGraphics.CGRect frame) : base(frame)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(CoreGraphics.CGRect frame) : base(frame)
+        {
+            Initialize();
+        }
 
-		public QodenTableViewCell(UITableViewCellStyle style, NSString reuseIdentifier) : base(style, reuseIdentifier)
-		{
-			Initialize();
-		}
+        public QodenTableViewCell(UITableViewCellStyle style, NSString reuseIdentifier) : base(style, reuseIdentifier)
+        {
+            Initialize();
+        }
 
-		void Initialize()
-		{
-			CreateView();
-		}
+        void Initialize()
+        {
+            CreateView();
+        }
 
-		protected virtual void CreateView()
-		{
-			hierarchy = new ViewHierarchy(this, ViewHierarchyBuilder.Instance);
-			BackgroundColor = UIColor.White;
-		}
+        protected virtual void CreateView()
+        {
+            hierarchy = new ViewHierarchy(this, ViewHierarchyBuilder.Instance);
+            BackgroundColor = UIColor.White;
+        }
 
         public override void LayoutSubviews()
         {
@@ -67,48 +68,62 @@ namespace Qoden.UI
             }
         }
 
+        void ILayoutable.OnLayout(LayoutBuilder layout)
+        {
+            OnLayout(layout);
+        }
+
         protected virtual void OnLayout(LayoutBuilder layout)
         {
         }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				hierarchy?.Dispose();
-				bindings?.Unbind();
-			}
-			base.Dispose(disposing);
-		}
+        public sealed override CGSize SizeThatFits(CGSize size)
+        {
+            return SizeThatFits((SizeF)size);
+        }
 
+        public virtual SizeF SizeThatFits(SizeF bounds)
+        {
+            return ViewLayoutUtil.SizeThatFits(this, bounds);
+        }
 
-		public override void WillMoveToSuperview(UIView newsuper)
-		{
-			base.WillMoveToSuperview(newsuper);
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                hierarchy?.Dispose();
+                bindings?.Unbind();
+            }
+            base.Dispose(disposing);
+        }
 
-			if (bindings != null)
-			{
-				if (newsuper != null)
-				{
-					Bindings.Bind();
-					Bindings.UpdateTarget();
-				}
-				else
-				{
-					Bindings.Unbind();
-				}
-			}
-		}
+        public override void WillMoveToSuperview(UIView newsuper)
+        {
+            base.WillMoveToSuperview(newsuper);
 
-		private BindingList bindings;
-		public BindingList Bindings
-		{
-			get
-			{
-				if (bindings == null)
-					bindings = new BindingList();
-				return bindings;
-			}
-		}
-	}
+            if (bindings != null)
+            {
+                if (newsuper != null)
+                {
+                    Bindings.Bind();
+                    Bindings.UpdateTarget();
+                }
+                else
+                {
+                    Bindings.Unbind();
+                }
+            }
+        }
+
+        private BindingList bindings;
+        public BindingList Bindings
+        {
+            get
+            {
+                if (bindings == null)
+                    bindings = new BindingList();
+                return bindings;
+            }
+        }
+    }
 }
