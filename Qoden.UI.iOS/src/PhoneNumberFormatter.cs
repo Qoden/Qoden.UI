@@ -6,11 +6,41 @@ namespace Qoden.UI
 {
     public class PhoneNumberFormatter : IDisposable
     {
+        //When AsYouTypeFormatter created first time it is very slow (2 sec on Mac Book Pro)
+        static bool slowInitDone;
+
+        public static void Warm()
+        {
+            new System.Threading.Thread(() =>
+            {
+                var vv = new PhoneAsYouTypeFormatter("US");
+                slowInitDone = true;
+            }).Start();
+        }
+
         PhoneAsYouTypeFormatter _formatter;
+        string _locale;
+
+        internal PhoneAsYouTypeFormatter Formatter 
+        {
+            get 
+            {
+                if (_formatter == null)
+                {
+                    _formatter = new PhoneAsYouTypeFormatter(_locale);
+                    if (!slowInitDone && NSThread.IsMain)
+                    {
+                        Console.WriteLine("Warning: Slow PhoneAsYouTypeFormatter init detected. Please call PhoneNumberFormatter.Warm() in background thread to warm formatter cache");
+                        slowInitDone = true;
+                    }
+                }
+                return _formatter;
+            }
+        }
 
         public PhoneNumberFormatter(string locale = "US")
         {
-            _formatter = new PhoneAsYouTypeFormatter(locale);
+            _locale = locale;
         }
 
         UITextField _field;
@@ -44,10 +74,10 @@ namespace Qoden.UI
         {
             if (!changingText && !change.NewValue.IsEqual(change.OldValue))
             {
-                if (_formatter.Output != _field.Text)
+                if (Formatter.Output != _field.Text)
                 {
                     changingText = true;
-                    _field.Text = _formatter.Reset(_field.Text);
+                    _field.Text = Formatter.Reset(_field.Text);
                     changingText = false;
                 }
             }
@@ -63,15 +93,15 @@ namespace Qoden.UI
 
         bool PhoneNumber_ShouldChangeCharacters(UITextField tf, NSRange range, string chars)
         {
-            if (_formatter.Output != tf.Text)
+            if (Formatter.Output != tf.Text)
             {
-                tf.Text = _formatter.Reset(tf.Text);
+                tf.Text = Formatter.Reset(tf.Text);
             }
             else
             {
                 var formattedText = tf.Text;
                 var newPhoneNumberCursorPos = CountPhoneNumberChars(formattedText, (int)range.Location) + CountPhoneNumberChars(chars, chars.Length);
-                formattedText = _formatter.Replace((int)range.Location, (int)range.Length, chars);
+                formattedText = Formatter.Replace((int)range.Location, (int)range.Length, chars);
                 tf.Text = formattedText;
                 var newCursorOffset = FormattedTextCursorPosition(formattedText, newPhoneNumberCursorPos);
                 var cursorLocation = tf.GetPosition(tf.BeginningOfDocument, newCursorOffset);
@@ -88,7 +118,7 @@ namespace Qoden.UI
             int result = 0;
             for (int i = 0; i < limit; ++i)
             {
-                if (_formatter.IsPhoneNumberDigit(chars[i]))
+                if (Formatter.IsPhoneNumberDigit(chars[i]))
                     result++;
             }
             return result;
@@ -99,7 +129,7 @@ namespace Qoden.UI
             var newCursorOffset = 0;
             while (newCursorOffset < formattedText.Length && phoneNumberCursorPosition > 0)
             {
-                if (_formatter.IsPhoneNumberDigit(formattedText[newCursorOffset]))
+                if (Formatter.IsPhoneNumberDigit(formattedText[newCursorOffset]))
                 {
                     phoneNumberCursorPosition--;
                 }

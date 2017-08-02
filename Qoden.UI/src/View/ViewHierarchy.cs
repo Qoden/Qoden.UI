@@ -8,11 +8,11 @@ using Qoden.Validation;
 
 namespace Qoden.UI
 {
-	/// <summary>
-	/// Builds and maintain view hierarchy defined with View and Decorate attributes.
-	/// </summary>
-	public class ViewHierarchy : IDisposable
-	{
+    /// <summary>
+    /// Builds and maintain view hierarchy defined with View and Decorate attributes.
+    /// </summary>
+    public class ViewHierarchy : IDisposable
+    {
 		List<object> _views = new List<object>();
 		object _root;
         IViewHierarchyBuilder _builder;
@@ -59,6 +59,7 @@ namespace Qoden.UI
 
 			foreach (var property in properties)
 			{
+                
                 var obj = BuildChild(view, property);
 				if (obj != null)
 				{
@@ -76,6 +77,7 @@ namespace Qoden.UI
 			{
 				subview = InstantiateView(parent, member);
 			}
+
             //Decorate member
             var decoratorAttribute = member.GetCustomAttribute<DecoratorAttribute>();
 			if (decoratorAttribute != null)
@@ -97,10 +99,11 @@ namespace Qoden.UI
             //Add view
             if (viewAttribute != null && subview != null && viewAttribute.AddToParent)
 			{
-                var platformView = (subview as IViewWrapper)?.PlatformView ?? subview;
-                _builder.AddSubview(parent, platformView);
+                subview = (subview as IViewWrapper)?.PlatformView ?? subview;
+                _builder.AddSubview(parent, subview);
 			}
-			return subview;
+
+            return subview;
 		}
 
         object InstantiateView(object parent, MemberInfo member)
@@ -111,17 +114,24 @@ namespace Qoden.UI
 				var outletType = Inspection.GetMemberType(member);
                 if (typeof(IViewWrapper).IsAssignableFrom(outletType))
                 {
-                    var wrapper = (IViewWrapper)Activator.CreateInstance(outletType);
-                    wrapper.PlatformView = wrapper.Create(_builder);
-                    Inspection.SetValue(parent, member, wrapper);
-                    subview = wrapper;
+                    subview = Activator.CreateInstance(outletType);
                 }
                 else
                 {
                     subview = _builder.MakeView(outletType);
-                    Inspection.SetValue(parent, member, subview);
+
                 }
+                Inspection.SetValue(parent, member, subview);
 			}
+
+            var wrapper = subview as IViewWrapper;
+            if (wrapper != null)
+            {
+                if (wrapper.PlatformView == null)
+                {
+                    wrapper.PlatformView = wrapper.Create(_builder);
+                }
+            }
 
 			return subview;
 		}

@@ -14,7 +14,8 @@ namespace Qoden.UI
             {
                 return new UIButton(UIButtonType.RoundedRect);
             }
-            return Activator.CreateInstance(t);
+            var view = Activator.CreateInstance(t);
+            return view;
         }
 
         public void AddSubview(object root, object child)

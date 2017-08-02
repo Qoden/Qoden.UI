@@ -44,8 +44,7 @@ namespace Qoden.UI
         public ViewHierarchyBuilder Builder { get => ViewHierarchyBuilder.Instance; }
 
         protected virtual void CreateView()
-        {
-            BackgroundColor = UIColor.White;
+        {            
             hierarchy = new ViewHierarchy(this, Builder);
         }
 
