@@ -15,5 +15,12 @@ namespace Qoden.UI
         {
             return (PlatformViewLayoutBox)builder.View(new QView(v), bounds, padding, units);
         }
+
+        public static PlatformViewLayoutBox View(this LayoutBuilder builder, View v, View parentView = null, EdgeInset? padding = null, IUnit units = null)
+        {
+            var f = parentView.Frame();
+            var bounds = new RectangleF(PointF.Empty, f.Size);
+            return (PlatformViewLayoutBox)builder.View(new QView(v), bounds, padding, units);
+        }
     }
 }
