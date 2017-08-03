@@ -37,6 +37,11 @@ namespace Qoden.UI
                             (int)Math.Round(padding.Bottom));
         }
 
+        public static RectangleF Bounds(this View view)
+        {
+            return new RectangleF(0, 0, view.Width, view.Height);
+        }
+
         public static RectangleF Frame(this View view)
         {
             return new RectangleF(view.Left, view.Top, view.Width, view.Height);

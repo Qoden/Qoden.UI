@@ -67,6 +67,11 @@ namespace Qoden.UI
                                                   padding.Bottom);
         }
 
+        public static RectangleF Bounds(this UIView view)
+        {
+            return (RectangleF)view.Bounds;
+        }
+
         public static RectangleF Frame(this UIView view)
         {
             return (RectangleF)view.Frame;
