@@ -54,7 +54,7 @@ namespace Qoden.UI
             base.LayoutSubviews();
             if (_view != null)
             {
-                _view.LayoutInBounds((RectangleF)ContentView.Bounds)
+                _view.MakeViewLayoutBox((RectangleF)ContentView.Bounds)
                     .Left(0).Right(0).Top(0).Bottom(0)
                     .Layout();
             }
@@ -76,7 +76,7 @@ namespace Qoden.UI
         {
             if (_view != null)
             {
-                _view.LayoutInBounds((RectangleF)Bounds)
+                _view.MakeViewLayoutBox((RectangleF)Bounds)
                     .Left(0).Right(0).Top(0).Bottom(0)
                     .Layout();
             }

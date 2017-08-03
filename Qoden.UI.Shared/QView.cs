@@ -42,7 +42,7 @@ namespace Qoden.UI
             }
         }
 
-        public IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null)
+        public IViewLayoutBox MakeViewLayoutBox(RectangleF bounds, IUnit unit = null)
         {
             return new PlatformViewLayoutBox(this, bounds, unit);
         }

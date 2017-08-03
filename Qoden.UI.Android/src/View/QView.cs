@@ -45,9 +45,9 @@ namespace Qoden.UI
         public static void SetFrame(this View view, RectangleF value)
         {
             view.Layout((int)Math.Round(value.Left),
-                    (int)Math.Round(value.Top),
-                    (int)Math.Round(value.Right),
-                    (int)Math.Round(value.Bottom));
+                        (int)Math.Round(value.Top),
+                        (int)Math.Round(value.Right),
+                        (int)Math.Round(value.Bottom));
         }
 
         public static void SetVisibility(this View view, bool visible)

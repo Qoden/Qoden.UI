@@ -7,6 +7,6 @@ namespace Qoden.UI
     {
         RectangleF Frame { get; set; }
         SizeF SizeThatFits(SizeF bounds);
-        IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null);
+        IViewLayoutBox MakeViewLayoutBox(RectangleF bounds, IUnit unit = null);
     }
 }

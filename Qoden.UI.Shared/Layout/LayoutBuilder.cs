@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace Qoden.UI
@@ -10,35 +9,11 @@ namespace Qoden.UI
 #if __ANDROID__
     using View = Android.Views.View;
 #endif
-    public class LayoutBuilder
+    public static class LayoutBuilder_Extensions
     {
-        private List<PlatformViewLayoutBox> _boxes = new List<PlatformViewLayoutBox>();
-
-        public LayoutBuilder(RectangleF bounds)
+        public static PlatformViewLayoutBox View(this LayoutBuilder builder, View v, RectangleF? bounds = null, EdgeInset? padding = null, IUnit units = null)
         {
-            Bounds = bounds;
+            return (PlatformViewLayoutBox)builder.View(new QView(v), bounds, padding, units);
         }
-
-        public RectangleF Bounds { get; private set; }
-
-        public PlatformViewLayoutBox View(IPlatformView v, IUnit units = null)
-        {
-            var bounds = new RectangleF(Bounds.X + Padding.Left,
-                                        Bounds.Y + Padding.Top,
-                                        Bounds.Width - Padding.Left - Padding.Right,
-                                        Bounds.Height - Padding.Top - Padding.Bottom);
-            var box = new PlatformViewLayoutBox(v, bounds, units ?? Units.PlatformDefault);
-            _boxes.Add(box);
-            return box;
-        }
-
-        public PlatformViewLayoutBox View(View v, IUnit units = null)
-        {
-            return View(new QView(v), units);
-        }
-
-        public IEnumerable<PlatformViewLayoutBox> Views => _boxes;
-
-        public EdgeInset Padding { get; set; }
     }
 }

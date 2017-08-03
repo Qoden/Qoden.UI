@@ -96,14 +96,5 @@ namespace Qoden.UI
             }
             return _clickTarget;
         }
-
-        //public UIView PlatformView => this;
-
-        //RectangleF IViewGeometry.Frame { get => (RectangleF)Frame; set => Frame = value; }
-
-        //public IViewLayoutBox LayoutInBounds(RectangleF bounds, IUnit unit = null)
-        //{
-        //    return new PlatformViewLayoutBox(this, bounds, unit);
-        //}
     }
 }

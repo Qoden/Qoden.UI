@@ -6,6 +6,5 @@ namespace Qoden.UI
     public class QImage
     {
         public UIImage PlatformImage { get; set; }
-
     }
 }

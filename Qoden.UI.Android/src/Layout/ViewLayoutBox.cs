@@ -7,9 +7,9 @@ namespace Qoden.UI
 {
     public class PlatformViewLayoutBox : ViewLayoutBox
     {
-        IPlatformView _view;
+        private IPlatformView _view;
 
-        public PlatformViewLayoutBox(IPlatformView view, RectangleF r, IUnit unit) : base(r, unit)
+        public PlatformViewLayoutBox(IPlatformView view, RectangleF r, IUnit unit) : base(r, unit ?? Units.PlatformDefault)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
         }

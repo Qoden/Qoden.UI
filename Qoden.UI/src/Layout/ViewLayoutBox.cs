@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
+using Qoden.Validation;
 
 namespace Qoden.UI
 {
@@ -9,7 +10,7 @@ namespace Qoden.UI
         SizeF? _measuredSize;
 
         public ViewLayoutBox(RectangleF r, IUnit unit) : base(r, unit)
-        {            
+        {
         }
 
         public override string ToString()
@@ -59,6 +60,7 @@ namespace Qoden.UI
         }
 
         public abstract void Layout();
+
         public abstract IViewGeometry View { get; }
     }
 }

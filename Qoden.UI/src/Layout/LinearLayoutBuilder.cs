@@ -22,44 +22,34 @@ namespace Qoden.UI
     /// </summary>
     public class LinearLayoutBuilder
     {
-        RectangleF _layoutBounds, _viewBounds;
+        RectangleF _layoutBounds;
         PointF _layoutOrigin;
-        List<IViewLayoutBox> _views;
         float _maxSize;
         Matrix2d _layoutToView, _viewToLayout;
+        LayoutBuilder _layoutBuilder;
 
         public bool Flow { get; set; }
-        public IEnumerable<IViewLayoutBox> Views => _views;
-        public RectangleF Bounds => _viewBounds;
 
-        public void StartLayout(RectangleF bounds, LayoutDirection layoutDirection)
+        public void StartLayout(LayoutBuilder layoutBuilder, LayoutDirection layoutDirection)
         {
-            StartLayout(bounds, layoutDirection, DefaultFlowDirection(layoutDirection));
+            StartLayout(layoutBuilder, layoutDirection, DefaultFlowDirection(layoutDirection));
         }
 
-        public void StartLayout(RectangleF bounds, LayoutDirection layoutDirection, LayoutDirection flowDirection)
+        public void StartLayout(LayoutBuilder layoutBuilder, LayoutDirection layoutDirection, LayoutDirection flowDirection)
         {
+            Assert.Argument(layoutBuilder, nameof(layoutBuilder)).NotNull();
+
+            _layoutBuilder = layoutBuilder;
             _maxSize = 0;
-            _views = new List<IViewLayoutBox>();
-            _viewBounds = bounds;
-            _layoutToView = LayoutTransform(_viewBounds, layoutDirection, flowDirection);
+            _layoutToView = LayoutTransform(_layoutBuilder.Bounds, layoutDirection, flowDirection);
             _viewToLayout = _layoutToView.Inverted();
-            _layoutBounds = _viewToLayout.Transform(bounds);
+            _layoutBounds = _viewToLayout.Transform(_layoutBuilder.Bounds);
             _layoutOrigin = _layoutBounds.Location;
-        }
-
-        public void Layout()
-        {
-            foreach (var v in _views)
-            {
-                v.Layout();
-            }
-            _views = null;
         }
 
         public LinearLayoutBuilder Add(LayoutParams layoutParams)
         {
-            Assert.State(_views).NotNull("Layout is not started. Did you call StartLayout?");
+            Assert.State(_layoutBuilder).NotNull("Layout is not started. Did you call StartLayout?");
 
             var layoutResult = LayoutView(_layoutOrigin, ref layoutParams);
             var newLayoutOrigin = layoutResult.NewLayoutOrigin;
@@ -76,7 +66,6 @@ namespace Qoden.UI
             }
             _maxSize = Math.Max(_maxSize, layoutResult.LayoutViewFrame.Height);
             _layoutOrigin = newLayoutOrigin;
-            _views.Add(layoutResult.ViewLayoutBox);
 
             return this;
         }
@@ -96,7 +85,8 @@ namespace Qoden.UI
             //Free space available for a view in view coordinates
             var viewFreeSpace = _layoutToView.Transform(freeSpace);
             //Postion which view wants to occupy in view coordinates
-            var viewBox = layoutParams.LayoutView(viewFreeSpace);
+            var viewBox = _layoutBuilder.View(layoutParams.View, viewFreeSpace);
+            layoutParams.Layout(viewBox);
             //Postion which view wants to occupy in layout coordinates
             var layoutFrame = _viewToLayout.Transform(viewBox.LayoutBounds);
             //Space required for view starting from layout origin in layout coordinates
@@ -110,22 +100,6 @@ namespace Qoden.UI
                 LayoutViewFrame = viewFrame
             };
         }
-
-        public SizeF GetPreferredSize()
-        {
-            var max = new PointF(float.MinValue, float.MinValue);
-            var min = new PointF(float.MaxValue, float.MaxValue);
-            foreach (var v in _views)
-            {
-                max.X = Math.Max(max.X, v.LayoutRight);
-                max.Y = Math.Max(max.Y, v.LayoutBottom);
-
-                min.X = Math.Max(min.X, v.LayoutLeft);
-                min.Y = Math.Max(min.Y, v.LayoutTop);
-            }
-            return new SizeF(Math.Abs(max.X - min.X), Math.Abs(max.Y - min.Y));
-        }
-
 
         /*
          * Calculates transform matrix from layout coordinate system to view coordinate system.
@@ -227,13 +201,6 @@ namespace Qoden.UI
                 Assert.Property(value).NotNull();
                 _layout = value;
             }
-        }
-
-        public IViewLayoutBox LayoutView(RectangleF bounds)
-        {
-            var box = View.LayoutInBounds(bounds);
-            Layout(box);
-            return box;
         }
 
         static void DefaultLayout(IViewLayoutBox obj)

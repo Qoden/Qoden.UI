@@ -9,7 +9,7 @@ namespace Qoden.UI
     {
         IPlatformView _view;
 
-        public PlatformViewLayoutBox(IPlatformView view, RectangleF r, IUnit unit) : base(r, unit)
+        public PlatformViewLayoutBox(IPlatformView view, RectangleF r, IUnit unit) : base(r, unit ?? Units.PlatformDefault)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
         }
@@ -18,6 +18,7 @@ namespace Qoden.UI
 
         public override void Layout()
         {
+            _view.SetFrame(LayoutBounds);
             _view.PlatformView.Frame = LayoutBounds;
         }
     }
