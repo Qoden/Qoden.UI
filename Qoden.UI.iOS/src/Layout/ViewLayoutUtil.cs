@@ -18,7 +18,11 @@ namespace Qoden.UI
                 t = Math.Min(frame.Top, t);
                 b = Math.Max(frame.Bottom, b);
             }
-            return new SizeF(r, b);
+
+            // Top and Left padings already assumed by 'r' and 'b' coordinates
+            // since layout performed in padded rectangle.
+            return new SizeF((float)(r + layout.Padding.Right),
+                             (float)(b + layout.Padding.Bottom));
         }
     }
 }

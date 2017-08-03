@@ -23,7 +23,11 @@ namespace Qoden.UI
 
         public PlatformViewLayoutBox View(IPlatformView v, IUnit units = null)
         {
-            var box = new PlatformViewLayoutBox(v, Bounds, units ?? Units.PlatformDefault);
+            var bounds = new RectangleF(Bounds.X + Padding.Left,
+                                        Bounds.Y + Padding.Top,
+                                        Bounds.Width - Padding.Left - Padding.Right,
+                                        Bounds.Height - Padding.Top - Padding.Bottom);
+            var box = new PlatformViewLayoutBox(v, bounds, units ?? Units.PlatformDefault);
             _boxes.Add(box);
             return box;
         }
@@ -34,5 +38,7 @@ namespace Qoden.UI
         }
 
         public IEnumerable<PlatformViewLayoutBox> Views => _boxes;
+
+        public EdgeInset Padding { get; set; }
     }
 }

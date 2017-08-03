@@ -7,7 +7,7 @@ namespace Qoden.UI
     /// <summary>
     /// Contains layout parameters relative to provided rectangle.
     /// </summary>
-    public interface ILayoutBox 
+    public interface ILayoutBox
     {
         /// <summary>
         /// Measurement unit for relative offsets
@@ -52,32 +52,32 @@ namespace Qoden.UI
         float LayoutWidth { get; }
 
         /// <summary>
-        /// Calculated layout left position in pixels
+        /// Calculated layout height in pixels
         /// </summary>
         float LayoutHeight { get; }
 
         /// <summary>
-        /// Calculated layout right position in pixels
+        /// Calculated layout left position in view coordinates in pixels
         /// </summary>
         float LayoutLeft { get; }
 
         /// <summary>
-        /// Calculated layout right position in pixels
+        /// Calculated layout right position in view coordinates in pixels
         /// </summary>
         float LayoutRight { get; }
 
         /// <summary>
-        /// Caculated layout top position in pixels
+        /// Caculated layout top position in view coordinates in pixels
         /// </summary>
         float LayoutTop { get; }
 
         /// <summary>
-        /// Calculated layout rectable bottom position in pixels
+        /// Calculated layout bottom position in view coordinates in pixels
         /// </summary>
         float LayoutBottom { get; }
 
         /// <summary>
-        /// Caclulated layout center in pixels
+        /// Caclulated layout center in view coordinates in pixels
         /// </summary>
         PointF LayoutCenter { get; }
 
@@ -87,12 +87,12 @@ namespace Qoden.UI
         SizeF LayoutSize { get; }
 
         /// <summary>
-        /// Calculated layout bounds in pixels
+        /// Calculated layout bounds in view coordinate system in pixels
         /// </summary>
         RectangleF LayoutBounds { get; }
 
         /// <summary>
-        /// Outer bounds in pixels
+        /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF Bounds { get; }
     }
@@ -108,7 +108,7 @@ namespace Qoden.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.
         /// </summary>
-        /// <param name="outerBounds">Layout bounds in pixels</param>
+        /// <param name="outerBounds">Layout bounds in view coordinate system in pixels</param>
         public LayoutBox(RectangleF outerBounds) : this(outerBounds, IdentityUnit.Identity)
         {
         }
@@ -116,7 +116,7 @@ namespace Qoden.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.
         /// </summary>
-        /// <param name="outerBounds">Layout bounds in pixels</param>
+        /// <param name="outerBounds">Layout bounds in view coordinate system in pixels</param>
         /// <param name="unit">Unit to be used for relative offsets</param>
         public LayoutBox(RectangleF outerBounds, IUnit unit)
         {
@@ -266,9 +266,6 @@ namespace Qoden.UI
             SetCenterY(unit.ToPixels(cy));
         }
 
-        /// <summary>
-        /// Caculated layout width in pixels
-        /// </summary>
         public float LayoutWidth
         {
             get
@@ -285,9 +282,6 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Calculated layout left position in pixels
-        /// </summary>
         public float LayoutHeight
         {
             get
@@ -304,9 +298,6 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Calculated layout right position in pixels
-        /// </summary>
         public float LayoutLeft
         {
             get
@@ -321,9 +312,6 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Calculated layout right position in pixels
-        /// </summary>
         public float LayoutRight
         {
             get
@@ -338,9 +326,6 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Caculated layout top position in pixels
-        /// </summary>
         public float LayoutTop
         {
             get
@@ -355,9 +340,6 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Calculated layout rectable bottom position in pixels
-        /// </summary>
         public float LayoutBottom
         {
             get
@@ -374,25 +356,16 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Caclulated layout center in pixels
-        /// </summary>
         public PointF LayoutCenter
         {
             get { return new PointF(LayoutLeft + LayoutWidth / 2, LayoutTop + LayoutHeight / 2); }
         }
 
-        /// <summary>
-        /// Caclualted layout size in pixels
-        /// </summary>
         public SizeF LayoutSize
         {
             get { return new SizeF(LayoutWidth, LayoutHeight); }
         }
 
-        /// <summary>
-        /// Calculated layout bounds in pixels
-        /// </summary>
         public RectangleF LayoutBounds
         {
             get
@@ -401,54 +374,31 @@ namespace Qoden.UI
             }
         }
 
-        /// <summary>
-        /// Outer bounds in pixels
-        /// </summary>
         public RectangleF Bounds => bounds;
     }
 
     public static class LayoutBoxCenter
     {
-        public static T CenterHorizontally<T>(this T box, RectangleF view, Pixel dx) where T : ILayoutBox
+        public static T CenterHorizontally<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            box.SetCenterX(Pixel.Val(view.Left + view.Width / 2 + dx.Value));
+            box.SetCenterX(Pixel.Val(box.Bounds.Left + box.Bounds.Width / 2 + dx.Value));
             return box;
-        }
-
-        public static T CenterHorizontally<T>(this T box, RectangleF view, float dx = 0) where T : ILayoutBox
-        {
-            return box.CenterHorizontally(view, box.Unit.ToPixels(dx));
         }
 
         public static T CenterHorizontally<T>(this T box, float dx = 0) where T : ILayoutBox
         {
-            return box.CenterHorizontally(box.Bounds, box.Unit.ToPixels(dx));
-        }
-
-        public static T CenterHorizontally<T>(this T box, Pixel dx) where T : ILayoutBox
-        {
-            return box.CenterHorizontally(box.Bounds, dx);
-        }
-
-        public static T CenterVertically<T>(this T box, RectangleF view, Pixel dx) where T : ILayoutBox
-        {
-            box.SetCenterY(Pixel.Val(view.Top + view.Height / 2 + dx.Value));
-            return box;
-        }
-
-        public static T CenterVertically<T>(this T box, RectangleF view, float dx = 0) where T : ILayoutBox
-        {
-            return box.CenterVertically(view, box.Unit.ToPixels(dx));
-        }
-
-        public static T CenterVertically<T>(this T box, float dx = 0) where T : ILayoutBox
-        {
-            return box.CenterVertically(box.Bounds, box.Unit.ToPixels(dx));
+            return box.CenterHorizontally(box.Unit.ToPixels(dx));
         }
 
         public static T CenterVertically<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            return box.CenterVertically(box.Bounds, dx);
+            box.SetCenterY(Pixel.Val(box.Bounds.Top + box.Bounds.Height / 2 + dx.Value));
+            return box;
+        }
+
+        public static T CenterVertically<T>(this T box, float dx = 0) where T : ILayoutBox
+        {
+            return box.CenterVertically(box.Unit.ToPixels(dx));
         }
     }
 
@@ -529,45 +479,70 @@ namespace Qoden.UI
 
     public static class LayoutBoxRelative
     {
+        /// <summary>
+        /// Place this box before provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Before<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            box.SetRight(Pixel.Val(box.Bounds.Width - reference.Left + dx.Value));
+            var referenceOffset = box.Bounds.Right - reference.Left;
+            box.SetRight(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
 
+        /// <summary>
+        /// Place this box before provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Before<T>(this T box, RectangleF reference, float dx = 0) where T : ILayoutBox
         {
             return box.Before(reference, box.Unit.ToPixels(dx));
         }
 
+        /// <summary>
+        /// Place this box after provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T After<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            box.SetLeft(Pixel.Val(reference.Right + dx.Value));
+            var referenceOffset = reference.Right - box.Bounds.Left;
+            box.SetLeft(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
-
+        /// <summary>
+        /// Place this box after provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T After<T>(this T box, RectangleF reference, float dx = 0) where T : ILayoutBox
         {
             return box.After(reference, box.Unit.ToPixels(dx));
         }
 
+        /// <summary>
+        /// Place this box below provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Below<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            box.SetTop(Pixel.Val(reference.Bottom + dx.Value));
+            var referenceOffset = reference.Bottom - box.Bounds.Top;
+            box.SetTop(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
 
+        /// <summary>
+        /// Place this box below provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Below<T>(this T box, RectangleF reference, float dx = 0) where T : ILayoutBox
         {
             return box.Below(reference, box.Unit.ToPixels(dx));
         }
-
+        /// <summary>
+        /// Place this box above provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Above<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            box.SetBottom(Pixel.Val((box.Bounds.Height - reference.Top) + dx.Value));
+            var referenceOffset = box.Bounds.Bottom - reference.Top;
+            box.SetBottom(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
-
+        /// <summary>
+        /// Place this box above provided reference box. Reference is in view coordinate system.
+        /// </summary>
         public static T Above<T>(this T box, RectangleF reference, float dx = 0) where T : ILayoutBox
         {
             return box.Above(reference, box.Unit.ToPixels(dx));

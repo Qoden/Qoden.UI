@@ -86,20 +86,11 @@ namespace Qoden.UI
             return box.Above((RectangleF)reference.Frame, (float)size);
         }
 
-        public static T CenterHorizontally<T>(this T box, UIKit.UIView view) where T : LayoutBox
-        {
-            return box.CenterHorizontally((RectangleF)view.Frame);
-        }
-
-        public static T CenterVertically<T>(this T box, UIKit.UIView view) where T : LayoutBox
-        {
-            return box.CenterVertically((RectangleF)view.Frame);
-        }
-
         public static T CenterHorizontally<T>(this T box, nfloat dx) where T : LayoutBox
         {
             return box.CenterHorizontally((float)dx);
         }
+
         public static T CenterVertically<T>(this T box, nfloat dy) where T : LayoutBox
         {
             return box.CenterVertically((float)dy);
