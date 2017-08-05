@@ -39,6 +39,11 @@ namespace Qoden.UI
             return (int)Math.Round(unit.ToPixels(x).Value);
         }
 
+        public static float ToFloatPixels(this IUnit unit, float x)
+        {
+            return unit.ToPixels(x).Value;
+        }
+
         public static RectangleF ToPixels(this RectangleF rect, IUnit unit)
         {
             return new RectangleF(unit.ToPixels(rect.Left).Value,

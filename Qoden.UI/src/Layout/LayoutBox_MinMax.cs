@@ -16,18 +16,18 @@ namespace Qoden.UI
 
         public static T MinWidth<T>(this T box, Pixel mw) where T : ILayoutBox
         {
-            if (box.FrameWidth < mw.Value)
+            if (box.FrameWidth() < mw.Value)
             {
-                box.SetWidth(mw);
+                box.Width = mw.Value;
             }
             return box;
         }
 
         public static T MinHeight<T>(this T box, Pixel mh) where T : ILayoutBox
         {
-            if (box.FrameHeight < mh.Value)
+            if (box.FrameHeight() < mh.Value)
             {
-                box.SetHeight(mh);
+                box.Height = mh.Value;
             }
 
             return box;
@@ -45,18 +45,18 @@ namespace Qoden.UI
 
         public static T MaxWidth<T>(this T box, Pixel mw) where T : ILayoutBox
         {
-            if (box.FrameWidth > mw.Value)
+            if (box.FrameWidth() > mw.Value)
             {
-                box.SetWidth(mw);
+                box.Width = mw.Value;
             }
             return box;
         }
 
         public static T MaxHeight<T>(this T box, Pixel mh) where T : ILayoutBox
         {
-            if (box.FrameHeight > mh.Value)
+            if (box.FrameHeight() > mh.Value)
             {
-                box.SetHeight(mh);
+                box.Height = mh.Value;
             }
 
             return box;

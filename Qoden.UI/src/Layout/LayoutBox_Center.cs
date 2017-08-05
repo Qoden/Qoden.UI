@@ -6,7 +6,7 @@ namespace Qoden.UI
     {
         public static T CenterHorizontally<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            box.SetCenterX(Pixel.Val(box.OuterBounds.Left + box.OuterBounds.Width / 2 + dx.Value));
+            box.CenterX = (Pixel.Val(box.OuterBounds.Left + box.OuterBounds.Width / 2 + dx.Value)).Value;
             return box;
         }
 
@@ -17,7 +17,7 @@ namespace Qoden.UI
 
         public static T CenterVertically<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            box.SetCenterY(Pixel.Val(box.OuterBounds.Top + box.OuterBounds.Height / 2 + dx.Value));
+            box.CenterY = (Pixel.Val(box.OuterBounds.Top + box.OuterBounds.Height / 2 + dx.Value)).Value;
             return box;
         }
 

@@ -10,7 +10,7 @@ namespace Qoden.UI
         /// <param name="l">Distance in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetLeft(this ILayoutBox box, float l)
         {
-            box.SetLeft(box.Unit.ToPixels(l));
+            box.Left = box.Unit.ToFloatPixels(l);
         }
         /// <summary>
         /// Set distance from <see cref="T:ILayoutBox.OuterBounds"/> right edge to view right edge.
@@ -18,7 +18,7 @@ namespace Qoden.UI
         /// <param name="r">Distance in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetRight(this ILayoutBox box, float r)
         {
-            box.SetRight(box.Unit.ToPixels(r));
+            box.Right = box.Unit.ToFloatPixels(r);
         }
         /// <summary>
         /// Set distance from <see cref="T:ILayoutBox.OuterBounds"/> top edge to view top edge.
@@ -26,7 +26,7 @@ namespace Qoden.UI
         /// <param name="t">Distance in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetTop(this ILayoutBox box, float t)
         {
-            box.SetTop(box.Unit.ToPixels(t));
+            box.Top = box.Unit.ToFloatPixels(t);
         }
         /// <summary>
         /// Set distance from <see cref="T:ILayoutBox.OuterBounds"/> bottom edge to view bottom edge.
@@ -34,7 +34,7 @@ namespace Qoden.UI
         /// <param name="b">Distance in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetBottom(this ILayoutBox box, float b)
         {
-            box.SetBottom(box.Unit.ToPixels(b));
+            box.Bottom = box.Unit.ToFloatPixels(b);
         }
         /// <summary>
         /// Set box width.
@@ -42,7 +42,7 @@ namespace Qoden.UI
         /// <param name="w">Width in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetWidth(this ILayoutBox box, float w)
         {
-            box.SetWidth(box.Unit.ToPixels(w));
+            box.Width = box.Unit.ToFloatPixels(w);
         }
         /// <summary>
         /// Set box height.
@@ -50,7 +50,7 @@ namespace Qoden.UI
         /// <param name="h">Height in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetHeight(this ILayoutBox box, float h)
         {
-            box.SetHeight(box.Unit.ToPixels(h));
+            box.Height = box.Unit.ToFloatPixels(h);
         }
         /// <summary>
         /// Set box center X position relative to <see cref="T:ILayoutBox.OuterBounds"/>.
@@ -58,7 +58,7 @@ namespace Qoden.UI
         /// <param name="cx">Center x position in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetCenterX(this ILayoutBox box, float cx)
         {
-            box.SetCenterX(box.Unit.ToPixels(cx));
+            box.CenterX = box.Unit.ToFloatPixels(cx);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Qoden.UI
         /// <param name="cy">Center y position in <see cref="T:ILayoutBox.Unit"/></param>
         public static void SetCenterY(this ILayoutBox box, float cy)
         {
-            box.SetCenterY(box.Unit.ToPixels(cy));
+            box.CenterY = box.Unit.ToFloatPixels(cy);
         }
     }
 }

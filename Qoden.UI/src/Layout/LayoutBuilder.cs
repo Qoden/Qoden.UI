@@ -85,7 +85,7 @@ namespace Qoden.UI
                 int r = int.MinValue, b = int.MinValue;
                 foreach (var v in Views)
                 {
-                    var size = v.PreferredBoundingSize;
+                    var size = v.PreferredBoundingSize();
                     r = (int)Math.Round(Math.Max(r, v.OuterBounds.Left + size.Width));
                     b = (int)Math.Round(Math.Max(b, v.OuterBounds.Top + size.Height));
                 }

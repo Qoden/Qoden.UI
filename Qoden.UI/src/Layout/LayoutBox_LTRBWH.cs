@@ -12,7 +12,7 @@ namespace Qoden.UI
 
         public static T Width<T>(this T box, Pixel w) where T : ILayoutBox
         {
-            box.SetWidth(w);
+            box.Width = w.Value;
             return box;
         }
 
@@ -24,7 +24,7 @@ namespace Qoden.UI
 
         public static T Height<T>(this T box, Pixel h) where T : ILayoutBox
         {
-            box.SetHeight(h);
+            box.Height = h.Value;
             return box;
         }
 
@@ -36,7 +36,7 @@ namespace Qoden.UI
 
         public static T Left<T>(this T box, Pixel l) where T : ILayoutBox
         {
-            box.SetLeft(l);
+            box.Left = l.Value;
             return box;
         }
 
@@ -48,7 +48,7 @@ namespace Qoden.UI
 
         public static T Right<T>(this T box, Pixel r) where T : ILayoutBox
         {
-            box.SetRight(r);
+            box.Right = r.Value;
             return box;
         }
 
@@ -60,19 +60,19 @@ namespace Qoden.UI
 
         public static T Top<T>(this T box, Pixel t) where T : ILayoutBox
         {
-            box.SetTop(t);
+            box.Top = t.Value;
             return box;
         }
 
         public static T Bottom<T>(this T box, float b) where T : ILayoutBox
         {
-            box.SetBottom(b);
+            box.Bottom(box.Unit.ToPixels(b));
             return box;
         }
 
         public static T Bottom<T>(this T box, Pixel b) where T : ILayoutBox
         {
-            box.SetBottom(b);
+            box.Bottom = b.Value;
             return box;
         }
     }
