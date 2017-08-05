@@ -111,8 +111,6 @@
     <Compile Include="src\Graphics\QImage.cs" />
     <Compile Include="src\QodenDialog.cs" />
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
-    <Compile Include="src\Layout\ViewLayoutUtil.cs" />
-    <Compile Include="src\Layout\ILayoutable.cs" />
     <Compile Include="src\View\QProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>

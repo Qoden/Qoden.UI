@@ -23,7 +23,7 @@ namespace Qoden.UI
     /// </summary>
     public class LinearLayoutBuilder
     {
-        RectangleF _layoutBounds, _viewBounds;
+        RectangleF _layoutSpaceBounds, _bounds;
         PointF _layoutOrigin;
 
         float _maxSize;
@@ -39,11 +39,11 @@ namespace Qoden.UI
             flowDirection = flowDirection ?? DefaultFlowDirection(layoutDirection);
             _layoutBuilder = layoutBuilder;
             _maxSize = 0;
-            _viewBounds = bounds ?? _layoutBuilder.PaddedOuterBounds;
-            _layoutToView = LayoutTransform(_viewBounds, layoutDirection, flowDirection.Value);
+            _bounds = bounds ?? _layoutBuilder.OuterBounds;
+            _layoutToView = LayoutTransform(_bounds, layoutDirection, flowDirection.Value);
             _viewToLayout = _layoutToView.Inverted();
-            _layoutBounds = _viewToLayout.Transform(_viewBounds);
-            _layoutOrigin = _layoutBounds.Location;
+            _layoutSpaceBounds = _viewToLayout.Transform(_bounds);
+            _layoutOrigin = _layoutSpaceBounds.Location;
         }
 
         public IViewLayoutBox Add(LayoutParams layoutParams)
@@ -52,27 +52,29 @@ namespace Qoden.UI
 
             var layoutResult = LayoutView(_layoutOrigin, ref layoutParams);
             var newLayoutOrigin = layoutResult.NewLayoutOrigin;
-            if (Flow && newLayoutOrigin.X - LayoutStep > _layoutBounds.Right)
+            if (Flow && newLayoutOrigin.X - LayoutStep > _layoutSpaceBounds.Right)
             {
-                var nextLine = new PointF(_layoutBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
+                var nextLine = new PointF(_layoutSpaceBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
                 layoutResult = LayoutView(nextLine, ref layoutParams);
                 newLayoutOrigin = layoutResult.NewLayoutOrigin;
-                if (newLayoutOrigin.X > _layoutBounds.Right)
+                if (newLayoutOrigin.X > _layoutSpaceBounds.Right)
                 {
-                    newLayoutOrigin.X = _layoutBounds.X;
+                    newLayoutOrigin.X = _layoutSpaceBounds.X;
                     newLayoutOrigin.Y = _layoutOrigin.Y + layoutResult.LayoutViewFrame.Height + FlowStep;
                 }
-
             }
+            _bounds = RectangleF.Union(_bounds, layoutResult.ViewLayoutBox.Frame());
             _maxSize = Math.Max(_maxSize, layoutResult.LayoutViewFrame.Height);
             _layoutOrigin = newLayoutOrigin;
 
             return layoutResult.ViewLayoutBox;
         }
 
+        public RectangleF LayoutBounds => _bounds;
+
         public void AddOverflow()
         {
-            _layoutOrigin = new PointF(_layoutBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
+            _layoutOrigin = new PointF(_layoutSpaceBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
             _maxSize = 0;
         }
 
@@ -89,17 +91,17 @@ namespace Qoden.UI
 
         private LayoutViewResult LayoutView(PointF layoutOrigin, ref LayoutParams layoutParams)
         {
-            var freeSpaceSize = new SizeF(_layoutBounds.Right - layoutOrigin.X, _layoutBounds.Bottom - layoutOrigin.Y);
+            var freeSpaceSize = new SizeF(_layoutSpaceBounds.Right - layoutOrigin.X, _layoutSpaceBounds.Bottom - layoutOrigin.Y);
             //Free space available a view in layout coordinates 
             var freeSpace = new RectangleF(layoutOrigin, freeSpaceSize);
             //Free space available for a view in view coordinates
             var viewFreeSpace = _layoutToView.Transform(freeSpace);
             //Area which view wants to occupy in view coordinates
-            var viewBox = _layoutBuilder.View(layoutParams.View, viewFreeSpace, EdgeInsets.Zero);
+            var viewBox = _layoutBuilder.View(layoutParams.View, viewFreeSpace);
             _views.Add(viewBox);
             layoutParams.Layout(viewBox);
             //Area which view wants to occupy in layout coordinates
-            var layoutFrame = _viewToLayout.Transform(viewBox.LayoutBounds);
+            var layoutFrame = _viewToLayout.Transform(viewBox.Frame());
             //Space required for view starting from layout origin in layout coordinates
             var viewFrame = new RectangleF(layoutOrigin, new SizeF(layoutFrame.Right - layoutOrigin.X, layoutFrame.Bottom - layoutOrigin.Y));
             var newLayoutOrigin = new PointF(viewFrame.Right + LayoutStep, viewFrame.Top);

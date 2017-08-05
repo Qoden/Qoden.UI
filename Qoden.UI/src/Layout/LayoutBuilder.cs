@@ -28,11 +28,6 @@ namespace Qoden.UI
         public RectangleF OuterBounds { get; private set; }
 
         /// <summary>
-        /// Default layout padding.
-        /// </summary>
-        public EdgeInsets Padding { get; set; }
-
-        /// <summary>
         /// Default layout measurement units.
         /// </summary>
         /// <value>The units.</value>
@@ -49,12 +44,24 @@ namespace Qoden.UI
         /// </summary>
         /// <param name="v">View geometry (usually cross platform View wrapper)</param>
         /// <param name="outerBounds">Optional outer bounds to override this builder <see cref="OuterBounds"/>.</param>
-        /// <param name="padding">Optional padding to override this builder <see cref="Padding"/>.</param>
         /// <param name="units">Optional units to override this builder <see cref="Units"/>.</param>
-        public IViewLayoutBox View(IViewGeometry v, RectangleF? outerBounds = null, EdgeInsets? padding = null, IUnit units = null)
+        public IViewLayoutBox View(IViewGeometry v, RectangleF? outerBounds = null, IUnit units = null)
         {
-            var layoutBounds = MakeLayoutBounds(outerBounds, padding);
+            var layoutBounds = outerBounds ?? OuterBounds;
             var box = v.MakeViewLayoutBox(layoutBounds, units ?? Units);
+            _boxes.Add(box);
+            return box;
+        }
+
+        /// <summary>
+        /// Build <see cref="IViewLayoutBox"/>. 
+        /// </summary>
+        /// <param name="outerBounds">Optional outer bounds to override this builder <see cref="OuterBounds"/>.</param>
+        /// <param name="units">Optional units to override this builder <see cref="Units"/>.</param>
+        public IViewLayoutBox Spacer(RectangleF? outerBounds = null, IUnit units = null)
+        {
+            var layoutBounds = outerBounds ?? OuterBounds;
+            var box = new SpacerLayoutBox(layoutBounds, units);
             _boxes.Add(box);
             return box;
         }
@@ -64,30 +71,25 @@ namespace Qoden.UI
         /// </summary>
         /// <returns>The box.</returns>
         /// <param name="outerBounds">Outer bounds.</param>
-        /// <param name="padding">Padding.</param>
         /// <param name="units">Units.</param>
-        public ILayoutBox Box(RectangleF? outerBounds = null, EdgeInsets? padding = null, IUnit units = null)
+        public ILayoutBox Box(RectangleF? outerBounds = null, IUnit units = null)
         {
-            var layoutBounds = MakeLayoutBounds(outerBounds, padding);
+            var layoutBounds = outerBounds ?? OuterBounds;
             return new LayoutBox(layoutBounds, units ?? Units);
         }
 
-        private RectangleF MakeLayoutBounds(RectangleF? outerBounds, EdgeInsets? padding)
+        public SizeF PreferredSize
         {
-            var b = outerBounds ?? OuterBounds;
-            var p = padding ?? Padding;
-            var layoutBounds = new RectangleF(b.X + p.Left,
-                                              b.Y + p.Top,
-                                              Math.Max(b.Width - p.Left - p.Right, 0),
-                                              Math.Max(b.Height - p.Top - p.Bottom, 0));
-            return layoutBounds;
-        }
-
-        public RectangleF PaddedOuterBounds
-        {
-            get 
+            get
             {
-                return MakeLayoutBounds(OuterBounds, Padding);
+                int r = int.MinValue, b = int.MinValue;
+                foreach (var v in Views)
+                {
+                    var size = v.PreferredBoundingSize();
+                    r = (int)Math.Round(Math.Max(r, v.OuterBounds.Left + size.Width));
+                    b = (int)Math.Round(Math.Max(b, v.OuterBounds.Top + size.Height));
+                }
+                return new SizeF(r, b);
             }
         }
 

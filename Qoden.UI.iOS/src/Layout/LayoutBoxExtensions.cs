@@ -8,7 +8,7 @@ namespace Qoden.UI
     {
         public static CGRect AsCGRect<T>(this T box) where T : LayoutBox
         {
-            return box.LayoutBounds;
+            return box.Frame();
         }
 
         public static T Left<T>(this T box, nfloat size) where T : LayoutBox
