@@ -9,7 +9,7 @@ using Android.Widget;
 
 namespace Qoden.UI
 {
-    public class QodenView : ViewGroup
+    public class QodenView : ViewGroup, ILayoutable
     {
         private ViewHierarchy hierarchy;
 
@@ -66,6 +66,11 @@ namespace Qoden.UI
         {
         }
 
+        void ILayoutable.OnLayout(LayoutBuilder layout)
+        {
+            OnLayout(layout);
+        }
+
         protected sealed override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
             var width = MeasureSpec.GetSize(widthMeasureSpec);
@@ -84,17 +89,7 @@ namespace Qoden.UI
 
         public virtual System.Drawing.SizeF SizeThatFits(System.Drawing.SizeF bounds)
         {
-            var layoutBuilder = new LayoutBuilder(new RectangleF(PointF.Empty, bounds));
-            OnLayout(layoutBuilder);
-            int l = int.MaxValue, t = int.MaxValue, r = int.MinValue, b = int.MinValue;
-            foreach (var v in layoutBuilder.Views)
-            {
-                l = (int)Math.Round(Math.Min(v.LayoutLeft, l));
-                r = (int)Math.Round(Math.Max(v.LayoutRight, r));
-                t = (int)Math.Round(Math.Min(v.LayoutTop, t));
-                b = (int)Math.Round(Math.Max(v.LayoutBottom, b));
-            }
-            return new System.Drawing.SizeF(Math.Abs(r - l), Math.Abs(b - t));
+            return ViewLayoutUtil.SizeThatFits(this, bounds);
         }
 
         protected override void Dispose(bool disposing)

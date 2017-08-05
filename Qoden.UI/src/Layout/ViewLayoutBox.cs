@@ -61,6 +61,46 @@ namespace Qoden.UI
 
         public abstract void Layout();
 
-        public abstract IViewGeometry View { get; }
+        public abstract IViewGeometry View { get;  }
+    }
+
+    public class SpacerLayoutBox : ViewLayoutBox
+    {
+        private SpacerGeometry _spacer;
+
+        public SpacerLayoutBox(SpacerGeometry geometry, RectangleF r, IUnit unit) : base(r, unit)
+        {
+            _spacer = geometry;
+        }
+
+        public SpacerLayoutBox(RectangleF r, IUnit unit) : base(r, unit)
+        {
+            _spacer = new SpacerGeometry();
+        }
+
+        public override IViewGeometry View => _spacer;
+
+        public override void Layout()
+        {
+        }
+    }
+
+    public class SpacerGeometry : IViewGeometry
+    {
+        public RectangleF Frame
+        {
+            get;
+            set;
+        }
+
+        public IViewLayoutBox MakeViewLayoutBox(RectangleF bounds, IUnit unit = null)
+        {
+            return new SpacerLayoutBox(this, bounds, unit);
+        }
+
+        public SizeF SizeThatFits(SizeF bounds)
+        {
+            return Frame.Size;
+        }
     }
 }

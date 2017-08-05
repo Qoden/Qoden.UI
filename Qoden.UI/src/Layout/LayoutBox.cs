@@ -42,9 +42,16 @@ namespace Qoden.UI
         IUnit unit = IdentityUnit.Identity;
 
         //These variables control horizontal dimensions
-        float left, right, width, centerX;
+        public float Left { get; set; }
+        public float Right{ get; set; }
+        public float Width{ get; set; }
+        public float CenterX{ get; set; }
         //These variables control vertical dimensions
-        float top, bottom, height, centerY;
+        public float Top { get; set; }
+        public float Bottom { get; set; } 
+        public float Height { get; set; } 
+        public float CenterY { get; set; }
+
         const float NOT_SET = -1;
 
         /// <summary>
@@ -63,7 +70,7 @@ namespace Qoden.UI
         public LayoutBox(RectangleF outerBounds, IUnit unit)
         {
             this.outerBounds = outerBounds;
-            left = right = top = bottom = width = height = centerX = centerY = NOT_SET;
+            Left = Right = Top = Bottom = Width = Height = CenterX = CenterY = NOT_SET;
             this.unit = unit ?? IdentityUnit.Identity;
         }
 
@@ -72,108 +79,63 @@ namespace Qoden.UI
         /// </summary>
         public IUnit Unit => unit;
 
-        static bool IsSet(float val)
+        public static bool IsSet(float val)
         {
             return Math.Abs(val - NOT_SET) > float.Epsilon;
         }
 
         public void SetLeft(Pixel l)
         {
-            if (IsSet(centerX) && IsSet(width))
-                centerX = NOT_SET;
-            if (IsSet(right) && IsSet(width))
-                right = NOT_SET;
-            left = l.Value;
+            Left = l.Value;
         }
 
         public void SetRight(Pixel r)
         {
-            if (IsSet(centerX) && IsSet(width))
-                centerX = NOT_SET;
-            if (IsSet(left) && IsSet(width))
-                width = NOT_SET;
-            right = r.Value;
+            Right = r.Value;
         }
 
         public void SetTop(Pixel t)
         {
-            if (IsSet(centerY) && IsSet(height))
-                centerY = NOT_SET;
-            if (IsSet(bottom) && IsSet(height))
-                height = NOT_SET;
-            top = t.Value;
+            Top = t.Value;
         }
 
         public void SetBottom(Pixel b)
         {
-            if (IsSet(centerY) && IsSet(height))
-                centerY = NOT_SET;
-            if (IsSet(top) && IsSet(height))
-                height = NOT_SET;
-            bottom = b.Value;
+            Bottom = b.Value;
         }
 
         public void SetWidth(Pixel w)
         {
-            if (IsSet(left) && IsSet(right))
-            {
-                left = NOT_SET;
-            }
-            if (IsSet(centerX) && IsSet(left))
-                centerX = NOT_SET;
-            if (IsSet(centerX) && IsSet(right))
-                centerX = NOT_SET;
-            width = w.Value;
+            Width = w.Value;
         }
 
         public void SetHeight(Pixel h)
         {
-            if (IsSet(top) && IsSet(bottom))
-            {
-                top = NOT_SET;
-            }
-            if (IsSet(centerY) && IsSet(top))
-                centerY = NOT_SET;
-            if (IsSet(centerY) && IsSet(bottom))
-                centerY = NOT_SET;
-            height = h.Value;
+            Height = h.Value;
         }
 
         public void SetCenterX(Pixel cx)
         {
-            if (IsSet(left) && IsSet(right))
-                right = NOT_SET;
-            if (IsSet(left) && IsSet(width))
-                left = NOT_SET;
-            if (IsSet(right) && IsSet(width))
-                right = NOT_SET;
-            centerX = cx.Value;
+            CenterX = cx.Value;
         }
 
         public void SetCenterY(Pixel cy)
         {
-            if (IsSet(top) && IsSet(bottom))
-                bottom = NOT_SET;
-            if (IsSet(top) && IsSet(height))
-                top = NOT_SET;
-            if (IsSet(bottom) && IsSet(height))
-                bottom = NOT_SET;
-
-            centerY = cy.Value;
+            CenterY = cy.Value;
         }
 
         public float LayoutWidth
         {
             get
             {
-                if (IsSet(width))
-                    return width;
-                if (IsSet(left) && IsSet(right))
-                    return outerBounds.Width - right - left;
-                if (IsSet(centerX) && IsSet(left))
-                    return (centerX - left) * 2;
-                if (IsSet(centerX) && IsSet(right))
-                    return (centerX - right) * 2;
+                if (IsSet(Width))
+                    return Width;
+                if (IsSet(CenterX) && IsSet(Left))
+                    return (CenterX - Left) * 2;
+                if (IsSet(CenterX) && IsSet(Right))
+                    return (outerBounds.Width - Right - CenterX) * 2;
+                if (IsSet(Left) && IsSet(Right))
+                    return outerBounds.Width - Right - Left;
                 return outerBounds.Width;
             }
         }
@@ -182,14 +144,14 @@ namespace Qoden.UI
         {
             get
             {
-                if (IsSet(height))
-                    return height;
-                if (IsSet(top) && IsSet(bottom))
-                    return outerBounds.Height - bottom - top;
-                if (IsSet(centerY) && IsSet(top))
-                    return (centerY - top) * 2;
-                if (IsSet(centerY) && IsSet(bottom))
-                    return (centerY - bottom) * 2;
+                if (IsSet(Height))
+                    return Height;
+                if (IsSet(Top) && IsSet(Bottom))
+                    return outerBounds.Height - Bottom - Top;
+                if (IsSet(CenterY) && IsSet(Top))
+                    return (CenterY - Top) * 2;
+                if (IsSet(CenterY) && IsSet(Bottom))
+                    return (outerBounds.Height - Bottom - CenterY) * 2;
                 return outerBounds.Height;
             }
         }
@@ -198,12 +160,12 @@ namespace Qoden.UI
         {
             get
             {
-                if (IsSet(left))
-                    return outerBounds.Left + left;
-                if (IsSet(centerX) && IsSet(width))
-                    return outerBounds.Left + centerX - width / 2;
-                if (IsSet(right) && IsSet(width))
-                    return outerBounds.Right - right - width;
+                if (IsSet(Left))
+                    return outerBounds.Left + Left;
+                if (IsSet(CenterX) && IsSet(Width))
+                    return outerBounds.Left + CenterX - Width / 2;
+                if (IsSet(Right) && IsSet(Width))
+                    return outerBounds.Right - Right - Width;
                 return outerBounds.Left;
             }
         }
@@ -212,12 +174,12 @@ namespace Qoden.UI
         {
             get
             {
-                if (IsSet(right))
-                    return outerBounds.Right - right;
-                if (IsSet(centerX) && IsSet(width))
-                    return outerBounds.Left + centerX + width / 2;
-                if (IsSet(left) && IsSet(width))
-                    return outerBounds.Left + left + width;
+                if (IsSet(Right))
+                    return outerBounds.Right - Right;
+                if (IsSet(Left) && IsSet(Width))
+                    return outerBounds.Left + Left + Width;
+                if (IsSet(CenterX) && IsSet(Width))
+                    return outerBounds.Left + CenterX + Width / 2;
                 return outerBounds.Right;
             }
         }
@@ -226,12 +188,12 @@ namespace Qoden.UI
         {
             get
             {
-                if (IsSet(top))
-                    return outerBounds.Top + top;
-                if (IsSet(centerY) && IsSet(height))
-                    return outerBounds.Top + centerY - height / 2;
-                if (IsSet(bottom) && IsSet(height))
-                    return outerBounds.Bottom - bottom - height;
+                if (IsSet(Top))
+                    return outerBounds.Top + Top;
+                if (IsSet(CenterY) && IsSet(Height))
+                    return outerBounds.Top + CenterY - Height / 2;
+                if (IsSet(Bottom) && IsSet(Height))
+                    return outerBounds.Bottom - Bottom - Height;
                 return outerBounds.Top;
             }
         }
@@ -240,14 +202,12 @@ namespace Qoden.UI
         {
             get
             {
-                if (IsSet(bottom))
-                    return outerBounds.Bottom - bottom;
-                if (IsSet(centerY) && IsSet(height))
-                    return outerBounds.Top + centerY + height / 2;
-                if (IsSet(top) && IsSet(height))
-                {
-                    return outerBounds.Top + top + height;
-                }
+                if (IsSet(Bottom))
+                    return outerBounds.Bottom - Bottom;
+                if (IsSet(Top) && IsSet(Height))
+                    return outerBounds.Top + Top + Height;
+                if (IsSet(CenterY) && IsSet(Height))
+                    return outerBounds.Top + CenterY + Height / 2;
                 return outerBounds.Bottom;
             }
         }
@@ -267,6 +227,92 @@ namespace Qoden.UI
             get
             {
                 return new RectangleF(LayoutLeft, LayoutTop, LayoutWidth, LayoutHeight);
+            }
+        }
+
+        public float PreferredBoundingWidth
+        {
+            get
+            {
+                if (IsSet(Left) && IsSet(Right) && IsSet(Width))
+                {
+                    return Left + Right + Width;
+                }
+
+                if (IsSet(Left) && IsSet(CenterX) && IsSet(Right))
+                {
+                    return Left + (CenterX - Left) * 2 + Right;
+                }
+
+                if (IsSet(Left) && IsSet(Width))
+                {
+                    return Left + Width;
+                }
+
+                if (IsSet(Left) && IsSet(CenterX))
+                {
+                    return Left + (CenterX - Left) * 2;
+                }
+
+                if (IsSet(Right) && IsSet(Width))
+                {
+                    return Right + Width;
+                }
+
+                if (IsSet(Width) && IsSet(CenterX))
+                    return CenterX + Width/2;
+
+                if (IsSet(Width))
+                    return Width;
+
+                return LayoutWidth;
+            }
+        }
+
+        public float PreferredBoundingHeight
+        {
+            get
+            {
+                if (IsSet(Top) && IsSet(Bottom) && IsSet(Height))
+                {
+                    return Top + Bottom + Height;
+                }
+
+                if (IsSet(Top) && IsSet(CenterY) && IsSet(Bottom))
+                {
+                    return Top + (CenterY - Top) * 2 + Bottom;
+                }
+
+                if (IsSet(Top) && IsSet(Height))
+                {
+                    return Top + Height;
+                }
+
+                if (IsSet(Top) && IsSet(CenterY))
+                {
+                    return Top + (CenterY - Top) * 2;
+                }
+
+                if (IsSet(Bottom) && IsSet(Height))
+                {
+                    return Bottom + Height;
+                }
+
+                if (IsSet(Height) && IsSet(CenterY))
+                    return CenterY + Height / 2;
+
+                if (IsSet(Height))
+                    return Height;
+
+                return LayoutHeight;
+            }
+        }
+
+        public SizeF PreferredBoundingSize
+        {
+            get
+            {
+                return new SizeF(PreferredBoundingWidth, PreferredBoundingHeight);
             }
         }
 

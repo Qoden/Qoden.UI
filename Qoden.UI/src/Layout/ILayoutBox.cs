@@ -12,7 +12,6 @@ namespace Qoden.UI
         /// Measurement unit for relative values.
         /// </summary>
         IUnit Unit { get; }
-
         /// <summary>
         /// Set distance from <see cref="OuterBounds"/> left edge to box left edge.
         /// </summary>
@@ -53,6 +52,16 @@ namespace Qoden.UI
         /// </summary>
         /// <param name="cy">Center y position in pixels</param>
         void SetCenterY(Pixel cy);
+        //These variables control horizontal dimensions
+        float Left { get; }
+        float Right { get; }
+        float Width { get; }
+        float CenterX { get; }
+        //These variables control vertical dimensions
+        float Top { get; }
+        float Bottom { get; }
+        float Height { get; }
+        float CenterY { get; }
         /// <summary>
         /// Caculated layout width in pixels
         /// </summary>
@@ -93,6 +102,8 @@ namespace Qoden.UI
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
+
+        SizeF PreferredBoundingSize { get; }
     }
 }
 
