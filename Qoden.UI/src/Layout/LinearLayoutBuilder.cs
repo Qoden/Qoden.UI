@@ -63,7 +63,7 @@ namespace Qoden.UI
                     newLayoutOrigin.Y = _layoutOrigin.Y + layoutResult.LayoutViewFrame.Height + FlowStep;
                 }
             }
-            _bounds = RectangleF.Union(_bounds, layoutResult.ViewLayoutBox.LayoutBounds);
+            _bounds = RectangleF.Union(_bounds, layoutResult.ViewLayoutBox.Frame);
             _maxSize = Math.Max(_maxSize, layoutResult.LayoutViewFrame.Height);
             _layoutOrigin = newLayoutOrigin;
 
@@ -101,7 +101,7 @@ namespace Qoden.UI
             _views.Add(viewBox);
             layoutParams.Layout(viewBox);
             //Area which view wants to occupy in layout coordinates
-            var layoutFrame = _viewToLayout.Transform(viewBox.LayoutBounds);
+            var layoutFrame = _viewToLayout.Transform(viewBox.Frame);
             //Space required for view starting from layout origin in layout coordinates
             var viewFrame = new RectangleF(layoutOrigin, new SizeF(layoutFrame.Right - layoutOrigin.X, layoutFrame.Bottom - layoutOrigin.Y));
             var newLayoutOrigin = new PointF(viewFrame.Right + LayoutStep, viewFrame.Top);

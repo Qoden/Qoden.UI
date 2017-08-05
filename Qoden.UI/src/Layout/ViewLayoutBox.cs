@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Reflection;
-using Qoden.Validation;
+﻿using System.Drawing;
 
 namespace Qoden.UI
 {
@@ -15,7 +12,7 @@ namespace Qoden.UI
 
         public override string ToString()
         {
-            return string.Format("[ViewLayoutBox: {0}, {1}, {2}, {3}]", LayoutLeft, LayoutTop, LayoutWidth, LayoutHeight);
+            return string.Format("[ViewLayoutBox: {0}, {1}, {2}, {3}]", FrameLeft, FrameTop, FrameWidth, FrameHeight);
         }
 
         public SizeF MeasuredSize

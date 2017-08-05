@@ -52,57 +52,62 @@ namespace Qoden.UI
         /// </summary>
         /// <param name="cy">Center y position in pixels</param>
         void SetCenterY(Pixel cy);
-        //These variables control horizontal dimensions
+
         float Left { get; }
         float Right { get; }
         float Width { get; }
         float CenterX { get; }
-        //These variables control vertical dimensions
         float Top { get; }
         float Bottom { get; }
         float Height { get; }
         float CenterY { get; }
+
+
         /// <summary>
-        /// Caculated layout width in pixels
+        /// Calculated layout width in pixels
         /// </summary>
-        float LayoutWidth { get; }
+        float FrameWidth { get; }
         /// <summary>
         /// Calculated layout height in pixels
         /// </summary>
-        float LayoutHeight { get; }
+        float FrameHeight { get; }
         /// <summary>
         /// Calculated layout left position in view coordinates in pixels
         /// </summary>
-        float LayoutLeft { get; }
+        float FrameLeft { get; }
         /// <summary>
         /// Calculated layout right position in view coordinates in pixels
         /// </summary>
-        float LayoutRight { get; }
+        float FrameRight { get; }
         /// <summary>
         /// Caculated layout top position in view coordinates in pixels
         /// </summary>
-        float LayoutTop { get; }
+        float FrameTop { get; }
         /// <summary>
         /// Calculated layout bottom position in view coordinates in pixels
         /// </summary>
-        float LayoutBottom { get; }
+        float FrameBottom { get; }
         /// <summary>
         /// Caclulated layout center in view coordinates in pixels
         /// </summary>
-        PointF LayoutCenter { get; }
+        PointF FrameCenter { get; }
         /// <summary>
         /// Caclualted layout size in pixels
         /// </summary>
-        SizeF LayoutSize { get; }
+        SizeF FrameSize { get; }
         /// <summary>
         /// Calculated layout bounds in view coordinate system in pixels
         /// </summary>
-        RectangleF LayoutBounds { get; }
+        RectangleF Frame { get; }
         /// <summary>
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
 
+        /// <summary>
+        /// Gets the size of the preferred outer bounds. This bounds can fit 
+        /// entire box with all specified parameters such as Left, Right, Width.
+        /// </summary>
         SizeF PreferredBoundingSize { get; }
     }
 }

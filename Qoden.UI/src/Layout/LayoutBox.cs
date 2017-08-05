@@ -16,24 +16,13 @@ namespace Qoden.UI
      * e) Right and CenterX
      * f) CenterX and Width
      * 
-     * There are also many ambigious combinations like CenterX and Left and Right.
-     * If client set such ambigious combination then LayoutBox discard ambigious 
-     * one. For example if client set Left then Right then CenterX LayoutBox 
-     * discard Right and only Left and CenterX are left.
+     * There are also few ambigious combinations like CenterX and Left and Right.
+     * If client set such combination then LayoutBox discards ambigious 
+     * element one. For example if client set Left then Right then CenterX 
+     * LayoutBox discard Right and only Left and CenterX are left.
      * 
-     * LayutBox also provides two sets of resulting dimensions.
-     * a) LayoutXYZ (LayoutWidth, LayoutLeft, LayoutRight and so on)
-     * b) PreferredXYZ (PreferredWidth, PreferredLeft, PreferredRight and so on)
-     *      
-     * LayoutXYZ family of properties describes rectangle inside provided 
-     * OuterBounds. When calculated these properties prefer to use relative 
-     * measures if possible. For instance if Left, Right and Width available 
-     * then Layout property will choose Left and Right and won't use Width.
-     * Of course if only Left and Width available then Layout will use it.
-     * 
-     * PreferredXYZ familty of properties uses different strategy. They use 
-     * Width/Height when they are available. For example if Left, Right and 
-     * Width available Preferred property will choose Left and Width.
+     * LayoutBox also calculates Preferred bounding box sizes for given 
+     * parameters. When doing so it takes into ab
      * 
      **/
     public class LayoutBox : ILayoutBox
@@ -124,7 +113,7 @@ namespace Qoden.UI
             CenterY = cy.Value;
         }
 
-        public float LayoutWidth
+        public float FrameWidth
         {
             get
             {
@@ -140,7 +129,7 @@ namespace Qoden.UI
             }
         }
 
-        public float LayoutHeight
+        public float FrameHeight
         {
             get
             {
@@ -156,7 +145,7 @@ namespace Qoden.UI
             }
         }
 
-        public float LayoutLeft
+        public float FrameLeft
         {
             get
             {
@@ -170,7 +159,7 @@ namespace Qoden.UI
             }
         }
 
-        public float LayoutRight
+        public float FrameRight
         {
             get
             {
@@ -184,7 +173,7 @@ namespace Qoden.UI
             }
         }
 
-        public float LayoutTop
+        public float FrameTop
         {
             get
             {
@@ -198,7 +187,7 @@ namespace Qoden.UI
             }
         }
 
-        public float LayoutBottom
+        public float FrameBottom
         {
             get
             {
@@ -212,21 +201,21 @@ namespace Qoden.UI
             }
         }
 
-        public PointF LayoutCenter
+        public PointF FrameCenter
         {
-            get { return new PointF(LayoutLeft + LayoutWidth / 2, LayoutTop + LayoutHeight / 2); }
+            get { return new PointF(FrameLeft + FrameWidth / 2, FrameTop + FrameHeight / 2); }
         }
 
-        public SizeF LayoutSize
+        public SizeF FrameSize
         {
-            get { return new SizeF(LayoutWidth, LayoutHeight); }
+            get { return new SizeF(FrameWidth, FrameHeight); }
         }
 
-        public RectangleF LayoutBounds
+        public RectangleF Frame
         {
             get
             {
-                return new RectangleF(LayoutLeft, LayoutTop, LayoutWidth, LayoutHeight);
+                return new RectangleF(FrameLeft, FrameTop, FrameWidth, FrameHeight);
             }
         }
 
@@ -265,7 +254,7 @@ namespace Qoden.UI
                 if (IsSet(Width))
                     return Width;
 
-                return LayoutWidth;
+                return FrameWidth;
             }
         }
 
@@ -304,7 +293,7 @@ namespace Qoden.UI
                 if (IsSet(Height))
                     return Height;
 
-                return LayoutHeight;
+                return FrameHeight;
             }
         }
 

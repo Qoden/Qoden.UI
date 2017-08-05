@@ -18,8 +18,8 @@ namespace Qoden.UI
 
         public override void Layout()
         {
-            _view.SetFrame(LayoutBounds);
-            _view.PlatformView.Frame = LayoutBounds;
+            _view.SetFrame(Frame);
+            _view.PlatformView.Frame = Frame;
         }
     }
 
