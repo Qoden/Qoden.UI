@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)QListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QImageView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />

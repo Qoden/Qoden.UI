@@ -29,8 +29,8 @@ namespace Qoden.UI
 
         private SizeF BoundingSize(float? maxWidth = null, float? maxHeight = null)
         {
-            var w = maxWidth.HasValue ? Unit.ToPixels(maxWidth.Value).Value : Bounds.Width;
-            var h = maxHeight.HasValue ? Unit.ToPixels(maxHeight.Value).Value : Bounds.Height;
+            var w = maxWidth.HasValue ? Unit.ToPixels(maxWidth.Value).Value : OuterBounds.Width;
+            var h = maxHeight.HasValue ? Unit.ToPixels(maxHeight.Value).Value : OuterBounds.Height;
             return new SizeF(w, h);
         }
 

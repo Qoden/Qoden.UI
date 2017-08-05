@@ -83,6 +83,7 @@
 		<Compile Include="src\IViewHost.cs" />
 		<Compile Include="src\QodenApplication.cs" />
 		<Compile Include="src\IDetachedController.cs" />
+		<Compile Include="src\View\QProgressBar.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Resources\AboutResources.txt" />

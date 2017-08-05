@@ -11,7 +11,7 @@ namespace Qoden.UI
 #endif
     public static class LayoutBuilder_Extensions
     {
-        public static PlatformViewLayoutBox View(this LayoutBuilder builder, View v, RectangleF? bounds = null, EdgeInset? padding = null, IUnit units = null)
+        public static PlatformViewLayoutBox View(this LayoutBuilder builder, View v, RectangleF? bounds = null, EdgeInsets? padding = null, IUnit units = null)
         {
             return (PlatformViewLayoutBox)builder.View(new QView(v), bounds, padding, units);
         }

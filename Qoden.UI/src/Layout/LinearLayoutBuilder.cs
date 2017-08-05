@@ -6,10 +6,11 @@ using Qoden.Validation;
 
 namespace Qoden.UI
 {
-    public enum LayoutDirection
+    public enum LinearLayoutDirection
     {
         TopBottom, BottomTop, LeftRight, RightLeft
     }
+
     /**
      * Layout builder performs layout in a coordinate system where 
      * primary layout direction is positive X axis and overflow layout direction
@@ -22,53 +23,62 @@ namespace Qoden.UI
     /// </summary>
     public class LinearLayoutBuilder
     {
-        RectangleF _layoutBounds;
+        RectangleF _layoutBounds, _viewBounds;
         PointF _layoutOrigin;
+
         float _maxSize;
         Matrix2d _layoutToView, _viewToLayout;
         LayoutBuilder _layoutBuilder;
+        List<IViewLayoutBox> _views = new List<IViewLayoutBox>();
 
         public bool Flow { get; set; }
 
-        public void StartLayout(LayoutBuilder layoutBuilder, LayoutDirection layoutDirection)
-        {
-            StartLayout(layoutBuilder, layoutDirection, DefaultFlowDirection(layoutDirection));
-        }
-
-        public void StartLayout(LayoutBuilder layoutBuilder, LayoutDirection layoutDirection, LayoutDirection flowDirection)
+        public LinearLayoutBuilder(LayoutBuilder layoutBuilder, LinearLayoutDirection layoutDirection, LinearLayoutDirection? flowDirection = null, RectangleF? bounds = null)
         {
             Assert.Argument(layoutBuilder, nameof(layoutBuilder)).NotNull();
-
+            flowDirection = flowDirection ?? DefaultFlowDirection(layoutDirection);
             _layoutBuilder = layoutBuilder;
             _maxSize = 0;
-            _layoutToView = LayoutTransform(_layoutBuilder.Bounds, layoutDirection, flowDirection);
+            _viewBounds = bounds ?? _layoutBuilder.PaddedOuterBounds;
+            _layoutToView = LayoutTransform(_viewBounds, layoutDirection, flowDirection.Value);
             _viewToLayout = _layoutToView.Inverted();
-            _layoutBounds = _viewToLayout.Transform(_layoutBuilder.Bounds);
+            _layoutBounds = _viewToLayout.Transform(_viewBounds);
             _layoutOrigin = _layoutBounds.Location;
         }
 
-        public LinearLayoutBuilder Add(LayoutParams layoutParams)
+        public IViewLayoutBox Add(LayoutParams layoutParams)
         {
             Assert.State(_layoutBuilder).NotNull("Layout is not started. Did you call StartLayout?");
 
             var layoutResult = LayoutView(_layoutOrigin, ref layoutParams);
             var newLayoutOrigin = layoutResult.NewLayoutOrigin;
-            if (Flow && newLayoutOrigin.X > _layoutBounds.Right)
+            if (Flow && newLayoutOrigin.X - LayoutStep > _layoutBounds.Right)
             {
-                var nextLine = new PointF(_layoutBounds.X, _layoutOrigin.Y + _maxSize);
+                var nextLine = new PointF(_layoutBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
                 layoutResult = LayoutView(nextLine, ref layoutParams);
                 newLayoutOrigin = layoutResult.NewLayoutOrigin;
                 if (newLayoutOrigin.X > _layoutBounds.Right)
                 {
                     newLayoutOrigin.X = _layoutBounds.X;
-                    newLayoutOrigin.Y = _layoutOrigin.Y + layoutResult.LayoutViewFrame.Height;
+                    newLayoutOrigin.Y = _layoutOrigin.Y + layoutResult.LayoutViewFrame.Height + FlowStep;
                 }
+
             }
             _maxSize = Math.Max(_maxSize, layoutResult.LayoutViewFrame.Height);
             _layoutOrigin = newLayoutOrigin;
 
-            return this;
+            return layoutResult.ViewLayoutBox;
         }
+
+        public void AddOverflow()
+        {
+            _layoutOrigin = new PointF(_layoutBounds.X, _layoutOrigin.Y + _maxSize + FlowStep);
+            _maxSize = 0;
+        }
+
+        public float LayoutStep { get; set; } = 0;
+        public float FlowStep { get; set; } = 0;
+        public IEnumerable<IViewLayoutBox> Views => _views;
 
         struct LayoutViewResult
         {
@@ -84,14 +94,15 @@ namespace Qoden.UI
             var freeSpace = new RectangleF(layoutOrigin, freeSpaceSize);
             //Free space available for a view in view coordinates
             var viewFreeSpace = _layoutToView.Transform(freeSpace);
-            //Postion which view wants to occupy in view coordinates
-            var viewBox = _layoutBuilder.View(layoutParams.View, viewFreeSpace);
+            //Area which view wants to occupy in view coordinates
+            var viewBox = _layoutBuilder.View(layoutParams.View, viewFreeSpace, EdgeInsets.Zero);
+            _views.Add(viewBox);
             layoutParams.Layout(viewBox);
-            //Postion which view wants to occupy in layout coordinates
+            //Area which view wants to occupy in layout coordinates
             var layoutFrame = _viewToLayout.Transform(viewBox.LayoutBounds);
             //Space required for view starting from layout origin in layout coordinates
             var viewFrame = new RectangleF(layoutOrigin, new SizeF(layoutFrame.Right - layoutOrigin.X, layoutFrame.Bottom - layoutOrigin.Y));
-            var newLayoutOrigin = new PointF(viewFrame.Right, viewFrame.Top);
+            var newLayoutOrigin = new PointF(viewFrame.Right + LayoutStep, viewFrame.Top);
 
             return new LayoutViewResult()
             {
@@ -104,43 +115,43 @@ namespace Qoden.UI
         /*
          * Calculates transform matrix from layout coordinate system to view coordinate system.
          */
-        private static Matrix2d LayoutTransform(RectangleF bounds, LayoutDirection layoutDirection, LayoutDirection flowDirection)
+        private static Matrix2d LayoutTransform(RectangleF bounds, LinearLayoutDirection layoutDirection, LinearLayoutDirection flowDirection)
         {
             switch (layoutDirection)
             {
-                case LayoutDirection.LeftRight:
+                case LinearLayoutDirection.LeftRight:
                     switch (flowDirection)
                     {
-                        case LayoutDirection.TopBottom:
+                        case LinearLayoutDirection.TopBottom:
                             return new Matrix2d();
-                        case LayoutDirection.BottomTop:
+                        case LinearLayoutDirection.BottomTop:
                             return Matrix2d.Translation(0, bounds.Height) * Matrix2d.Stretch(1, -1);
                     }
                     break;
-                case LayoutDirection.RightLeft:
+                case LinearLayoutDirection.RightLeft:
                     switch (flowDirection)
                     {
-                        case LayoutDirection.TopBottom:
+                        case LinearLayoutDirection.TopBottom:
                             return Matrix2d.Translation(bounds.Width, 0) * Matrix2d.Stretch(-1, 1);
-                        case LayoutDirection.BottomTop:
+                        case LinearLayoutDirection.BottomTop:
                             return Matrix2d.Translation(bounds.Width, bounds.Height) * Matrix2d.Stretch(-1, -1);
                     }
                     break;
-                case LayoutDirection.TopBottom:
+                case LinearLayoutDirection.TopBottom:
                     switch (flowDirection)
                     {
-                        case LayoutDirection.LeftRight:
+                        case LinearLayoutDirection.LeftRight:
                             return Matrix2d.Rotation(90) * Matrix2d.Stretch(1, -1);
-                        case LayoutDirection.RightLeft:
+                        case LinearLayoutDirection.RightLeft:
                             return Matrix2d.Translation(bounds.Width, 0) * Matrix2d.Rotation(90);
                     }
                     break;
-                case LayoutDirection.BottomTop:
+                case LinearLayoutDirection.BottomTop:
                     switch (flowDirection)
                     {
-                        case LayoutDirection.LeftRight:
+                        case LinearLayoutDirection.LeftRight:
                             return Matrix2d.Translation(0, bounds.Height) * Matrix2d.Rotation(-90);
-                        case LayoutDirection.RightLeft:
+                        case LinearLayoutDirection.RightLeft:
                             return Matrix2d.Translation(bounds.Width, bounds.Height) * Matrix2d.Stretch(-1, 1) * Matrix2d.Rotation(-90);
                     }
                     break;
@@ -149,18 +160,18 @@ namespace Qoden.UI
             throw new ArgumentException(message);
         }
 
-        private static LayoutDirection DefaultFlowDirection(LayoutDirection layoutDirection)
+        private static LinearLayoutDirection DefaultFlowDirection(LinearLayoutDirection layoutDirection)
         {
             switch (layoutDirection)
             {
-                case LayoutDirection.LeftRight:
-                    return LayoutDirection.TopBottom;
-                case LayoutDirection.TopBottom:
-                    return LayoutDirection.LeftRight;
-                case LayoutDirection.RightLeft:
-                    return LayoutDirection.TopBottom;
-                case LayoutDirection.BottomTop:
-                    return LayoutDirection.LeftRight;
+                case LinearLayoutDirection.LeftRight:
+                    return LinearLayoutDirection.TopBottom;
+                case LinearLayoutDirection.TopBottom:
+                    return LinearLayoutDirection.LeftRight;
+                case LinearLayoutDirection.RightLeft:
+                    return LinearLayoutDirection.TopBottom;
+                case LinearLayoutDirection.BottomTop:
+                    return LinearLayoutDirection.LeftRight;
                 default:
                     throw new ArgumentException("Unknown layout direction");
             }
@@ -206,6 +217,14 @@ namespace Qoden.UI
         static void DefaultLayout(IViewLayoutBox obj)
         {
             obj.AutoSize().Left(0).Top(0);
+        }
+    }
+
+    public static class LinearLayoutBuilder_LayoutBuilder_Extensions
+    {
+        public static LinearLayoutBuilder LinearLayout(this LayoutBuilder layoutBuilder, LinearLayoutDirection layoutDirection, LinearLayoutDirection? flowDirection = null, RectangleF? bounds = null)
+        {
+            return new LinearLayoutBuilder(layoutBuilder, layoutDirection, flowDirection, bounds);
         }
     }
 }

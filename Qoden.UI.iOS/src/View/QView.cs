@@ -59,7 +59,7 @@ namespace Qoden.UI
             view.BackgroundColor = bgColor.ToColor();
         }
 
-        public static void SetPadding(this UIView view, EdgeInset padding)
+        public static void SetPadding(this UIView view, EdgeInsets padding)
         {
             view.LayoutMargins = new UIEdgeInsets(padding.Left,
                                                   padding.Top,

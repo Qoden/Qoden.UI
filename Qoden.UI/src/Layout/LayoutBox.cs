@@ -5,101 +5,144 @@ using System.Drawing;
 namespace Qoden.UI
 {
     /// <summary>
-    /// Contains layout parameters relative to provided rectangle.
+    /// Describes rectangle in terms of relative offsets from edges of <see cref="OuterBounds"/>.
     /// </summary>
     public interface ILayoutBox
     {
         /// <summary>
-        /// Measurement unit for relative offsets
+        /// Measurement unit for relative values.
         /// </summary>
         IUnit Unit { get; }
 
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> left edge to box left edge.
+        /// </summary>
+        /// <param name="l">Distance in pixels</param>
         void SetLeft(Pixel l);
 
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> left edge to view left edge.
+        /// </summary>
+        /// <param name="l">Distance in <see cref="Unit"/></param>
         void SetLeft(float l);
 
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> right edge to view right edge.
+        /// </summary>
+        /// <param name="r">Distance in pixels</param>
         void SetRight(Pixel r);
-
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> right edge to view right edge.
+        /// </summary>
+        /// <param name="r">Distance in <see cref="Unit"/></param>
         void SetRight(float r);
 
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> top edge to view top edge.
+        /// </summary>
+        /// <param name="t">Distance in pixels</param>
         void SetTop(Pixel t);
-
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> top edge to view top edge.
+        /// </summary>
+        /// <param name="t">Distance in <see cref="Unit"/></param>
         void SetTop(float t);
 
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> bottom edge to view bottom edge.
+        /// </summary>
+        /// <param name="b">Distance in pixels</param>
         void SetBottom(Pixel b);
-
+        /// <summary>
+        /// Set distance from <see cref="OuterBounds"/> bottom edge to view bottom edge.
+        /// </summary>
+        /// <param name="b">Distance in <see cref="Unit"/></param>
         void SetBottom(float b);
-
+        /// <summary>
+        /// Set box width.
+        /// </summary>
+        /// <param name="w">Width in pixels</param>
         void SetWidth(Pixel w);
-
+        /// <summary>
+        /// Set box width.
+        /// </summary>
+        /// <param name="w">Width in <see cref="Unit"/></param>
         void SetWidth(float w);
-
+        /// <summary>
+        /// Set box height.
+        /// </summary>
+        /// <param name="h">Height in pixels</param>
         void SetHeight(Pixel h);
-
+        /// <summary>
+        /// Set box height.
+        /// </summary>
+        /// <param name="h">Height in <see cref="Unit"/></param>
         void SetHeight(float h);
-
+        /// <summary>
+        /// Set box center X position relative to <see cref="OuterBounds"/>.
+        /// </summary>
+        /// <param name="cx">Center x position in pixels</param>
         void SetCenterX(Pixel cx);
-
+        /// <summary>
+        /// Set box center X position relative to <see cref="OuterBounds"/>.
+        /// </summary>
+        /// <param name="cx">Center x position in <see cref="Unit"/></param>
         void SetCenterX(float cx);
-
+        /// <summary>
+        /// Set box center Y position relative to <see cref="OuterBounds"/>.
+        /// </summary>
+        /// <param name="cy">Center y position in pixels</param>
         void SetCenterY(Pixel cy);
-
+        /// <summary>
+        /// Set box center Y position relative to <see cref="OuterBounds"/>.
+        /// </summary>
+        /// <param name="cy">Center y position in <see cref="Unit"/></param>
         void SetCenterY(float cy);
-
         /// <summary>
         /// Caculated layout width in pixels
         /// </summary>
         float LayoutWidth { get; }
-
         /// <summary>
         /// Calculated layout height in pixels
         /// </summary>
         float LayoutHeight { get; }
-
         /// <summary>
         /// Calculated layout left position in view coordinates in pixels
         /// </summary>
         float LayoutLeft { get; }
-
         /// <summary>
         /// Calculated layout right position in view coordinates in pixels
         /// </summary>
         float LayoutRight { get; }
-
         /// <summary>
         /// Caculated layout top position in view coordinates in pixels
         /// </summary>
         float LayoutTop { get; }
-
         /// <summary>
         /// Calculated layout bottom position in view coordinates in pixels
         /// </summary>
         float LayoutBottom { get; }
-
         /// <summary>
         /// Caclulated layout center in view coordinates in pixels
         /// </summary>
         PointF LayoutCenter { get; }
-
         /// <summary>
         /// Caclualted layout size in pixels
         /// </summary>
         SizeF LayoutSize { get; }
-
         /// <summary>
         /// Calculated layout bounds in view coordinate system in pixels
         /// </summary>
         RectangleF LayoutBounds { get; }
-
         /// <summary>
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
-        RectangleF Bounds { get; }
+        RectangleF OuterBounds { get; }
     }
 
     public class LayoutBox : ILayoutBox
     {
-        RectangleF bounds;
+        RectangleF outerBounds;
         IUnit unit = IdentityUnit.Identity;
 
         float left, right, top, bottom, width, height, centerX, centerY;
@@ -120,7 +163,7 @@ namespace Qoden.UI
         /// <param name="unit">Unit to be used for relative offsets</param>
         public LayoutBox(RectangleF outerBounds, IUnit unit)
         {
-            this.bounds = outerBounds;
+            this.outerBounds = outerBounds;
             left = right = top = bottom = width = height = centerX = centerY = NOT_SET;
             this.unit = unit ?? IdentityUnit.Identity;
         }
@@ -140,7 +183,7 @@ namespace Qoden.UI
             if (IsSet(centerX) && IsSet(width))
                 centerX = NOT_SET;
             if (IsSet(right) && IsSet(width))
-                width = NOT_SET;
+                right = NOT_SET;
             left = l.Value;
         }
 
@@ -230,14 +273,11 @@ namespace Qoden.UI
         public void SetCenterX(Pixel cx)
         {
             if (IsSet(left) && IsSet(right))
-            {
-                width = right - left;
-                left = right = NOT_SET;
-            }
+                right = NOT_SET;
             if (IsSet(left) && IsSet(width))
-                width = NOT_SET;
+                left = NOT_SET;
             if (IsSet(right) && IsSet(width))
-                width = NOT_SET;
+                right = NOT_SET;
             centerX = cx.Value;
         }
 
@@ -249,14 +289,11 @@ namespace Qoden.UI
         public void SetCenterY(Pixel cy)
         {
             if (IsSet(top) && IsSet(bottom))
-            {
-                height = bounds.Height - bottom - top;
-                top = bottom = NOT_SET;
-            }
+                bottom = NOT_SET;
             if (IsSet(top) && IsSet(height))
-                height = NOT_SET;
+                top = NOT_SET;
             if (IsSet(bottom) && IsSet(height))
-                height = NOT_SET;
+                bottom = NOT_SET;
 
             centerY = cy.Value;
         }
@@ -273,12 +310,12 @@ namespace Qoden.UI
                 if (IsSet(width))
                     return width;
                 if (IsSet(left) && IsSet(right))
-                    return bounds.Width - right - left;
+                    return outerBounds.Width - right - left;
                 if (IsSet(centerX) && IsSet(left))
                     return (centerX - left) * 2;
                 if (IsSet(centerX) && IsSet(right))
                     return (centerX - right) * 2;
-                return 0;
+                return outerBounds.Width;
             }
         }
 
@@ -289,12 +326,24 @@ namespace Qoden.UI
                 if (IsSet(height))
                     return height;
                 if (IsSet(top) && IsSet(bottom))
-                    return bounds.Height - bottom - top;
+                    return outerBounds.Height - bottom - top;
                 if (IsSet(centerY) && IsSet(top))
                     return (centerY - top) * 2;
                 if (IsSet(centerY) && IsSet(bottom))
                     return (centerY - bottom) * 2;
-                return 0;
+                return outerBounds.Height;
+            }
+        }
+
+        public float Left
+        {
+            get
+            {
+                if (IsSet(left))
+                    return left;
+                if (IsSet(centerX) && IsSet(width))
+                    return centerX - width / 2;
+                return NOT_SET;
             }
         }
 
@@ -303,12 +352,12 @@ namespace Qoden.UI
             get
             {
                 if (IsSet(left))
-                    return bounds.Left + left;
+                    return outerBounds.Left + left;
                 if (IsSet(centerX) && IsSet(width))
-                    return bounds.Left + centerX - width / 2;
+                    return outerBounds.Left + centerX - width / 2;
                 if (IsSet(right) && IsSet(width))
-                    return bounds.Right - right - width;
-                return 0;
+                    return outerBounds.Right - right - width;
+                return outerBounds.Left;
             }
         }
 
@@ -317,12 +366,12 @@ namespace Qoden.UI
             get
             {
                 if (IsSet(right))
-                    return bounds.Right - right;
+                    return outerBounds.Right - right;
                 if (IsSet(centerX) && IsSet(width))
-                    return bounds.Left + centerX + width / 2;
+                    return outerBounds.Left + centerX + width / 2;
                 if (IsSet(left) && IsSet(width))
-                    return bounds.Left + left + width;
-                return 0;
+                    return outerBounds.Left + left + width;
+                return outerBounds.Right;
             }
         }
 
@@ -331,12 +380,12 @@ namespace Qoden.UI
             get
             {
                 if (IsSet(top))
-                    return bounds.Top + top;
+                    return outerBounds.Top + top;
                 if (IsSet(centerY) && IsSet(height))
-                    return bounds.Top + centerY - height / 2;
+                    return outerBounds.Top + centerY - height / 2;
                 if (IsSet(bottom) && IsSet(height))
-                    return bounds.Bottom - bottom - height;
-                return 0;
+                    return outerBounds.Bottom - bottom - height;
+                return outerBounds.Top;
             }
         }
 
@@ -345,14 +394,14 @@ namespace Qoden.UI
             get
             {
                 if (IsSet(bottom))
-                    return bounds.Bottom - bottom;
+                    return outerBounds.Bottom - bottom;
                 if (IsSet(centerY) && IsSet(height))
-                    return bounds.Top + centerY + height / 2;
+                    return outerBounds.Top + centerY + height / 2;
                 if (IsSet(top) && IsSet(height))
                 {
-                    return bounds.Top + top + height;
+                    return outerBounds.Top + top + height;
                 }
-                return NOT_SET;
+                return outerBounds.Bottom;
             }
         }
 
@@ -374,14 +423,14 @@ namespace Qoden.UI
             }
         }
 
-        public RectangleF Bounds => bounds;
+        public RectangleF OuterBounds => outerBounds;
     }
 
     public static class LayoutBoxCenter
     {
         public static T CenterHorizontally<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            box.SetCenterX(Pixel.Val(box.Bounds.Left + box.Bounds.Width / 2 + dx.Value));
+            box.SetCenterX(Pixel.Val(box.OuterBounds.Left + box.OuterBounds.Width / 2 + dx.Value));
             return box;
         }
 
@@ -392,7 +441,7 @@ namespace Qoden.UI
 
         public static T CenterVertically<T>(this T box, Pixel dx) where T : ILayoutBox
         {
-            box.SetCenterY(Pixel.Val(box.Bounds.Top + box.Bounds.Height / 2 + dx.Value));
+            box.SetCenterY(Pixel.Val(box.OuterBounds.Top + box.OuterBounds.Height / 2 + dx.Value));
             return box;
         }
 
@@ -484,7 +533,7 @@ namespace Qoden.UI
         /// </summary>
         public static T Before<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            var referenceOffset = box.Bounds.Right - reference.Left;
+            var referenceOffset = box.OuterBounds.Right - reference.Left;
             box.SetRight(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
@@ -502,7 +551,7 @@ namespace Qoden.UI
         /// </summary>
         public static T After<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            var referenceOffset = reference.Right - box.Bounds.Left;
+            var referenceOffset = reference.Right - box.OuterBounds.Left;
             box.SetLeft(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
@@ -519,7 +568,7 @@ namespace Qoden.UI
         /// </summary>
         public static T Below<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            var referenceOffset = reference.Bottom - box.Bounds.Top;
+            var referenceOffset = reference.Bottom - box.OuterBounds.Top;
             box.SetTop(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }
@@ -536,7 +585,7 @@ namespace Qoden.UI
         /// </summary>
         public static T Above<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
-            var referenceOffset = box.Bounds.Bottom - reference.Top;
+            var referenceOffset = box.OuterBounds.Bottom - reference.Top;
             box.SetBottom(Pixel.Val(referenceOffset + dx.Value));
             return box;
         }

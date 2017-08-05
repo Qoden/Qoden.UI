@@ -97,7 +97,7 @@ namespace Qoden.UI
             view.PlatformView.SetBackgroundColor(bgColor);
         }
 
-        public static void SetPadding(this IQView<View> view, EdgeInset padding)
+        public static void SetPadding(this IQView<View> view, EdgeInsets padding)
         {
             view.PlatformView.SetPadding(padding);
         }

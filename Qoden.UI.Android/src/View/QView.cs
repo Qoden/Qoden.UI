@@ -29,7 +29,7 @@ namespace Qoden.UI
             view.SetBackgroundColor(bgColor.ToColor());
         }
 
-        public static void SetPadding(this View view, EdgeInset padding)
+        public static void SetPadding(this View view, EdgeInsets padding)
         {
             view.SetPadding((int)Math.Round(padding.Left),
                             (int)Math.Round(padding.Top),
