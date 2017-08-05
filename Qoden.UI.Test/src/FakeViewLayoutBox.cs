@@ -35,7 +35,7 @@ namespace Qoden.UI.Test
 
         public void Layout()
         {
-            View.Frame = Frame;
+            View.Frame = this.Frame();
         }
 
         public RectangleF ViewFrame => View.Frame;

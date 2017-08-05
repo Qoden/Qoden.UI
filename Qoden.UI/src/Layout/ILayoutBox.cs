@@ -6,6 +6,37 @@ namespace Qoden.UI
     /// <summary>
     /// Describes rectangle in terms of relative offsets from edges of <see cref="OuterBounds"/>.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Horizontal (same for vertical) offsets can be described in a few 
+    /// different ways:
+    /// <list>
+    ///   <item>Left and Width</item>
+    ///   <item>Left and Right</item>
+    ///   <item>Left and CenterX</item>
+    ///   <item>Right and Width</item>
+    ///   <item>Right and CenterX</item>
+    ///   <item>CenterX and Width</item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// There are also few ambigious combinations like CenterX and Left and Right.
+    /// If client set such combination then LayoutBox discards ambigious 
+    /// element. For example if client set Left, Right and then CenterX, 
+    /// LayoutBox discards Right and leave only Left and CenterX.
+    /// </para>
+    /// <para>
+    /// Most of calculations on LayoutBox implemented as extension methods.
+    /// You can implement simple ILayoutBox interface on any object and get all 
+    /// of LayoutBox calculation for free.
+    /// </para>
+    /// <para>
+    /// LayoutBox can also calculate size required to correctly wrap given 
+    /// box, see <see cref="T:LayoutBox_Frame.PreferredBoundingSize"/>.
+    /// This calculation looks into LayoutBox data and tries to derive minimal 
+    /// width/height and paddings around given box.
+    /// </para>
+    /// </remarks>
     public interface ILayoutBox
     {
         /// <summary>
@@ -48,7 +79,6 @@ namespace Qoden.UI
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
-
     }
 }
 

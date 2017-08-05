@@ -3,28 +3,7 @@ using System.Drawing;
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
 
 namespace Qoden.UI
-{
-    /**
-     * Note to developers.
-     * LayoutBox describes rectangle in terms of offsets from outer bounds.
-     * Horizontal (same for vertical) offsets can be described in a few 
-     * different ways:
-     * a) Left and Width
-     * b) Left and Right
-     * c) Left and CenterX
-     * d) Right and Width
-     * e) Right and CenterX
-     * f) CenterX and Width
-     * 
-     * There are also few ambigious combinations like CenterX and Left and Right.
-     * If client set such combination then LayoutBox discards ambigious 
-     * element one. For example if client set Left then Right then CenterX 
-     * LayoutBox discard Right and only Left and CenterX are left.
-     * 
-     * LayoutBox also calculates Preferred bounding box sizes for given 
-     * parameters. When doing so it takes into ab
-     * 
-     **/
+{    
     public class LayoutBox : ILayoutBox
     {
         RectangleF outerBounds;
