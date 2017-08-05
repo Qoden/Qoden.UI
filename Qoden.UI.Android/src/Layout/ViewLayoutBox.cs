@@ -20,15 +20,17 @@ namespace Qoden.UI
         {
             var parentWidthMeasureSpec = AndroidView.MeasureSpec.MakeMeasureSpec((int)Math.Round(OuterBounds.Width), MeasureSpecMode.AtMost);
             var parentHeightMeasureSpec = AndroidView.MeasureSpec.MakeMeasureSpec((int)Math.Round(OuterBounds.Height), MeasureSpecMode.AtMost);
+
+            var frame = this.Frame();
             int childWidthMeasureSpec = ViewGroup.GetChildMeasureSpec(parentWidthMeasureSpec,
-                                                            0, (int)Math.Round(FrameWidth));
+                                                            0, (int)Math.Round(frame.Width));
             int childHeightMeasureSpec = ViewGroup.GetChildMeasureSpec(parentHeightMeasureSpec,
-                                                             0, (int)Math.Round(FrameHeight));
+                                                             0, (int)Math.Round(frame.Height));
             _view.PlatformView.Measure(childWidthMeasureSpec, childHeightMeasureSpec);
-            _view.PlatformView.Layout((int)Math.Round(FrameLeft),
-                        (int)Math.Round(FrameTop),
-                        (int)Math.Round(FrameRight),
-                        (int)Math.Round(FrameBottom));
+            _view.PlatformView.Layout((int)Math.Round(frame.Left),
+                        (int)Math.Round(frame.Top),
+                        (int)Math.Round(frame.Right),
+                        (int)Math.Round(frame.Bottom));
         }
     }
 }
