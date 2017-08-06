@@ -14,5 +14,10 @@ namespace Qoden.UI
         {
             return (T)builder.MakeView(typeof(T));
         }
+
+        public static QView MakeQView<T>(this IViewHierarchyBuilder builder) where T : View
+        {
+            return new QView(builder.MakeView<T>());
+        }
     }
 }

@@ -5,10 +5,8 @@ using Qoden.Validation;
 
 namespace Qoden.UI
 {
-    public abstract class PlainListContent : BaseAdapter<object>
+    public abstract partial class PlainListContent : BaseAdapter<object>, IPlainListContent
     {
-        QView _item = new QView();
-
         public PlainListContent(IViewHierarchyBuilder builder)
         {
             Assert.Argument(builder, nameof(builder)).NotNull();
@@ -17,28 +15,65 @@ namespace Qoden.UI
 
         public IViewHierarchyBuilder Builder { get; private set; }
 
+        #region Redirects from iOS API to IPlainListContent methods
+
         public sealed override View GetView(int position, View convertView, ViewGroup parent)
         {
+            var context = new PlainListCellContext()
+            {
+                IsFresh = false,
+                CellView = convertView,
+                Row = position,
+            };
+
             if (convertView == null)
             {
-                var typeId = GetItemViewType(position);
-                var view = CreateView(position, Builder);
-                convertView = view.PlatformView;
+                var childTypeId = GetCellType(context.Row);
+                CreateCell(childTypeId, ref context);
+                Assert.State(context.CellView, "CellView").NotNull();
+                context.IsFresh = true;
             }
-            _item.PlatformView = convertView;
-            FillView(position, _item);
-            return _item.PlatformView;
+            GetCell(context);
+            return context.CellView;
         }
 
-        #region Corss platform interface
-        //Override keywords below just for clarity, to have all methods listed in one place
-        public override abstract object this[int position] { get; }
-        public override abstract int Count { get; }
-        public override abstract long GetItemId(int position);
-        public override abstract int ViewTypeCount { get; }
-        public override abstract int GetItemViewType(int position);
-        public abstract QView CreateView(int position, IViewHierarchyBuilder builder);
-        public abstract void FillView(int pos, QView convertView);
+        public sealed override int ViewTypeCount => CellTypes.Length;
+
+        public sealed override int GetItemViewType(int position)
+        {
+            return GetCellType(position);
+        }
+
+        public sealed override int Count => NumberOfRows();
+
+        #endregion
+
+        #region Internal API overrides
+
+        protected virtual void CreateCell(int cellTypeId, ref PlainListCellContext cellContext)
+        {
+            var childViewType = CellTypes[cellTypeId];
+            var convertView = (View)Builder.MakeView(childViewType);
+            cellContext.CellView = convertView;
+        }
+
+        #endregion
+
+
+        #region Convenience overrides
+
+        public override long GetItemId(int position)
+        {
+            return position;
+        }
+
+        public override Java.Lang.Object GetItem(int position)
+        {
+            return null;
+        }
+
+        public override bool HasStableIds { get { return true; } }
+
         #endregion
     }
 }

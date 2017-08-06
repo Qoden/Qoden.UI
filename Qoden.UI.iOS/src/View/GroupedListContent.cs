@@ -1,90 +1,162 @@
 ﻿using System;
+using System.Collections.Generic;
 using Foundation;
+using Qoden.Validation;
 using UIKit;
 
 namespace Qoden.UI
 {
-    public abstract class GroupedListContent : UITableViewDataSource
+    public abstract class GroupedListContent : UITableViewDataSource, IGroupedListContent, IKeepLastCell
     {
-        QView _item = new QView();
-        QView _section = new QView();
-
         public GroupedListContent(IViewHierarchyBuilder builder)
         {
+            Assert.Argument(builder, nameof(builder)).NotNull();
             Builder = builder;
         }
 
+        public IViewHierarchyBuilder Builder { get; private set; }
+        public UITableViewCell LastCell => _lastCell;
+        public NSIndexPath LastIndexPath => _lastIndexPath;
+
         #region Cross platform interface
 
-        public abstract int GroupCount { get; }
-        public IViewHierarchyBuilder Builder { get; private set; }
+        public abstract int NumberOfSections();
+        public abstract int RowsInSection(int section);
+        public abstract Type[] SectionTypes { get; }
+        public abstract Type[] CellTypes { get; }
 
-        public abstract int GetChildrenCount(int groupPosition);
-        public abstract int GetChildType(int groupPosition, int childPosition);
-        public abstract int GetGroupType(int groupPosition);
-        public abstract QView CreateChildView(int groupPosition, int childPosition, IViewHierarchyBuilder builder);
-        public abstract void FillChildView(int groupPosition, int childPosition, QView item);
-        public abstract QView CreateGroupView(int groupPosition, IViewHierarchyBuilder builder);
-        public abstract void FillGroupView(int groupPosition, QView section);
+        public abstract int GetCellType(int section, int childPosition);
+        public abstract int GetSectionType(int section);
+
+        public abstract void GetSection(GroupedListSectionContext sectionContext);
+        public abstract void GetCell(GroupedListCellContext cellContext);
 
         #endregion
 
-        public override nint RowsInSection(UITableView tableView, nint section)
+        #region Redirects from iOS API to IGroupedListContent methods
+        public sealed override nint RowsInSection(UITableView tableView, nint section)
         {
-            return GetChildrenCount((int)section);
+            return RowsInSection((int)section);
         }
 
-        public override nint NumberOfSections(UITableView tableView)
+        public sealed override nint NumberOfSections(UITableView tableView)
         {
-            return GroupCount;
+            return NumberOfSections();
         }
+
+        protected UITableViewCell _lastCell;
+        protected NSIndexPath _lastIndexPath;
 
         public sealed override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var child = indexPath.Row;
-            var @group = indexPath.Section;
+            var childIdx = indexPath.Row;
+            var sectionIdx = indexPath.Section;
 
-            var id = GetChildType(@group, child);
-            var cell = tableView.DequeueReusableCell(id.ToString());
-            if (cell == null)
+            var context = new GroupedListCellContext()
             {
-                var listItem = CreateChildView(@group, child, ViewHierarchyBuilder.Instance);
-                cell = TableViewUtil.ToTableViewCell(listItem);
+                IsFresh = false,
+                Section = sectionIdx,
+                Row = childIdx,
+                CellView = null
+            };
+
+            var cellTypeId = GetCellType(sectionIdx, childIdx);
+            UITableViewCell cellView;
+            cellView = tableView.DequeueReusableCell(cellTypeId.ToString());
+            if (cellView == null)
+            {
+                context.IsFresh = true;
+                CreateCell(cellTypeId, ref context);
+                Assert.State(context.CellView, "ChildView").NotNull();
+
+                cellView = TableViewUtil.ToTableViewCell(context.CellView, cellTypeId);
             }
-            if (cell is UITableViewCellAdapter)
+
+            if (cellView is UITableViewCellAdapter)
             {
-                _item.PlatformView = ((UITableViewCellAdapter)cell).CellView;
+                context.CellView = ((UITableViewCellAdapter)cellView).CellView;
             }
             else
             {
-                _item.PlatformView = cell;
+                context.CellView = cellView;
             }
-            FillChildView(@group, child, _item);
-            return cell;
+
+            GetCell(context);
+
+            _lastCell = cellView;
+            _lastIndexPath = indexPath;
+
+            return cellView;
         }
 
-        [Export("tableView:viewForHeaderInSection:")]
-        public UIView GetViewForHeader(UITableView tableView, nint section)
+        #endregion
+
+        #region Default implementations for common methods
+
+        protected UIView DefaultGetViewForHeader(UITableView tableView, nint section)
         {
-            var prefix = "Header";
-            var group = (int)section;
-            var groupType = GetGroupType(group);
-            var groupView = tableView.DequeueReusableHeaderFooterView(prefix + groupType.ToString());
-            if (groupView == null)
+            var groupTypeId = GetSectionType((int)section);
+
+            var context = new GroupedListSectionContext()
             {
-                var qGroupView = CreateGroupView(group, ViewHierarchyBuilder.Instance);
-                groupView = TableViewUtil.ToTableViewHeaderFooter(qGroupView);
+                IsFresh = false,
+                SectionHeaderView = null,
+                Section = (int)section
+            };
+
+            UITableViewHeaderFooterView sectionView;
+            sectionView = tableView.DequeueReusableHeaderFooterView(groupTypeId.ToString());
+
+            if (sectionView == null)
+            {
+                context.IsFresh = true;
+                CreateSection(groupTypeId, ref context);
+                Assert.State(context.SectionHeaderView, "SectionHeaderView").NotNull();
+                sectionView = TableViewUtil.ToTableViewHeaderFooter(context.SectionHeaderView, groupTypeId);
             }
-            if (groupView is UITableViewHeaderFooterViewAdapter)
+
+            if (sectionView is UITableViewHeaderFooterViewAdapter)
             {
-                _section.PlatformView = ((UITableViewHeaderFooterViewAdapter)groupView).View;
+                context.SectionHeaderView = ((UITableViewHeaderFooterViewAdapter)sectionView).View;
             }
             else
             {
-                _section.PlatformView = groupView;
+                context.SectionHeaderView = sectionView;
             }
-            FillGroupView(group, _section);
-            return groupView;
+
+            GetSection(context);
+
+            return sectionView;
         }
+
+        #endregion
+
+        #region Internal API overrides
+
+        protected virtual void CreateCell(int cellTypeId, ref GroupedListCellContext cellContext)
+        {
+            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes, Builder);
+        }
+
+        protected virtual void CreateSection(int sectionTypeId, ref GroupedListSectionContext sectionContext)
+        {
+            var groupType = SectionTypes[sectionTypeId];
+            if (typeof(UITableViewHeaderFooterView).IsAssignableFrom(groupType))
+            {
+                sectionContext.SectionHeaderView = (UITableViewHeaderFooterView)Activator.CreateInstance(groupType, new[] { sectionTypeId.ToString() });
+            }
+            else
+            {
+                sectionContext.SectionHeaderView = (UIView)Builder.MakeView(groupType);
+            }
+        }
+        #endregion
+
+    }
+
+    public interface IKeepLastCell
+    {
+        UITableViewCell LastCell { get; }
+        NSIndexPath LastIndexPath { get; }
     }
 }

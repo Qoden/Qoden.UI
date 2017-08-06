@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Drawing;
+using Foundation;
 using UIKit;
 
 namespace Qoden.UI
 {
-    internal class TableViewUtil
+    public static class TableViewUtil
     {
-        public static UITableViewCell ToTableViewCell(QView view)
+        public static UITableViewCell ToTableViewCell(UIView view, int cellTypeId)
         {
-            var cellView = view.PlatformView;
+            var cellView = view;
             if (!(cellView is UITableViewCell))
             {
-                return new UITableViewCellAdapter(cellView);
+                return new UITableViewCellAdapter(cellView, cellTypeId.ToString());
             }
             else
             {
@@ -19,16 +20,44 @@ namespace Qoden.UI
             }
         }
 
-        internal static UITableViewHeaderFooterView ToTableViewHeaderFooter(QView view)
+        internal static UITableViewHeaderFooterView ToTableViewHeaderFooter(UIView view, int sectionTypeId)
         {
-            var cellView = view.PlatformView;
+            var cellView = view;
             if (!(cellView is UITableViewHeaderFooterView))
             {
-                return new UITableViewHeaderFooterViewAdapter(cellView);
+                return new UITableViewHeaderFooterViewAdapter(cellView, sectionTypeId.ToString());
             }
             else
             {
                 return (UITableViewHeaderFooterView)cellView;
+            }
+        }
+
+        public static nfloat DefaultGetHeightForRow<T>(this T content, UITableView tableView, NSIndexPath indexPath)
+            where T  : IUITableViewDataSource, IKeepLastCell
+        {
+            UITableViewCell cell;
+            if (indexPath.Equals(content.LastIndexPath))
+            {
+                cell = content.LastCell;
+            }
+            else
+            {
+                cell = content.GetCell(tableView, indexPath);
+            }
+            return cell.Bounds.Height;
+        }
+
+        public static UIView CreateView(int cellTypeId, Type[] cellTypes, IViewHierarchyBuilder builder)
+        {
+            var cellType = cellTypes[cellTypeId];
+            if (typeof(UITableViewCell).IsAssignableFrom(cellType))
+            {
+                return (UITableViewCell)Activator.CreateInstance(cellType, new[] { cellTypeId.ToString() });
+            }
+            else
+            {
+                return (UIView)builder.MakeView(cellType);
             }
         }
     }
@@ -38,15 +67,11 @@ namespace Qoden.UI
         QView _view;
         public UIView CellView => _view.PlatformView;
 
-        public UITableViewCellAdapter(UIView cellView)
+        public UITableViewCellAdapter(UIView cellView, string reuseId) : base(UITableViewCellStyle.Default, reuseId)
         {
             _view = new QView(cellView);
             ContentView.AddSubview(cellView);
             BackgroundColor = CellView.BackgroundColor;
-        }
-
-        public UITableViewCellAdapter(IQView<UIView> cellView) : this(cellView.PlatformView)
-        {
         }
 
         public override void LayoutSubviews()
@@ -66,7 +91,7 @@ namespace Qoden.UI
         QView _view;
         public UIView View => _view.PlatformView;
 
-        public UITableViewHeaderFooterViewAdapter(UIView cellView)
+        public UITableViewHeaderFooterViewAdapter(UIView cellView, string reuseId) : base(new NSString(reuseId))
         {
             _view = new QView(cellView);
             AddSubview(cellView);

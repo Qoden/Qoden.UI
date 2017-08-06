@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LinkerTrick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\PlatformViewLayoutBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LinearLayoutBuilder.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IListContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupedListContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewHierarchyBuilderExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Units.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QView.cs" />
@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)QImageView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QProgressBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlainListContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />

@@ -5,10 +5,10 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public abstract class PlainListContent : UITableViewDataSource
+    public abstract partial class PlainListContent : UITableViewDataSource, IPlainListContent, IKeepLastCell
     {
-        QView _item = new QView();
-        IViewHierarchyBuilder _builder;
+        UITableViewCell _lastCell;
+        NSIndexPath _lastIndexPath;
 
         public PlainListContent(IViewHierarchyBuilder builder)
         {
@@ -18,40 +18,60 @@ namespace Qoden.UI
 
         public IViewHierarchyBuilder Builder { get; private set; }
 
-        #region Cross platform inteface
+        public UITableViewCell LastCell => _lastCell;
+        public NSIndexPath LastIndexPath => _lastIndexPath;
 
-        public abstract int Count { get; }
-        public abstract QView CreateView(int position, IViewHierarchyBuilder builder);
-        public abstract void FillView(int pos, QView convertView);
-        public abstract int GetItemViewType(int position);
+        #region Redirects from iOS API to IPlainListContent methods
 
-        #endregion
+        public sealed override nint RowsInSection(UITableView tableView, nint section)
+        {
+            return NumberOfRows();
+        }
 
-        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        public sealed override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var position = indexPath.Row;
-            var typeIdx = GetItemViewType(position);
+            var context = new PlainListCellContext()
+            {
+                Row = position,
+                CellView = null,
+                IsFresh = false
+            };
+
+            var typeIdx = GetCellType(position);
             var cell = tableView.DequeueReusableCell(typeIdx.ToString());
+
             if (cell == null)
             {
-                var view = CreateView(position, ViewHierarchyBuilder.Instance);
-                cell = TableViewUtil.ToTableViewCell(view);
+                context.IsFresh = true;
+                var cellTypeId = GetCellType(context.Row);
+                CreateView(cellTypeId, ref context);
+                Assert.State(context.CellView, "CellView").NotNull();
+                cell = TableViewUtil.ToTableViewCell(context.CellView, typeIdx);
             }
             if (cell is UITableViewCellAdapter)
             {
-                _item.PlatformView = ((UITableViewCellAdapter)cell).CellView;
+                context.CellView = ((UITableViewCellAdapter)cell).CellView;
             }
             else
             {
-                _item.PlatformView = cell;
+                context.CellView = cell;
             }
-            FillView(position, _item);
+            GetCell(context);
+            _lastCell = cell;
+            _lastIndexPath = indexPath;
             return cell;
         }
 
-        public override nint RowsInSection(UITableView tableView, nint section)
+        #endregion
+
+        #region Internal API overrides
+
+        protected virtual void CreateView(int cellTypeId, ref PlainListCellContext cellContext)
         {
-            return Count;
+            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes, Builder);
         }
+
+        #endregion
     }
 }
