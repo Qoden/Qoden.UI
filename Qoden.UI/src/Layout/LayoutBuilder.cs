@@ -78,18 +78,35 @@ namespace Qoden.UI
             return new LayoutBox(layoutBounds, units ?? Units);
         }
 
+        /// <summary>
+        /// Calculate bounding frame in view coordinate system in pixels
+        /// </summary>
+        /// <returns>The frame.</returns>
+        public RectangleF BoundingFrame()
+        {
+            RectangleF combinedFrame;
+            foreach (var v in Views)
+            {
+                var frame = v.BoundingFrame();
+                combinedFrame = RectangleF.Union(combinedFrame, frame);
+            }
+            return combinedFrame;
+        }
+
+        SizeF? _preferedSize;
+        /// <summary>
+        /// Preferred layout size in pixels
+        /// </summary>
         public SizeF PreferredSize
         {
             get
             {
-                int r = int.MinValue, b = int.MinValue;
-                foreach (var v in Views)
-                {
-                    var size = v.PreferredBoundingSize();
-                    r = (int)Math.Round(Math.Max(r, v.OuterBounds.Left + size.Width));
-                    b = (int)Math.Round(Math.Max(b, v.OuterBounds.Top + size.Height));
-                }
-                return new SizeF(r, b);
+                if (_preferedSize.HasValue) return _preferedSize.Value;
+                return BoundingFrame().Size;
+            }
+            set 
+            {
+                _preferedSize = value;
             }
         }
 
