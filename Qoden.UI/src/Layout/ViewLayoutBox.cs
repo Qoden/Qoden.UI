@@ -12,7 +12,7 @@ namespace Qoden.UI
 
         public override string ToString()
         {
-            return string.Format("[ViewLayoutBox: {0}, {1}, {2}, {3}]", this.FrameLeft(), this.FrameTop(), this.FrameWidth(), this.FrameHeight());
+            return string.Format("[ViewLayoutBox: Left:{0}, Top:{1}, Width:{2}, Height:{3}]", this.FrameLeft(), this.FrameTop(), this.FrameWidth(), this.FrameHeight());
         }
 
         public SizeF MeasuredSize
