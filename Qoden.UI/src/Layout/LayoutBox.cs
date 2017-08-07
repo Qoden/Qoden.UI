@@ -9,6 +9,8 @@ namespace Qoden.UI
         RectangleF outerBounds;
         IUnit unit = IdentityUnit.Identity;
 
+        public EdgeInsets Margins { get; set; }
+
         //These variables control horizontal dimensions
         public float Left { get; set; }
         public float Right{ get; set; }
@@ -20,7 +22,7 @@ namespace Qoden.UI
         public float Height { get; set; } 
         public float CenterY { get; set; }
 
-        const float NOT_SET = -1;
+        const float NOT_SET = float.MaxValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.

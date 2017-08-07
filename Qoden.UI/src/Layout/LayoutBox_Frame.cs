@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 #pragma warning disable CS1701 // Assuming assembly reference matches identity
 
 namespace Qoden.UI
@@ -109,85 +110,15 @@ namespace Qoden.UI
             return new RectangleF(box.FrameLeft(), box.FrameTop(), box.FrameWidth(), box.FrameHeight());
         }
 
-        public static float PreferredBoundingWidth(this ILayoutBox box)
+        public static RectangleF BoundingFrame(this ILayoutBox box)
         {
-            if (LayoutBox.IsSet(box.Left) && LayoutBox.IsSet(box.Right) && LayoutBox.IsSet(box.Width))
-            {
-                return box.Left + box.Right + box.Width;
-            }
-
-            if (LayoutBox.IsSet(box.Left) && LayoutBox.IsSet(box.CenterX) && LayoutBox.IsSet(box.Right))
-            {
-                return box.Left + (box.CenterX - box.Left) * 2 + box.Right;
-            }
-
-            if (LayoutBox.IsSet(box.Left) && LayoutBox.IsSet(box.Width))
-            {
-                return box.Left + box.Width;
-            }
-
-            if (LayoutBox.IsSet(box.Left) && LayoutBox.IsSet(box.CenterX))
-            {
-                return box.Left + (box.CenterX - box.Left) * 2;
-            }
-
-            if (LayoutBox.IsSet(box.Right) && LayoutBox.IsSet(box.Width))
-            {
-                return box.Right + box.Width;
-            }
-
-            if (LayoutBox.IsSet(box.Width) && LayoutBox.IsSet(box.CenterX))
-                return box.CenterX + box.Width / 2;
-
-            if (LayoutBox.IsSet(box.Width))
-                return box.Width;
-
-            return box.FrameWidth();
-        }
-
-        public static float PreferredBoundingHeight(this ILayoutBox box)
-        {
-            if (LayoutBox.IsSet(box.Top) && LayoutBox.IsSet(box.Bottom) && LayoutBox.IsSet(box.Height))
-            {
-                return box.Top + box.Bottom + box.Height;
-            }
-
-            if (LayoutBox.IsSet(box.Top) && LayoutBox.IsSet(box.CenterY) && LayoutBox.IsSet(box.Bottom))
-            {
-                return box.Top + (box.CenterY - box.Top) * 2 + box.Bottom;
-            }
-
-            if (LayoutBox.IsSet(box.Top) && LayoutBox.IsSet(box.Height))
-            {
-                return box.Top + box.Height;
-            }
-
-            if (LayoutBox.IsSet(box.Top) && LayoutBox.IsSet(box.CenterY))
-            {
-                return box.Top + (box.CenterY - box.Top) * 2;
-            }
-
-            if (LayoutBox.IsSet(box.Bottom) && LayoutBox.IsSet(box.Height))
-            {
-                return box.Bottom + box.Height;
-            }
-
-            if (LayoutBox.IsSet(box.Height) && LayoutBox.IsSet(box.CenterY))
-                return box.CenterY + box.Height / 2;
-
-            if (LayoutBox.IsSet(box.Height))
-                return box.Height;
-
-            return box.FrameHeight();
-        }
-
-        /// <summary>
-        /// Gets the size of the preferred outer bounds. This bounds can fit 
-        /// entire box with all specified parameters such as Left, Right, Width.
-        /// </summary>
-        public static SizeF PreferredBoundingSize(this ILayoutBox box)
-        {
-            return new SizeF(box.PreferredBoundingWidth(), box.PreferredBoundingHeight());
+            var frame = box.Frame();
+            return new RectangleF(
+                frame.Left - box.Margins.Left,
+                frame.Top - box.Margins.Top,
+                frame.Width + box.Margins.Left + box.Margins.Right,
+                frame.Height + box.Margins.Top + box.Margins.Bottom
+            );
         }
     }
 }

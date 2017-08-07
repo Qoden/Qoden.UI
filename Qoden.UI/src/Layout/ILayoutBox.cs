@@ -32,9 +32,7 @@ namespace Qoden.UI
     /// </para>
     /// <para>
     /// LayoutBox can also calculate size required to correctly wrap given 
-    /// box, see <see cref="T:LayoutBox_Frame.PreferredBoundingSize"/>.
-    /// This calculation looks into LayoutBox data and tries to derive minimal 
-    /// width/height and paddings around given box.
+    /// box, see <see cref="T:LayoutBox_Frame.BoundingFrame"/>.
     /// </para>
     /// </remarks>
     public interface ILayoutBox
@@ -79,6 +77,8 @@ namespace Qoden.UI
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
+
+        EdgeInsets Margins { get; set; }
     }
 }
 
