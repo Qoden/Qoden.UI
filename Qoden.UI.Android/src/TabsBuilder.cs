@@ -35,6 +35,10 @@ namespace Qoden.UI
             for (int i = 0; i < _tabs.Count; ++i)
             {
                 _tabs[i].SetVisibility(i == position);
+                if (i == position)
+                {
+                    _tabs[i].RequestLayout();
+                }
             }
         }
 
