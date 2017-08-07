@@ -19,6 +19,11 @@ namespace Qoden.UI
         }
     }
 
+    public enum TextAlignment
+    {
+        Left, Center, Right
+    }
+
     public static partial class TextViewExtensions
     {
         public static void SetFont(this IQView<TextView> view, Font font)
@@ -39,6 +44,11 @@ namespace Qoden.UI
         public static string GetText(this IQView<TextView> view)
         {
             return view.PlatformView.GetText();
+        }
+
+        public static void SetTextAlignment(this IQView<TextView> view, TextAlignment alignment)
+        {
+            view.PlatformView.SetTextAlignment(alignment);
         }
     }
 }
