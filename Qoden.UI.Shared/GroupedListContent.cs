@@ -61,4 +61,27 @@ namespace Qoden.UI
         public View SectionHeaderView;
         public int Section;
     }
+
+    public abstract partial class GroupedListContent
+    {
+#if __IOS__
+        static Type[] _SectionTypes = { typeof(UIKit.UITableViewHeaderFooterView) };
+        static Type[] _CellTypes = { typeof(UIKit.UITableViewCell) };
+#endif
+#if __ANDROID__
+        static Type[] _SectionTypes = { typeof(Android.Views.View) };
+        static Type[] _CellTypes = { typeof(Android.Views.View) };
+#endif
+        public virtual Type[] SectionTypes { get; } = _SectionTypes;
+        public virtual Type[] CellTypes { get; } = _CellTypes;
+
+        public virtual int GetCellType(int section, int childPosition)
+        {
+            return 0;
+        }
+        public virtual int GetSectionType(int section)
+        {
+            return 0;
+        }
+    }
 }

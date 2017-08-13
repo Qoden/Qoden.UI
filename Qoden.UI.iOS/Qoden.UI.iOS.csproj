@@ -112,6 +112,7 @@
     <Compile Include="src\QodenDialog.cs" />
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
     <Compile Include="src\View\QProgressBar.cs" />
+    <Compile Include="src\View\TextAlignmentExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />

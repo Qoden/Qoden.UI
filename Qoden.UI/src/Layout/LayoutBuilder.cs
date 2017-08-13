@@ -87,7 +87,7 @@ namespace Qoden.UI
             RectangleF combinedFrame;
             foreach (var v in Views)
             {
-                var frame = v.BoundingFrame();
+                var frame = v.Frame();
                 combinedFrame = RectangleF.Union(combinedFrame, frame);
             }
             return combinedFrame;

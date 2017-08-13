@@ -9,8 +9,6 @@ namespace Qoden.UI
         RectangleF outerBounds;
         IUnit unit = IdentityUnit.Identity;
 
-        public EdgeInsets Margins { get; set; }
-
         //These variables control horizontal dimensions
         public float Left { get; set; }
         public float Right{ get; set; }

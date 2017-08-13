@@ -34,5 +34,10 @@ namespace Qoden.UI
         {
             view.PlatformView.SetFont(font);
         }
+
+        public static void SetTextAlignment(this IQView<Button> view, TextAlignment alignment)
+        {
+            view.PlatformView.SetTextAlignment(alignment);
+        }
     }
 }

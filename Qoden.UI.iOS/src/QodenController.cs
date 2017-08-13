@@ -79,15 +79,22 @@ namespace Qoden.UI
 			base.ViewWillAppear(animated);
 			Bindings.Bind();
 			Bindings.UpdateTarget();
+            ViewWillAppear();
 		}
-
 		public override void ViewWillDisappear(bool animated)
 		{
 			//TODO implement logging and return it
 			//LOG.Info("View will disappear");
 			base.ViewWillDisappear(animated);
 			Bindings.Unbind();
+            ViewWillDisappear();
 		}
+
+        protected virtual void ViewWillAppear()
+        { }
+
+        protected virtual void ViewWillDisappear()
+        { }
 
         BindingListHolder bindings;
         public BindingList Bindings

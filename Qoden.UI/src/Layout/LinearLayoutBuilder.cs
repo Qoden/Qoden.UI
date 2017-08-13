@@ -102,7 +102,7 @@ namespace Qoden.UI
             _views.Add(viewBox);
             layoutParams.Layout(viewBox);
             //Area which view wants to occupy in layout coordinates
-            var layoutFrame = _viewToLayout.Transform(viewBox.BoundingFrame());
+            var layoutFrame = _viewToLayout.Transform(viewBox.Frame());
             //Space required for view starting from layout origin in layout coordinates
             var viewFrame = new RectangleF(layoutOrigin, new SizeF(layoutFrame.Right - layoutOrigin.X, layoutFrame.Bottom - layoutOrigin.Y));
             var newLayoutOrigin = new PointF(viewFrame.Right + LayoutStep, viewFrame.Top);

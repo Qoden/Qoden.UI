@@ -1,4 +1,5 @@
-﻿using Android.Widget;
+﻿using Android.Views;
+using Android.Widget;
 
 namespace Qoden.UI
 {
@@ -17,19 +18,29 @@ namespace Qoden.UI
             view.Adapter = adapter;
         }
 
-        public static void SetContent(this ExpandableListView view, IExpandableListAdapter adapter)
-        {
-            view.SetAdapter(adapter);
-        }
-
         public static void SetContent(this IQView<ListView> view, IListAdapter adapter)
         {
             view.PlatformView.SetContent(adapter);
         }
 
+        public static void SetContent(this ExpandableListView view, IExpandableListAdapter adapter)
+        {
+            view.SetContent(adapter);
+        }
+
         public static void SetContent(this IQView<ExpandableListView> view, IExpandableListAdapter adapter)
         {
             view.PlatformView.SetContent(adapter);
+        }
+
+        public static void SetFooterView(this ListView view, View header)
+        {
+            view.AddFooterView(header);
+        }
+
+        public static void SetHeaderView(this ListView view, View header)
+        {
+            view.AddHeaderView(header);
         }
     }
 }

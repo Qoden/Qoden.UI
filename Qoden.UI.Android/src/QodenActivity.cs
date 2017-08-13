@@ -14,15 +14,21 @@ namespace Qoden.UI
             set => _view.Value = value;
         }
 
+        /// <summary>
+        /// Override this instead on OnCreate
+        /// </summary>
         public virtual void ViewDidLoad()
         {
         }
 
+        /// <summary>
+        /// Override this to create view
+        /// </summary>
         public virtual void LoadView()
         {
         }
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected sealed override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
              _view = new ViewHolder(this);
@@ -31,36 +37,40 @@ namespace Qoden.UI
             ViewDidLoad();
         }
 
-        protected override void OnPostCreate(Bundle savedInstanceState)
+        protected sealed override void OnResume()
         {
-            base.OnPostCreate(savedInstanceState);
+            base.OnResume();
             if (!Bindings.Bound)
             {
                 Bindings.Bind();
                 Bindings.UpdateTarget();
             }
+            ViewWillAppear();
         }
 
-        public override void OnPostCreate(Bundle savedInstanceState, PersistableBundle persistentState)
+        protected sealed override void OnPause()
         {
-            base.OnPostCreate(savedInstanceState, persistentState);
-            if (!Bindings.Bound)
-            {
-                Bindings.Bind();
-                Bindings.UpdateTarget();
-            }
-        }
-
-        protected override void OnStop()
-        {
-            base.OnStop();
+            base.OnPause();
             Bindings.Unbind();
+            ViewWillDisappear();
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
         }
+
+        /// <summary>
+        /// Override this instead on OnResume
+        /// </summary>
+        protected virtual void ViewWillAppear()
+        { }
+
+        /// <summary>
+        /// Override this instead on OnPause
+        /// </summary>
+        protected virtual void ViewWillDisappear()
+        { }
 
         BindingListHolder bindings;
         public BindingList Bindings

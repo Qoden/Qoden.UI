@@ -41,7 +41,7 @@ namespace Qoden.UI
         public static void SetContent(this UITableView view, IUITableViewDataSource adapter)
         {
             view.DataSource = adapter;
-            if (view.WeakDelegate == null && adapter is NSObject)
+            if (adapter is NSObject)
             {
                 view.WeakDelegate = (NSObject)adapter;
             }
@@ -50,6 +50,16 @@ namespace Qoden.UI
         public static void SetContent(this IQView<UITableView> view, IUITableViewDataSource adapter)
         {
             view.PlatformView.SetContent(adapter);
+        }
+
+        public static void SetHeaderView(this UITableView view, UIView header)
+        {
+            view.TableHeaderView = header;            
+        }
+
+        public static void SetFooterView(this UITableView view, UIView header)
+        {
+            view.TableFooterView = header;
         }
     }
 }

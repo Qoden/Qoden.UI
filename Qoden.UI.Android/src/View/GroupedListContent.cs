@@ -5,7 +5,7 @@ using Qoden.Validation;
 
 namespace Qoden.UI
 {
-    public abstract class GroupedListContent : BaseExpandableListAdapter, IHeterogeneousExpandableList, IGroupedListContent
+    public abstract partial class GroupedListContent : BaseExpandableListAdapter, IHeterogeneousExpandableList, IGroupedListContent
     {
         public GroupedListContent(IViewHierarchyBuilder builder)
         {
@@ -19,10 +19,6 @@ namespace Qoden.UI
 
         public abstract int NumberOfSections();
         public abstract int RowsInSection(int section);
-        public abstract Type[] SectionTypes { get; }
-        public abstract Type[] CellTypes { get; }
-        public abstract int GetCellType(int section, int childPosition);
-        public abstract int GetSectionType(int section);
         public abstract void GetSection(GroupedListSectionContext sectionContext);
         public abstract void GetCell(GroupedListCellContext cellContext);
 

@@ -77,8 +77,6 @@ namespace Qoden.UI
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
-
-        EdgeInsets Margins { get; set; }
     }
 }
 

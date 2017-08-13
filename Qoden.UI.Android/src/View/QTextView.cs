@@ -1,6 +1,4 @@
-﻿using System;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Widget;
 
 namespace Qoden.UI
 {
@@ -40,20 +38,7 @@ namespace Qoden.UI
 
         public static void SetTextAlignment(this TextView view, TextAlignment alignment)
         {
-            switch(alignment)
-            {
-                case TextAlignment.Center:
-                    view.Gravity = GravityFlags.Center;
-                    break;
-                case TextAlignment.Left:
-                    view.Gravity = GravityFlags.Left;
-                    break;
-                case TextAlignment.Right:
-                    view.Gravity = GravityFlags.Right;
-                    break;
-                default:
-                    throw new ArgumentException(nameof(alignment));
-            }
+            view.Gravity = alignment.ToGravityFlags();
         }
     }
 }

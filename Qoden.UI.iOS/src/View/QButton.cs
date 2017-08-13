@@ -28,6 +28,7 @@ namespace Qoden.UI
         public static void SetText(this UIButton view, string text)
         {
             view.SetTitle(text, UIControlState.Normal);
+            view.SizeToFit();
         }
 
         public static void SetTextColor(this UIButton view, RGB color)
@@ -38,6 +39,11 @@ namespace Qoden.UI
         public static void SetFont(this UIButton view, Font font)
         {
             view.Font = font.ToFont();
+        }
+
+        public static void SetTextAlignment(this UIButton view, TextAlignment alignment)
+        {
+            view.TitleLabel.TextAlignment = alignment.ToUITextAlignment();
         }
     }
 }

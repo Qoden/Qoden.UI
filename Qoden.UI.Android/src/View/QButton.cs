@@ -1,4 +1,6 @@
-﻿using Android.Widget;
+﻿using System;
+using Android.Views;
+using Android.Widget;
 
 namespace Qoden.UI
 {
@@ -29,6 +31,11 @@ namespace Qoden.UI
         public static void SetTextColor(this Button view, RGB color)
         {
             view.SetTextColor(color.ToColor());
+        }
+
+        public static void SetTextAlignment(this Button view, TextAlignment alignment)
+        {
+            view.Gravity = alignment.ToGravityFlags();
         }
     }
 }

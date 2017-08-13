@@ -1,5 +1,4 @@
-﻿using System;
-using Foundation;
+﻿using Foundation;
 using UIKit;
 
 namespace Qoden.UI
@@ -61,20 +60,7 @@ namespace Qoden.UI
 
         public static void SetTextAlignment(this UILabel view, TextAlignment alignment)
         {
-            switch (alignment)
-            {
-                case TextAlignment.Center:
-                    view.TextAlignment = UITextAlignment.Center;
-                    break;
-                case TextAlignment.Left:
-                    view.TextAlignment = UITextAlignment.Left;
-                    break;
-                case TextAlignment.Right:
-                    view.TextAlignment = UITextAlignment.Right;
-                    break;
-                default:
-                    throw new ArgumentException(nameof(alignment));
-            }
+            view.TextAlignment = alignment.ToUITextAlignment();
         }
     }
 }

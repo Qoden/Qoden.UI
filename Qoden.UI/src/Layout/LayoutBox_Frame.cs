@@ -109,17 +109,6 @@ namespace Qoden.UI
         {
             return new RectangleF(box.FrameLeft(), box.FrameTop(), box.FrameWidth(), box.FrameHeight());
         }
-
-        public static RectangleF BoundingFrame(this ILayoutBox box)
-        {
-            var frame = box.Frame();
-            return new RectangleF(
-                frame.Left - box.Margins.Left,
-                frame.Top - box.Margins.Top,
-                frame.Width + box.Margins.Left + box.Margins.Right,
-                frame.Height + box.Margins.Top + box.Margins.Bottom
-            );
-        }
     }
 }
 

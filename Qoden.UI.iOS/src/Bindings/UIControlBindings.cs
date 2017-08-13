@@ -50,8 +50,7 @@ namespace Qoden.UI
         {
             return new EventHandlerSource<T>(TouchUpInsideEvent, control)
             {
-                SetEnabledAction = SetControlEnabled,
-                ParameterExtractor = (object sender, EventArgs eventArgs) => sender
+                SetEnabledAction = SetControlEnabled
             };
         }
 
