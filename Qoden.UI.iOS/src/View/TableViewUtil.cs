@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using CoreGraphics;
 using Foundation;
 using UIKit;
 
@@ -34,7 +35,7 @@ namespace Qoden.UI
         }
 
         public static nfloat DefaultGetHeightForRow<T>(this T content, UITableView tableView, NSIndexPath indexPath)
-            where T  : IUITableViewDataSource, IKeepLastCell
+            where T : IUITableViewDataSource, IKeepLastCell
         {
             UITableViewCell cell;
             if (indexPath.Equals(content.LastIndexPath))
@@ -97,14 +98,14 @@ namespace Qoden.UI
             AddSubview(cellView);
         }
 
+        public sealed override CGSize SizeThatFits(CGSize size)
+        {
+            return _view.SizeThatFits((SizeF)size);
+        }
+
         public override void LayoutSubviews()
         {
-            if (_view != null)
-            {
-                _view.MakeViewLayoutBox((RectangleF)Bounds)
-                    .Left(0).Right(0).Top(0).Bottom(0)
-                    .Layout();
-            }
+            _view.Frame = (RectangleF)Bounds;
         }
     }
 }

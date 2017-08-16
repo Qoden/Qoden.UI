@@ -107,6 +107,7 @@ namespace Qoden.UI
                 CreateSection(groupTypeId, ref context);
                 Assert.State(context.SectionHeaderView, "SectionHeaderView").NotNull();
                 sectionView = TableViewUtil.ToTableViewHeaderFooter(context.SectionHeaderView, groupTypeId);
+                sectionView.Frame = new CoreGraphics.CGRect(0, 0, tableView.Bounds.Width, tableView.EstimatedSectionHeaderHeight);
             }
 
             if (sectionView is UITableViewHeaderFooterViewAdapter)
