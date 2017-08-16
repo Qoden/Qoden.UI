@@ -12,7 +12,7 @@ namespace Qoden.UI
     {
         public QProgressBar(ProgressBar view) : base(view) { }
 
-        public QProgressBar() {}
+        public QProgressBar() { }
     }
 
     public static partial class QProgressBar_Extensions
@@ -30,6 +30,11 @@ namespace Qoden.UI
         public static void SetProgressTint(this IQView<ProgressBar> view, RGB color)
         {
             view.PlatformView.SetProgressTint(color);
+        }
+
+        public static void SetTrackTint(this IQView<ProgressBar> view, RGB color)
+        {
+            view.PlatformView.SetTrackTint(color);
         }
     }
 }

@@ -23,5 +23,10 @@ namespace Qoden.UI
         {
             view.ProgressTintColor = color.ToColor();
         }
+
+        public static void SetTrackTint(this UIProgressView view, RGB color)
+        {
+            view.TrackTintColor = color.ToColor();
+        }
     }
 }
