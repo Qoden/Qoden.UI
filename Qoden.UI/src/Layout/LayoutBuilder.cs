@@ -117,5 +117,10 @@ namespace Qoden.UI
                 v.Layout();
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("OuterBounds={0}, PreferredSize={1}", OuterBounds, PreferredSize);
+        }
     }
 }
