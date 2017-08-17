@@ -77,6 +77,16 @@ namespace Qoden.UI
 
             GetCell(context);
 
+            //If cell view lives inside UITableViewCellAdapter then resize cell
+            //as per contents
+            if (cellView != context.CellView)
+            {
+                var heightDx = cellView.Frame.Height - cellView.ContentView.Frame.Height;
+                cellView.Frame = new CoreGraphics.CGRect(0, 0, 
+                                                         tableView.Bounds.Width, 
+                                                         context.CellView.Bounds.Height + heightDx);
+            }
+
             _lastCell = cellView;
             _lastIndexPath = indexPath;
 

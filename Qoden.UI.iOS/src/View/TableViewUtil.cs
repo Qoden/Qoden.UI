@@ -65,25 +65,27 @@ namespace Qoden.UI
 
     internal class UITableViewCellAdapter : UITableViewCell
     {
-        QView _view;
-        public UIView CellView => _view.PlatformView;
+        public UIView CellView { get; private set; }
 
         public UITableViewCellAdapter(UIView cellView, string reuseId) : base(UITableViewCellStyle.Default, reuseId)
         {
-            _view = new QView(cellView);
-            ContentView.AddSubview(cellView);
+            CellView = cellView;
+            ContentView.AddSubview(CellView);
             BackgroundColor = CellView.BackgroundColor;
         }
 
         public override void LayoutSubviews()
         {
             base.LayoutSubviews();
-            if (_view != null)
+            if (CellView != null)
             {
-                _view.MakeViewLayoutBox((RectangleF)ContentView.Bounds)
-                    .Left(0).Right(0).Top(0).Bottom(0)
-                    .Layout();
+                CellView.Frame = ContentView.Bounds;
             }
+        }
+
+        public override CoreGraphics.CGSize SizeThatFits(CoreGraphics.CGSize size)
+        {
+            return CellView?.SizeThatFits(size) ?? ContentView.SizeThatFits(size);
         }
     }
 
