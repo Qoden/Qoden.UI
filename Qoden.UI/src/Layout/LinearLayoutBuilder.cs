@@ -23,7 +23,7 @@ namespace Qoden.UI
     /// </summary>
     public class LinearLayoutBuilder
     {
-        RectangleF _layoutSpaceBounds, _boundingBox;
+        RectangleF _layoutSpaceBounds, _layoutBounds;
         PointF _layoutOrigin;
 
         float _maxSize;
@@ -40,7 +40,7 @@ namespace Qoden.UI
             _layoutBuilder = layoutBuilder;
             _maxSize = 0;
             var layoutBounds = bounds ?? _layoutBuilder.OuterBounds;
-            _boundingBox = new RectangleF(layoutBounds.Location, SizeF.Empty);
+            _layoutBounds = new RectangleF(layoutBounds.Location, SizeF.Empty);
             _layoutToView = LayoutTransform(layoutBounds, layoutDirection, flowDirection.Value);
             _viewToLayout = _layoutToView.Inverted();
             _layoutSpaceBounds = _viewToLayout.Transform(layoutBounds);
@@ -64,14 +64,14 @@ namespace Qoden.UI
                     newLayoutOrigin.Y = _layoutOrigin.Y + layoutResult.LayoutViewFrame.Height + FlowStep;
                 }
             }
-            _boundingBox = RectangleF.Union(_boundingBox, layoutResult.ViewLayoutBox.Frame());
+            _layoutBounds = RectangleF.Union(_layoutBounds, layoutResult.ViewLayoutBox.Frame());
             _maxSize = Math.Max(_maxSize, layoutResult.LayoutViewFrame.Height);
             _layoutOrigin = newLayoutOrigin;
 
             return layoutResult.ViewLayoutBox;
         }
 
-        public RectangleF LayoutBounds => _boundingBox;
+        public RectangleF LayoutBounds => _layoutBounds;
 
         public void AddOverflow()
         {
@@ -92,7 +92,8 @@ namespace Qoden.UI
 
         private LayoutViewResult LayoutView(PointF layoutOrigin, ref LayoutParams layoutParams)
         {
-            var freeSpaceSize = new SizeF(_layoutSpaceBounds.Right - layoutOrigin.X, _layoutSpaceBounds.Bottom - layoutOrigin.Y);
+            var freeSpaceSize = new SizeF(Math.Max(0, _layoutSpaceBounds.Right - layoutOrigin.X),
+                                          Math.Max(0, _layoutSpaceBounds.Bottom - layoutOrigin.Y));
             //Free space available a view in layout coordinates 
             var freeSpace = new RectangleF(layoutOrigin, freeSpaceSize);
             //Free space available for a view in view coordinates
