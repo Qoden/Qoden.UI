@@ -14,9 +14,9 @@ namespace Qoden.UI
             return builder.Add(new QView(view), layout);
         }
 
-        public static IViewLayoutBox Add(this LinearLayoutBuilder builder, IPlatformView view, Action<IViewLayoutBox> layout = null)
-        {
-            return builder.Add(new LayoutParams(view, layout));
-        }
+        //public static IViewLayoutBox Add(this LinearLayoutBuilder builder, IPlatformView view, Action<IViewLayoutBox> layout = null)
+        //{
+        //    return builder.Add(new LayoutParams(view, layout));
+        //}
     }
 }

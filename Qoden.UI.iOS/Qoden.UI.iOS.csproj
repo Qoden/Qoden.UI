@@ -118,11 +118,8 @@
     <None Include="Qoden.UI.iOS.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="project.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
-      <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
+      <Project>{B2B9D68A-CE27-4349-893D-1E65FEAC61A7}</Project>
       <Name>Qoden.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
@@ -142,5 +139,9 @@
       <Name>Qoden.Validation</Name>
     </ProjectReference>
   </ItemGroup>
+	<ItemGroup>
+		 <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+         <PackageReference Include="libphonenumber-csharp" Version="8.7.0.1" />
+	</ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

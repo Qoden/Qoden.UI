@@ -101,9 +101,6 @@
 		<Folder Include="src\Bindings\" />
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="project.json" />
-	</ItemGroup>
-	<ItemGroup>
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
@@ -111,7 +108,7 @@
 	    <Name>Qoden.Binding</Name>
 	  </ProjectReference>
 	  <ProjectReference Include="..\Qoden.UI\Qoden.UI.csproj">
-	    <Project>{451591C5-6181-4BCE-88A7-5B89DEFFF408}</Project>
+	    <Project>{B2B9D68A-CE27-4349-893D-1E65FEAC61A7}</Project>
 	    <Name>Qoden.UI</Name>
 	  </ProjectReference>
 	  <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj">
@@ -130,6 +127,12 @@
 	    <Project>{E37DFBD3-8C0D-4243-963B-7050EB125B2B}</Project>
 	    <Name>Qoden.Util</Name>
 	  </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+            <PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
+            <PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
+            <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
 	</ItemGroup>
 	<Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

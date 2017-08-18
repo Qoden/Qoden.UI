@@ -16,6 +16,9 @@ namespace Qoden.UI
 
     public class QView<T> : IQView<T> where T : class
     {
+        public static implicit operator T(QView<T> view) { return view.PlatformView; }
+        public T PlatformView { get; set; }
+
         public QView()
         { }
 
@@ -23,8 +26,6 @@ namespace Qoden.UI
         {
             PlatformView = target;
         }
-
-        public T PlatformView { get; set; }
 
         object IViewWrapper.PlatformView
         {

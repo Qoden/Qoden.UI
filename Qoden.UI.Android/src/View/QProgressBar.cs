@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.Content;
+using Android.Graphics.Drawables;
 using Android.Widget;
 
 namespace Qoden.UI
@@ -22,7 +23,12 @@ namespace Qoden.UI
 
         public static void SetProgressTint(this ProgressBar view, RGB color)
         {
-            view.SetProgressTint(color);
+            view.ProgressDrawable = new ColorDrawable(color.ToColor());
+        }
+
+        public static void SetTrackTint(this ProgressBar view, RGB color)
+        {
+            view.Background = new ColorDrawable(color.ToColor());
         }
     }
 }
