@@ -9,7 +9,7 @@ using Android.Graphics.Drawables;
 
 namespace Qoden.UI
 {
-    public class RemoteImageView : ImageView, IPlatformRemoteImageView
+    public class RemoteImageView : Android.Widget.ImageView, IPlatformRemoteImageView
     {
         RemoteImageViewModel _model;
 
@@ -56,8 +56,8 @@ namespace Qoden.UI
 
         public Drawable Placeholder
         {
-            get { return _model.Placeholder.Drawable(); }
-            set { _model.Placeholder = new PlatformImage(value); }
+            get { return _model.Placeholder; }
+            set { _model.Placeholder = value; }
         }
 
         public async Task SetRemoteImage(RemoteImage image, CancellationToken token)
@@ -65,9 +65,9 @@ namespace Qoden.UI
             await _model.SetRemoteImage(image, token);
         }
 
-        void IPlatformRemoteImageView.SetImage(PlatformImage image)
+        void IPlatformRemoteImageView.SetImage(Drawable image)
         {
-            SetImageDrawable(image.Drawable());
+            SetImageDrawable(image);
         }
 
         void IPlatformRemoteImageView.OnFireImageChanged()

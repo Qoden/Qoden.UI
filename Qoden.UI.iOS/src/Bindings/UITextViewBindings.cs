@@ -71,11 +71,6 @@ namespace Qoden.UI
         public static readonly IPropertyBindingStrategy EditingDidEndBinding = new EventHandlerBindingStrategy(EditingEndedEvent);
         public static readonly IPropertyBindingStrategy TextChangedBinding = new TextChangedBindingStrategy();
 
-        public static IProperty<string> TextProperty(this IQView<UITextView> textView, bool immediate = true)
-        {
-            return textView.TextProperty(immediate);
-        }
-
         public static IProperty<string> TextProperty(this UITextView textView, bool immediate = true)
         {
             if (immediate)
@@ -86,11 +81,6 @@ namespace Qoden.UI
             {
                 return textView.GetProperty(_ => _.Text, EditingDidEndBinding);
             }
-        }
-
-        public static IProperty<CGSize> ContentSizeProperty(this IQView<UITextView> textView)
-        {
-            return textView.ContentSizeProperty();
         }
 
         public static IProperty<CGSize> ContentSizeProperty(this UITextView textView)

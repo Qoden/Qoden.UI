@@ -20,12 +20,6 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ClickedTarget<T>(this IQView<T> control)
-            where T : UIBarButtonItem
-        {
-            return control.PlatformView.ClickedTarget();
-        }
-
         public static EventHandlerSource<T> ClickedTarget<T>(this T control)
             where T : UIBarButtonItem
         {

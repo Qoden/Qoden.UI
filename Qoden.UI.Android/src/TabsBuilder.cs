@@ -10,12 +10,12 @@ namespace Qoden.UI
     {
         public string Title;
         public Drawable Image;
-        public Android.Views.View Content;
+        public View Content;
     }
 
     public class TabsBuilder
     {
-        List<Android.Views.View> _tabs = new List<Android.Views.View>();
+        List<View> _tabs = new List<View>();
         List<TabLayout.Tab> _items = new List<TabLayout.Tab>();
 
         public TabsBuilder(TabLayout layout)
@@ -34,7 +34,7 @@ namespace Qoden.UI
         {
             for (int i = 0; i < _tabs.Count; ++i)
             {
-                _tabs[i].SetVisibility(i == position);
+                _tabs[i].Visibility = i == position ? ViewStates.Visible : ViewStates.Gone;
                 if (i == position)
                 {
                     _tabs[i].RequestLayout();

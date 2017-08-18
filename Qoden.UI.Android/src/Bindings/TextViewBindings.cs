@@ -23,11 +23,6 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy TextChangedBinding = new EventHandlerBindingStrategy<TextChangedEventArgs>(TextChangedEvent);
 
-        public static IProperty<string> TextProperty(this IQView<TextView> view)
-        {
-            return view.PlatformView.TextProperty();
-        }
-
         public static IProperty<string> TextProperty(this TextView view)
         {
             return view.GetProperty(_ => _.Text, TextChangedBinding);
@@ -44,12 +39,6 @@ namespace Qoden.UI
                 }
                 return _EditorActionEvent;
             }
-        }
-
-        public static EventHandlerSource<T> EditorActionTarget<T>(this IQView<T> view)
-            where T : TextView
-        {
-            return view.PlatformView.EditorActionTarget();
         }
 
         public static EventHandlerSource<T> EditorActionTarget<T>(this T view)

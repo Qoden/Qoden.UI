@@ -74,11 +74,6 @@ namespace Qoden.UI
         public static readonly IPropertyBindingStrategy EditingDidEndBinding = new EventHandlerBindingStrategy(EditingDidEndEvent);
         public static readonly IPropertyBindingStrategy TextChangedBinding = new TextChangedBindingStrategy();
 
-        public static IProperty<string> TextProperty(this IQView<UITextField> textField, bool immediate = true)
-        {
-            return textField.PlatformView.TextProperty(immediate);
-        }
-
         public static IProperty<string> TextProperty(this UITextField textField, bool immediate = true)
         {
             if (immediate)

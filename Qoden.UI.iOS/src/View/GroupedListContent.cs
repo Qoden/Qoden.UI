@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Foundation;
 using Qoden.Validation;
 using UIKit;
@@ -8,13 +7,12 @@ namespace Qoden.UI
 {
     public abstract partial class GroupedListContent : UITableViewDataSource, IGroupedListContent, IKeepLastCell
     {
-        public GroupedListContent(IViewHierarchyBuilder builder)
+        public GroupedListContent(ViewBuilder builder)
         {
-            Assert.Argument(builder, nameof(builder)).NotNull();
             Builder = builder;
         }
 
-        public IViewHierarchyBuilder Builder { get; private set; }
+        public ViewBuilder Builder { get; private set; }
         public UITableViewCell LastCell => _lastCell;
         public NSIndexPath LastIndexPath => _lastIndexPath;
 
@@ -140,7 +138,7 @@ namespace Qoden.UI
 
         protected virtual void CreateCell(int cellTypeId, ref GroupedListCellContext cellContext)
         {
-            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes, Builder);
+            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes);
         }
 
         protected virtual void CreateSection(int sectionTypeId, ref GroupedListSectionContext sectionContext)
@@ -152,7 +150,7 @@ namespace Qoden.UI
             }
             else
             {
-                sectionContext.SectionHeaderView = (UIView)Builder.MakeView(groupType);
+                sectionContext.SectionHeaderView = (UIView)Activator.CreateInstance(groupType);
             }
         }
         #endregion

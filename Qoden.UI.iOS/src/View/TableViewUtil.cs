@@ -49,7 +49,7 @@ namespace Qoden.UI
             return cell.Bounds.Height;
         }
 
-        public static UIView CreateView(int cellTypeId, Type[] cellTypes, IViewHierarchyBuilder builder)
+        public static UIView CreateView(int cellTypeId, Type[] cellTypes)
         {
             var cellType = cellTypes[cellTypeId];
             if (typeof(UITableViewCell).IsAssignableFrom(cellType))
@@ -58,7 +58,7 @@ namespace Qoden.UI
             }
             else
             {
-                return (UIView)builder.MakeView(cellType);
+                return (UIView)Activator.CreateInstance(cellType);
             }
         }
     }
@@ -83,7 +83,7 @@ namespace Qoden.UI
             }
         }
 
-        public override CoreGraphics.CGSize SizeThatFits(CoreGraphics.CGSize size)
+        public override CGSize SizeThatFits(CGSize size)
         {
             return CellView?.SizeThatFits(size) ?? ContentView.SizeThatFits(size);
         }
@@ -91,12 +91,12 @@ namespace Qoden.UI
 
     internal class UITableViewHeaderFooterViewAdapter : UITableViewHeaderFooterView
     {
-        QView _view;
-        public UIView View => _view.PlatformView;
+        UIView _view;
+        public UIView View => _view;
 
         public UITableViewHeaderFooterViewAdapter(UIView cellView, string reuseId) : base(new NSString(reuseId))
         {
-            _view = new QView(cellView);
+            _view = cellView;
             AddSubview(cellView);
         }
 

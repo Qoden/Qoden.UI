@@ -42,12 +42,12 @@ namespace Qoden.UI
             ChildControllers = new ChildViewControllersList(context, ChildFragmentManager);
         }
 
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             return _view.Value;
         }
 
-        public override void OnViewCreated(View view, Bundle savedInstanceState)
+        public override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
@@ -165,7 +165,7 @@ namespace Qoden.UI
         }
     }
 
-    public class QodenDialog<T> : QodenDialog where T : View
+    public class QodenDialog<T> : QodenDialog where T : Android.Views.View
     {
         public new T View
         {

@@ -3,10 +3,10 @@ using Android.Views;
 
 namespace Qoden.UI
 {
-    public struct ViewHolder
+    struct ViewHolder
     {
         IViewHost _host;
-        View _view;
+        Android.Views.View _view;
 
         public ViewHolder(IViewHost host) : this()
         {            

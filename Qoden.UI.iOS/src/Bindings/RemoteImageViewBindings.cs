@@ -21,11 +21,6 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy ImageChangedBinding = new EventHandlerBindingStrategy(ImageChangedEvent);
 
-        public static IProperty<RemoteImage> ImageProperty(this IQView<RemoteImageView> imageView)
-        {
-            return imageView.PlatformView.ImageProperty();
-        }
-
         public static IProperty<RemoteImage> ImageProperty(this RemoteImageView imageView)
         {
             return imageView.GetProperty(_ => _.Image, ImageChangedBinding);

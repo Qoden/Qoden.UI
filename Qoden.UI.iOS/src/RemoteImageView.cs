@@ -2,22 +2,19 @@
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Drawing;
+using Qoden.UI.Wrappers;
 
 namespace Qoden.UI
 {
     public class RemoteImageView : QodenView, IPlatformRemoteImageView
     {
         RemoteImageViewModel _model;
-
-        [View]
         public UIImageView ImageView { get; private set; }
-
         public UIActivityIndicatorView Indicator { get; private set; }
 
-        protected override void CreateView()
+        public RemoteImageView()
         {
-            base.CreateView();
+            ImageView = Builder.ImageView();
             _model = new RemoteImageViewModel(this);
         }
 
@@ -70,10 +67,10 @@ namespace Qoden.UI
 
         public UIImage Placeholder
         {
-            get { return _model.Placeholder.UIImage(); }
+            get { return _model.Placeholder; }
             set
             {
-                _model.Placeholder = new PlatformImage(value);
+                _model.Placeholder = value;
             }
         }
 
@@ -82,9 +79,9 @@ namespace Qoden.UI
             await _model.SetRemoteImage(image, token);
         }
 
-        void IPlatformRemoteImageView.SetImage(PlatformImage image)
+        void IPlatformRemoteImageView.SetImage(UIImage image)
         {
-            ImageView.Image = image.UIImage();
+            ImageView.Image = image;
         }
 
         void IPlatformRemoteImageView.OnFireImageChanged()

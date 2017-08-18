@@ -5,9 +5,9 @@ namespace Qoden.UI.Test
 {
     public class FakeViewLayoutBox : LayoutBox, IViewLayoutBox
     {
-        public FakeView View { get; set; }
+        public PlatformView View { get; set; }
 
-        public FakeViewLayoutBox(FakeView view, RectangleF outerBounds) : base(outerBounds)
+        public FakeViewLayoutBox(PlatformView view, RectangleF outerBounds) : base(outerBounds)
         {
             View = view;
         }

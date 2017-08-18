@@ -23,11 +23,6 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy CheckedChangeBinding = new EventHandlerBindingStrategy<CompoundButton.CheckedChangeEventArgs>(CheckedChangeEvent);
 
-        public static IProperty<bool> CheckedProperty(this IQView<CompoundButton> view)
-        {
-            return view.PlatformView.CheckedProperty();
-        }
-
         public static IProperty<bool> CheckedProperty(this CompoundButton view)
         {
             return view.GetProperty(_ => _.Checked, CheckedChangeBinding);

@@ -5,18 +5,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Qoden.UI.Test
 {
     [TestClass]
-    public class LinearLayoutBuilderTest : QodenUITest
+    public class LinearLayoutBuilderTest
     {
-        QView view1, view2, view3;
+        PlatformView view1, view2, view3;
         LayoutBuilder builder;
 
         public LinearLayoutBuilderTest()
         {
             builder = new LayoutBuilder(new RectangleF(0, 0, 100, 100));
 
-            view1 = new QView(new FakeView(0, 0, 20, 30));
-            view2 = new QView(new FakeView(0, 0, 20, 20));
-            view3 = new QView(new FakeView(0, 0, 100, 100));
+            view1 = new PlatformView(0, 0, 20, 30);
+            view2 = new PlatformView(0, 0, 20, 20);
+            view3 = new PlatformView(0, 0, 100, 100);
         }
 
         [TestMethod]

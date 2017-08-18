@@ -2,10 +2,10 @@
 namespace Qoden.UI
 {
 #if __IOS__
-    using View = UIKit.UIView;
+    using PlatformView = UIKit.UIView;
 #endif
 #if __ANDROID__
-    using View = Android.Views.View;
+    using PlatformView = Android.Views.View;
 #endif
 
     public interface IPlainListContent 
@@ -31,7 +31,7 @@ namespace Qoden.UI
     public struct PlainListCellContext
     {
         public bool IsFresh;
-        public View CellView;
+        public PlatformView CellView;
         public int Row;
     }
 

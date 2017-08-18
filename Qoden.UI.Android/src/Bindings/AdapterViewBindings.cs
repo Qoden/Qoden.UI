@@ -7,12 +7,6 @@ namespace Qoden.UI
 {
     public static class AdapterViewBindings
     {
-        public static BindingList Adapter<T>(this BindingList bindings, IQView<AdapterView<T>> view, T adapter)
-            where T : IAdapter, IBinding
-        {
-            return bindings.Adapter(view.PlatformView, adapter);
-        }
-
         /// <summary>
         /// Set adapter into view and then add it as a binding if it support IBinding interface. Usually this is done 
         /// to make adapter subscribe/unsubscribe to model together will all other bindings.
@@ -45,12 +39,6 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy ItemSelectedEventBinding = new EventHandlerBindingStrategy<AdapterView.ItemSelectedEventArgs>(ItemSelectedEvent);
 
-        public static EventHandlerSource<T> ItemSelectedTarget<T>(this IQView<T> view)
-            where T : AdapterView
-        {
-            return view.PlatformView.ItemSelectedTarget();
-        }
-
         public static EventHandlerSource<T> ItemSelectedTarget<T>(this T view)
             where T : AdapterView
         {
@@ -75,12 +63,6 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ItemClickTarget<T>(this IQView<T> view)
-            where T : AdapterView
-        {
-            return view.PlatformView.ItemClickTarget();
-        }
-        
         public static EventHandlerSource<T> ItemClickTarget<T>(this T view)
             where T : AdapterView
         {
@@ -94,11 +76,6 @@ namespace Qoden.UI
         static void SetViewEnabled(AdapterView view, bool enabled)
         {
             view.Enabled = enabled;
-        }
-
-        public static AdapterBinding<T> Adapter<T>(this IQView<AdapterView<T>> view) where T : IAdapter
-        {
-            return view.PlatformView.Adapter();
         }
 
         public static AdapterBinding<T> Adapter<T>(this AdapterView<T> view) where T : IAdapter

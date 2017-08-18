@@ -10,13 +10,12 @@ namespace Qoden.UI
         UITableViewCell _lastCell;
         NSIndexPath _lastIndexPath;
 
-        public PlainListContent(IViewHierarchyBuilder builder)
+        public PlainListContent(ViewBuilder builder)
         {
-            Assert.Argument(builder, nameof(builder)).NotNull();
             Builder = builder;
         }
 
-        public IViewHierarchyBuilder Builder { get; private set; }
+        public ViewBuilder Builder { get; private set; }
 
         public UITableViewCell LastCell => _lastCell;
         public NSIndexPath LastIndexPath => _lastIndexPath;
@@ -69,7 +68,7 @@ namespace Qoden.UI
 
         protected virtual void CreateView(int cellTypeId, ref PlainListCellContext cellContext)
         {
-            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes, Builder);
+            cellContext.CellView = TableViewUtil.CreateView(cellTypeId, CellTypes);
         }
 
         #endregion

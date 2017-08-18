@@ -7,17 +7,16 @@ namespace Qoden.UI
 {
     public abstract partial class PlainListContent : BaseAdapter<object>, IPlainListContent
     {
-        public PlainListContent(IViewHierarchyBuilder builder)
+        public PlainListContent(ViewBuilder builder)
         {
-            Assert.Argument(builder, nameof(builder)).NotNull();
             Builder = builder;
         }
 
-        public IViewHierarchyBuilder Builder { get; private set; }
+        public ViewBuilder Builder { get; private set; }
 
         #region Redirects from iOS API to IPlainListContent methods
 
-        public sealed override View GetView(int position, View convertView, ViewGroup parent)
+        public sealed override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var context = new PlainListCellContext()
             {
@@ -50,10 +49,13 @@ namespace Qoden.UI
 
         #region Internal API overrides
 
+        object[] ActivatorArgs = new object[1];
+
         protected virtual void CreateCell(int cellTypeId, ref PlainListCellContext cellContext)
         {
             var childViewType = CellTypes[cellTypeId];
-            var convertView = (View)Builder.MakeView(childViewType);
+            ActivatorArgs[0] = Builder.Context;
+            var convertView = (Android.Views.View)Activator.CreateInstance(childViewType, ActivatorArgs);
             cellContext.CellView = convertView;
         }
 

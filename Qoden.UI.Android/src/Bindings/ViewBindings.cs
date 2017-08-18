@@ -14,14 +14,14 @@ namespace Qoden.UI
             {
                 if (LinkerTrick.False)
                 {
-                    new View(null).Click += (o, a) => { };
+                    new Android.Views.View(null).Click += (o, a) => { };
                 }
                 return _ClickEvent;
             }
         }
 
         public static EventHandlerSource<T> ClickTarget<T>(this T view)
-            where T : View
+            where T : Android.Views.View
         {
             return new EventHandlerSource<T>(ClickEvent, view)
             {
@@ -29,7 +29,7 @@ namespace Qoden.UI
             };
         }
 
-        static void SetViewEnabled(View view, bool enabled)
+        static void SetViewEnabled(Android.Views.View view, bool enabled)
         {
             view.Enabled = enabled;
         }

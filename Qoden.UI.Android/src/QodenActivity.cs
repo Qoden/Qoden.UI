@@ -15,7 +15,7 @@ namespace Qoden.UI
         }
 
         /// <summary>
-        /// Override this instead on OnCreate
+        /// Override this instead of OnCreate
         /// </summary>
         public virtual void ViewDidLoad()
         {

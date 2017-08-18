@@ -7,13 +7,12 @@ namespace Qoden.UI
 {
     public abstract partial class GroupedListContent : BaseExpandableListAdapter, IHeterogeneousExpandableList, IGroupedListContent
     {
-        public GroupedListContent(IViewHierarchyBuilder builder)
-        {
-            Assert.Argument(builder, nameof(builder)).NotNull();
+        public GroupedListContent(ViewBuilder builder)
+        {            
             Builder = builder;
         }
 
-        public IViewHierarchyBuilder Builder { get; private set; }
+        public ViewBuilder Builder { get; private set; }
 
         #region Cross Platform interface
 
@@ -47,7 +46,7 @@ namespace Qoden.UI
 
         public sealed override int GroupCount => NumberOfSections();
 
-        public sealed override View GetChildView(int groupPosition, int childPosition, bool isLastChild, View convertView, ViewGroup parent)
+        public sealed override Android.Views.View GetChildView(int groupPosition, int childPosition, bool isLastChild, Android.Views.View convertView, ViewGroup parent)
         {
             var context = new GroupedListCellContext()
             {
@@ -68,7 +67,7 @@ namespace Qoden.UI
             return context.CellView;
         }
 
-        public sealed override View GetGroupView(int groupPosition, bool isExpanded, View convertView, ViewGroup parent)
+        public sealed override Android.Views.View GetGroupView(int groupPosition, bool isExpanded, Android.Views.View convertView, ViewGroup parent)
         {
             var context = new GroupedListSectionContext()
             {
@@ -99,14 +98,18 @@ namespace Qoden.UI
         protected virtual void CreateCell(int cellTypeId, ref GroupedListCellContext cellContext)
         {
             var childViewType = CellTypes[cellTypeId];
-            var convertView = (View)Builder.MakeView(childViewType);
+            ActivatorArgs[0] = Builder.Context;
+            var convertView = (Android.Views.View)Activator.CreateInstance(childViewType, ActivatorArgs);
             cellContext.CellView = convertView;
         }
+
+        object[] ActivatorArgs = new object[1];
 
         protected virtual void CreateSection(int sectionTypeId, ref GroupedListSectionContext sectionContext)
         {
             var groupType = SectionTypes[sectionTypeId];
-            var convertView = (View)Builder.MakeView(groupType);
+            ActivatorArgs[0] = Builder.Context;
+            var convertView = (Android.Views.View)Activator.CreateInstance(groupType, ActivatorArgs);
             sectionContext.SectionHeaderView = convertView;
         }
 

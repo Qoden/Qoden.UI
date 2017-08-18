@@ -9,7 +9,7 @@ namespace Qoden.UI
 {
     public class QodenTableViewCell : UITableViewCell, ILayoutable
     {
-        ViewHierarchy hierarchy;
+        public ViewBuilder Builder { get; private set; }
 
         public QodenTableViewCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
         {
@@ -48,13 +48,7 @@ namespace Qoden.UI
 
         void Initialize()
         {
-            CreateView();
-        }
-
-        protected virtual void CreateView()
-        {
-            BackgroundColor = UIColor.White;
-            hierarchy = new ViewHierarchy(this, ContentView, ViewHierarchyBuilder.Instance);
+            Builder = new ViewBuilder(ContentView);
         }
 
         public override void LayoutSubviews()
@@ -79,20 +73,20 @@ namespace Qoden.UI
 
         public sealed override CGSize SizeThatFits(CGSize size)
         {
-            return SizeThatFits((SizeF)size);
+            return PreferredSize((SizeF)size);
         }
 
-        public virtual SizeF SizeThatFits(SizeF bounds)
+        public virtual SizeF PreferredSize(SizeF bounds)
         {
-            return ViewLayoutUtil.SizeThatFits(this, bounds);
+            return ViewLayoutUtil.PreferredSize(this, bounds);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                hierarchy?.Dispose();
-                bindings?.Unbind();
+                Builder.Dispose();
+                bindings.Unbind();
             }
             base.Dispose(disposing);
         }
@@ -101,7 +95,7 @@ namespace Qoden.UI
         {
             base.WillMoveToSuperview(newsuper);
 
-            if (bindings != null)
+            if (bindings.HasValue)
             {
                 if (newsuper != null)
                 {
@@ -115,15 +109,7 @@ namespace Qoden.UI
             }
         }
 
-        private BindingList bindings;
-        public BindingList Bindings
-        {
-            get
-            {
-                if (bindings == null)
-                    bindings = new BindingList();
-                return bindings;
-            }
-        }
+        BindingListHolder bindings;
+        public BindingList Bindings => bindings.Value;
     }
 }

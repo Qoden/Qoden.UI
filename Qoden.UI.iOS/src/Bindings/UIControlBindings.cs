@@ -35,28 +35,22 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy ValueBinding = new EventHandlerBindingStrategy(ValueChangedEvent);
 
-        public static IProperty<bool> EnabledProperty(this IQView<UIControl> control)
-        {
-            return control.PlatformView.EnabledProperty();
-        }
-
         public static IProperty<bool> EnabledProperty(this UIControl control)
         {
             return control.GetProperty(_ => _.Enabled, KVCBindingStrategy.Instance);
         }
 
-        public static EventHandlerSource<T> ClickTarget<T>(this T control)
-            where T : UIControl
+        public static EventHandlerSource ClickTarget(this UIControl control)
         {
-            return new EventHandlerSource<T>(TouchUpInsideEvent, control)
+            return new EventHandlerSource(TouchUpInsideEvent, control)
             {
                 SetEnabledAction = SetControlEnabled
             };
         }
 
-        static void SetControlEnabled(UIControl control, bool enabled)
+        static void SetControlEnabled(object control, bool enabled)
         {
-            control.Enabled = enabled;
+            ((UIControl)control).Enabled = enabled;
         }
     }
 }

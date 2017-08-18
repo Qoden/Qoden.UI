@@ -34,12 +34,12 @@ namespace Qoden.UI
             set { bindings.Value = value; }
         }
 
-        public sealed override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             return _view.Value;
         }
 
-        public sealed override void OnViewCreated(View view, Bundle savedInstanceState)
+        public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
@@ -111,7 +111,7 @@ namespace Qoden.UI
         }
     }
 
-    public class QodenController<T> : QodenController where T : View
+    public class QodenController<T> : QodenController where T : Android.Views.View
     {
         public new T View
         {

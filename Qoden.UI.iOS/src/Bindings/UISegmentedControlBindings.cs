@@ -24,11 +24,6 @@ namespace Qoden.UI
             }
         }
 
-        public static IProperty<int> SelectedSegmentProperty(this IQView<UISegmentedControl> segments)
-        {
-            return segments.PlatformView.SelectedSegmentProperty();
-        }
-
         public static IProperty<int> SelectedSegmentProperty(this UISegmentedControl segments)
         {
             return new SelectedSegment(segments);

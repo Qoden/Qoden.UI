@@ -5,10 +5,10 @@ using Qoden.Validation;
 namespace Qoden.UI
 {
 #if __IOS__
-    using View = UIKit.UIView;
+    using PlatformView = UIKit.UIView;
 #endif
 #if __ANDROID__
-    using View = Android.Views.View;
+    using PlatformView = Android.Views.View;
 #endif
 
     public interface IGroupedListContent
@@ -50,7 +50,7 @@ namespace Qoden.UI
     public struct GroupedListCellContext
     {
         public bool IsFresh;
-        public View CellView;
+        public PlatformView CellView;
         public int Section;
         public int Row;
     }
@@ -58,7 +58,7 @@ namespace Qoden.UI
     public struct GroupedListSectionContext
     {
         public bool IsFresh;
-        public View SectionHeaderView;
+        public PlatformView SectionHeaderView;
         public int Section;
     }
 

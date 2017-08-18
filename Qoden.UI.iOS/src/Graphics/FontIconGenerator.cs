@@ -16,12 +16,12 @@ namespace Qoden.UI
             _iconAppearance = appearance ?? throw new ArgumentNullException(nameof(appearance));
 		}
 
-        public PlatformImage CreateIcon(char icon)
+        public Image CreateIcon(char icon)
         {
             return CreateIcon(icon, UIEdgeInsets.Zero);   
         }
 
-        public PlatformImage CreateIcon(char icon, UIEdgeInsets insets)
+        public Image CreateIcon(char icon, UIEdgeInsets insets)
         {
             getGlyphCharBuffer[0] = icon;
             getGlyphGlyphBuffer[0] = 0;
@@ -52,7 +52,7 @@ namespace Qoden.UI
                         {
                             image = image.ImageWithRenderingMode(_iconAppearance.RenderingMode);
                         }
-                        return new PlatformImage(image);
+                        return image.AsImage();
                     }
                 }
                 finally

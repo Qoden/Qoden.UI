@@ -33,11 +33,6 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy PageSelectedEventBinding = new EventHandlerBindingStrategy<ViewPager.PageSelectedEventArgs>(PageSelectedEvent);
 
-        public static IProperty<int> SelectedPagePositionProperty(this IQView<ViewPager> viewPager)
-        {
-            return viewPager.PlatformView.SelectedPagePositionProperty();
-        }
-
         public static IProperty<int> SelectedPagePositionProperty(this ViewPager viewPager)
         {
             return viewPager.GetProperty(_ => _.CurrentItem, PageSelectedEventBinding);

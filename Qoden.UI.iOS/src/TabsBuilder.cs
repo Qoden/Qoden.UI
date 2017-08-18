@@ -33,7 +33,7 @@ namespace Qoden.UI
             for (int i = 0; i < _tabs.Count; ++i)
             {
                 var enable = i == position;
-                _tabs[i].SetVisibility(enable);
+                _tabs[i].Hidden = !enable;
                 if (enable)
                 {
                     _tabs[i].Superview.BringSubviewToFront(_tabs[i]);
