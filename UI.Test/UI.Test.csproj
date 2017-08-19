@@ -20,70 +20,70 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Qoden.UI.Shared\Layout\ILayoutBox.cs">
+    <Compile Include="..\UI.Shared\Layout\ILayoutBox.cs">
       <Link>src\Layout\ILayoutBox.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\ILayoutable.cs">
+    <Compile Include="..\UI.Shared\Layout\ILayoutable.cs">
       <Link>src\Layout\ILayoutable.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\IViewLayoutBox.cs">
+    <Compile Include="..\UI.Shared\Layout\IViewLayoutBox.cs">
       <Link>src\Layout\IViewLayoutBox.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox.cs">
       <Link>src\Layout\LayoutBox.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_Center.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_Center.cs">
       <Link>src\Layout\LayoutBox_Center.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_Frame.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_Frame.cs">
       <Link>src\Layout\LayoutBox_Frame.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_LTRBWH.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_LTRBWH.cs">
       <Link>src\Layout\LayoutBox_LTRBWH.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_MinMax.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_MinMax.cs">
       <Link>src\Layout\LayoutBox_MinMax.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_Relative.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_Relative.cs">
       <Link>src\Layout\LayoutBox_Relative.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBox_Unit.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBox_Unit.cs">
       <Link>src\Layout\LayoutBox_Unit.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LayoutBuilder.cs">
+    <Compile Include="..\UI.Shared\Layout\LayoutBuilder.cs">
       <Link>src\Layout\LayoutBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\LinearLayoutBuilder.cs">
+    <Compile Include="..\UI.Shared\Layout\LinearLayoutBuilder.cs">
       <Link>src\Layout\LinearLayoutBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\Units.cs">
+    <Compile Include="..\UI.Shared\Layout\Units.cs">
       <Link>src\Layout\Units.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\ViewLayoutBox.cs">
+    <Compile Include="..\UI.Shared\Layout\ViewLayoutBox.cs">
       <Link>src\Layout\ViewLayoutBox.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\ViewLayoutUtil.cs">
+    <Compile Include="..\UI.Shared\Layout\ViewLayoutUtil.cs">
       <Link>src\Layout\ViewLayoutUtil.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Layout\ViewSizing.cs">
+    <Compile Include="..\UI.Shared\Layout\ViewSizing.cs">
       <Link>src\Layout\ViewSizing.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\ColorFromString.cs">
+    <Compile Include="..\UI.Shared\Primitives\ColorFromString.cs">
       <Link>src\Primitives\ColorFromString.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\EdgeInsets.cs">
+    <Compile Include="..\UI.Shared\Primitives\EdgeInsets.cs">
       <Link>src\Primitives\EdgeInsets.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\Font.cs">
+    <Compile Include="..\UI.Shared\Primitives\Font.cs">
       <Link>src\Primitives\Font.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\Matrix2d.cs">
+    <Compile Include="..\UI.Shared\Primitives\Matrix2d.cs">
       <Link>src\Primitives\Matrix2d.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\RGB.cs">
+    <Compile Include="..\UI.Shared\Primitives\RGB.cs">
       <Link>src\Primitives\RGB.cs</Link>
     </Compile>
-    <Compile Include="..\Qoden.UI.Shared\Primitives\TextAlignment.cs">
+    <Compile Include="..\UI.Shared\Primitives\TextAlignment.cs">
       <Link>src\Primitives\TextAlignment.cs</Link>
     </Compile>
   </ItemGroup>

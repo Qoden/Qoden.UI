@@ -1,5 +1,5 @@
 ﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
+  <Import Project="..\UI.Shared\UI.Shared.projitems" Label="Shared" Condition="Exists('..\UI.Shared\UI.Shared.projitems')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -98,29 +98,17 @@
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Qoden.UI.iOS.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Qoden.Binding\Qoden.Binding\Qoden.Binding.csproj">
-      <Project>{36DE15DC-CDE0-4B9A-B108-65A40D257520}</Project>
-      <Name>Qoden.Binding</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Qoden.Format\Qoden.Format\Qoden.Format.csproj">
-      <Project>{94E3A418-2C3D-4BD8-9A0A-5408BE35BCF2}</Project>
-      <Name>Qoden.Format</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Qoden.Reflection\Qoden.Reflection\Qoden.Reflection.csproj">
-      <Project>{60E5307F-842C-405D-BD34-1ADE30B5D7CD}</Project>
-      <Name>Qoden.Reflection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Qoden.Validation\Qoden.Validation\Qoden.Validation.csproj">
-      <Project>{2FDBE806-5C80-467B-83C6-AF4707ED7FC6}</Project>
-      <Name>Qoden.Validation</Name>
-    </ProjectReference>
+    <None Include="UI.iOS.csproj" />
   </ItemGroup>
 	<ItemGroup>
 		 <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
          <PackageReference Include="libphonenumber-csharp" Version="8.7.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Binding\Binding.csproj">
+	    <Project>{275AD67F-E85A-4BA9-AD48-08247E5E06DC}</Project>
+	    <Name>Binding</Name>
+	  </ProjectReference>
 	</ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

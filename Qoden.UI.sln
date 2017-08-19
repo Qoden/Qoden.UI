@@ -1,13 +1,17 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Qoden.UI", "Qoden.UI.Shared\Qoden.UI.shproj", "{D5300C65-55EE-4881-90C3-E58F21190F75}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UI.Shared", "UI.Shared\UI.Shared.shproj", "{D5300C65-55EE-4881-90C3-E58F21190F75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.UI.Android", "Qoden.UI.Android\Qoden.UI.Android.csproj", "{E13D3879-B962-4072-9908-F548A87E9473}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Android", "UI.Android\UI.Android.csproj", "{E13D3879-B962-4072-9908-F548A87E9473}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.UI.iOS", "Qoden.UI.iOS\Qoden.UI.iOS.csproj", "{FFE30417-BB9D-4669-9BE8-3866380BE603}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.iOS", "UI.iOS\UI.iOS.csproj", "{FFE30417-BB9D-4669-9BE8-3866380BE603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.UI.Test", "Qoden.UI.Test\Qoden.UI.Test.csproj", "{4ED82195-C5A5-44D1-948D-5B513DDF9179}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Test", "UI.Test\UI.Test.csproj", "{4ED82195-C5A5-44D1-948D-5B513DDF9179}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding", "Binding\Binding.csproj", "{275AD67F-E85A-4BA9-AD48-08247E5E06DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding.Test", "Binding.Test\Binding.Test.csproj", "{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,5 +31,13 @@ Global
 		{4ED82195-C5A5-44D1-948D-5B513DDF9179}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ED82195-C5A5-44D1-948D-5B513DDF9179}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ED82195-C5A5-44D1-948D-5B513DDF9179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{275AD67F-E85A-4BA9-AD48-08247E5E06DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{275AD67F-E85A-4BA9-AD48-08247E5E06DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{275AD67F-E85A-4BA9-AD48-08247E5E06DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{275AD67F-E85A-4BA9-AD48-08247E5E06DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -73,7 +73,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Resources\AboutResources.txt" />
-		<None Include="Qoden.UI.Android.csproj" />
+		<None Include="UI.Android.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<AndroidResource Include="Resources\values\Strings.xml" />
@@ -91,10 +91,13 @@
             <PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
             <PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
             <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
-            <PackageReference Include="Qoden.Binding">
-              <Version>1.0.1</Version>
-            </PackageReference>
 	</ItemGroup>
-	<Import Project="..\Qoden.UI.Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Qoden.UI.Shared\Qoden.UI.Shared.projitems')" />
+	<ItemGroup>
+	  <ProjectReference Include="..\Binding\Binding.csproj">
+	    <Project>{275AD67F-E85A-4BA9-AD48-08247E5E06DC}</Project>
+	    <Name>Binding</Name>
+	  </ProjectReference>
+	</ItemGroup>
+	<Import Project="..\UI.Shared\UI.Shared.projitems" Label="Shared" Condition="Exists('..\UI.Shared\UI.Shared.projitems')" />
 	<Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
