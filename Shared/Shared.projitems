@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{D5300C65-55EE-4881-90C3-E58F21190F75}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Qoden.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)LinkerTrick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GroupedListContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlainListContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ILayoutable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ILayoutBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\IViewLayoutBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Center.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Frame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_LTRBWH.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_MinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Relative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Unit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LinearLayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewSizing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\ImageView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\ProgressBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\View.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\Units.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\RGB.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\EdgeInsets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\Matrix2d.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\Font.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\TextAlignment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\ColorFromString.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QodenView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\BindingListHolder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Primitives\RemoteImage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteImageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModelStore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IFontIconGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FontAwesome.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\GroupTableView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Layout\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Wrappers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Primitives\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Utils\" />
+  </ItemGroup>
+</Project>

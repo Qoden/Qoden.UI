@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\Qoden.UI.Shared.projitems')" />
+	<Import Project="..\Common.props" />
+  <Import Project="..\Build\Mobile.csproj" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E13D3879-B962-4072-9908-F548A87E9473}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Qoden.UI</RootNamespace>
+    <AssemblyName>Qoden.UI.Android</AssemblyName>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\RemoteImageView.cs" />
+    <Compile Include="src\IReverseAdapter.cs" />
+    <Compile Include="src\QodenActivity.cs" />
+    <Compile Include="src\PlainListBinding.cs" />
+    <Compile Include="src\GroupedObservableAdapter.cs" />
+    <Compile Include="src\ListItemContext.cs" />
+    <Compile Include="src\TabsBuilder.cs" />
+    <Compile Include="src\QodenController.cs" />
+    <Compile Include="src\ViewModelStore.cs" />
+    <Compile Include="src\Graphics\TypefaceCollection.cs" />
+    <Compile Include="src\Bindings\TextViewBindings.cs" />
+    <Compile Include="src\Bindings\CompoundButtonBindings.cs" />
+    <Compile Include="src\Bindings\RemoteImageViewBindings.cs" />
+    <Compile Include="src\Bindings\ViewBindings.cs" />
+    <Compile Include="src\Bindings\ViewPagerBindings.cs" />
+    <Compile Include="src\Bindings\AdapterViewBindings.cs" />
+    <Compile Include="src\View\PlainListContent.cs" />
+    <Compile Include="src\View\GroupedListContent.cs" />
+    <Compile Include="src\Graphics\FontIconDrawable.cs" />
+    <Compile Include="src\QodenDialog.cs" />
+    <Compile Include="src\ChildViewControllersList.cs" />
+    <Compile Include="src\IControllerHost.cs" />
+    <Compile Include="src\ViewHolder.cs" />
+    <Compile Include="src\IViewHost.cs" />
+    <Compile Include="src\QodenApplication.cs" />
+    <Compile Include="src\IDetachedController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Qoden.UI.Android.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
+    <Folder Include="src\View\" />
+    <Folder Include="src\Graphics\" />
+    <Folder Include="src\Bindings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
+      <Project>{275AD67F-E85A-4BA9-AD48-08247E5E06DC}</Project>
+      <Name>Qoden.Binding</Name>
+    </ProjectReference>
+		<PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
+		<PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
+		<PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
+
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+</Project>

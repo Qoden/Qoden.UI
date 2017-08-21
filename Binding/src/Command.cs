@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
 using Qoden.Validation;
-using Qoden.Reflection;
+using Qoden.Util;
 
 namespace Qoden.Binding
 {

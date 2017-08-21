@@ -1,5 +1,5 @@
 using System;
-using Qoden.Reflection;
+using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -72,8 +72,8 @@ namespace Qoden.Binding
 				return;
 			Assert.State (Source != null).IsTrue ("Source is not set");
 			sourceSubscription = Source.OnPropertyChange (Source_Change);
-			if (Target != null)
-				targetSubscription = Target.OnPropertyChange (Target_Change);
+            if (Target != null && this.UpdatesSource())
+                targetSubscription = Target.OnPropertyChange(Target_Change);
 		}
 
 		void Source_Change (IProperty _)
@@ -104,7 +104,7 @@ namespace Qoden.Binding
 
 		public void UpdateTarget ()
 		{	
-			if (this.UpdatesTarget ())
+            if (this.UpdatesTarget ())
 				PerformAction (UpdateTargetAction);
 		}
 

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Qoden.Validation;
-using Qoden.Reflection;
+using Qoden.Util;
 using System.Reflection;
 
 namespace Qoden.Binding

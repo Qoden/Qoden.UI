@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Qoden.Reflection;
+using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding

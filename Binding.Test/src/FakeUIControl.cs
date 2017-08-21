@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using Qoden.Reflection;
+using Qoden.Util;
 
 namespace Qoden.Binding.Test
 {

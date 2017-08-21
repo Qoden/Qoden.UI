@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using Qoden.Reflection;
+using Qoden.Util;
 
 namespace Qoden.Binding
 {	

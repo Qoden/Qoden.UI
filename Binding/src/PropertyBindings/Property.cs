@@ -4,7 +4,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Collections;
 using System.Linq.Expressions;
-using Qoden.Reflection;
+using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -169,7 +169,7 @@ namespace Qoden.Binding
 		IDisposable IProperty.OnPropertyChange(Action<IProperty> action)
 		{
 			if (BindingStrategy == null) 
-				throw new InvalidOperationException("Property '" + this.Key + "' does not support change tracking (BindingStrategy is null)");
+                throw new InvalidOperationException("Property '" + this.Key + "' does not support change tracking (BindingStrategy is null).");
 			return BindingStrategy.SubscribeToPropertyChange(this, action);
 		}
 	}

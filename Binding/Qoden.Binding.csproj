@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <DefineConstants>$(DefineConstants);__NET_CORE__</DefineConstants>
+    <AssemblyName>Qoden.Binding</AssemblyName>
+    <PackageId>Qoden.Binding</PackageId>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <Authors>Qoden Technologies</Authors>
+    <Description>Cross platform classes to enable extensible MVVM and simple data binding.</Description>
+    <RootNamespace>Qoden.Binding</RootNamespace>
+    <AssemblyName>Qoden.Binding</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Qoden.Binding.csproj" />
+  </ItemGroup>
+</Project>
