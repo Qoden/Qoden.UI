@@ -89,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{275AD67F-E85A-4BA9-AD48-08247E5E06DC}</Project>
+      <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
 		<PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
