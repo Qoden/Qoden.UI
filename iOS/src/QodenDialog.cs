@@ -37,13 +37,18 @@ namespace Qoden.UI
         private void Initialize()
         {
             ModalPresentationStyle = UIModalPresentationStyle.OverFullScreen;
+            //HideOnTap is true by default
+            _tapRecognizer = new UITapGestureRecognizer(View_Tap);
+            _tapRecognizer.CancelsTouchesInView = false;
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            var tapGesture = new UITapGestureRecognizer(View_Tap);
-            View.AddGestureRecognizer(tapGesture);
+            if (_tapRecognizer != null)
+            {
+                View.AddGestureRecognizer(_tapRecognizer);                
+            }
         }
 
         public UIViewController Parent
@@ -61,8 +66,30 @@ namespace Qoden.UI
                 _parent = Assert.Property(value).NotNull().Value;
             }
         }
+        UITapGestureRecognizer _tapRecognizer;
+        public bool HideOnTap 
+        {
+            get => _tapRecognizer != null;
+            set 
+            {
+                if (value != HideOnTap)
+                {
+                    if (value)
+                    {
+                        _tapRecognizer = new UITapGestureRecognizer(View_Tap);
+                        _tapRecognizer.CancelsTouchesInView = false;
+                        View.AddGestureRecognizer(_tapRecognizer);
+                    }
+                    else
+                    {
+                        View.RemoveGestureRecognizer(_tapRecognizer);
+                        _tapRecognizer.Dispose();
+                        _tapRecognizer = null;
+                    }
+                }    
+            }
+        }
 
-        public bool HideOnTap { get; set; } = true;
         public bool IsDisplayed
         {
             get;

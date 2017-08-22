@@ -37,11 +37,22 @@ namespace Qoden.UI
 
     public abstract partial class PlainListContent : IPlainListContent
     {
+        
+#if __IOS__
+        static readonly Type[] _CellTypes = { typeof(UIKit.UITableViewCell) };
+#endif
+#if __ANDROID__
+        static readonly Type[] _CellTypes = { typeof(Android.Views.View) };
+#endif
         #region Cross platform inteface
 
+        public virtual Type[] CellTypes => _CellTypes;
+        public virtual int GetCellType(int row)
+        {
+            return 0;
+        }
+
         public abstract int NumberOfRows();
-        public abstract Type[] CellTypes { get; }
-        public abstract int GetCellType(int row);
         public abstract void GetCell(PlainListCellContext cellContext);
 
         #endregion

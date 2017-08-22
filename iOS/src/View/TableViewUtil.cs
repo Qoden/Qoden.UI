@@ -8,6 +8,15 @@ namespace Qoden.UI
 {
     public static class TableViewUtil
     {
+        static TableViewUtil()
+        {
+            if (LinkerTrick.False)
+            {
+                // ReSharper disable once ObjectCreationAsStatement
+                new UITableViewCell(UITableViewCellStyle.Default, "");
+            }
+        }
+        
         public static UITableViewCell ToTableViewCell(UIView view, int cellTypeId)
         {
             var cellView = view;
@@ -52,14 +61,15 @@ namespace Qoden.UI
         public static UIView CreateView(int cellTypeId, Type[] cellTypes)
         {
             var cellType = cellTypes[cellTypeId];
+            if (typeof(UITableViewCell) == cellType)
+            {
+                return (UITableViewCell)Activator.CreateInstance(cellType, UITableViewCellStyle.Default, cellTypeId.ToString());
+            }
             if (typeof(UITableViewCell).IsAssignableFrom(cellType))
             {
-                return (UITableViewCell)Activator.CreateInstance(cellType, new[] { cellTypeId.ToString() });
+                return (UITableViewCell)Activator.CreateInstance(cellType, cellTypeId.ToString());
             }
-            else
-            {
-                return (UIView)Activator.CreateInstance(cellType);
-            }
+            return (UIView)Activator.CreateInstance(cellType);
         }
     }
 

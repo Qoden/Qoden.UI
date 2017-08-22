@@ -132,11 +132,16 @@ namespace Qoden.UI
             return GetChildViewController(key, () => new TController());
         }
 
-        IViewModelStore _viewModelStore = new ViewModelStore();
-        public IViewModelStore GetViewModelStore()
-        {
-            return _viewModelStore;
-        }
+        internal IViewModelStore _viewModelStore = new ViewModelStore();
+        
+	}
+
+	public static class QodenControllerExtnerions
+	{
+		public static IViewModelStore GetViewModelStore<T>(this QodenController<T> controller) where T : UIView, new()
+		{
+			return controller._viewModelStore;
+		}
 	}
 
     public static class QodenChildController
