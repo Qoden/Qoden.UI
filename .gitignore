@@ -10,6 +10,7 @@ Qoden.UI.*.nuget.*
 [Bb]in/
 packages/
 TestResults/
+Droid/Resources/Resource.designer.cs
 
 # globs
 Makefile.in
