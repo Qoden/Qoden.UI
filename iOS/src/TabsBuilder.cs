@@ -9,10 +9,11 @@ namespace Qoden.UI
         public string Title;
         public UIImage Image;
         public UIView Content;
+        public Action<UITabBarItem> Customization;
     }
 
     public class TabsBuilder
-    {        
+    {
         List<UIView> _tabs = new List<UIView>();
         List<UITabBarItem> _items = new List<UITabBarItem>();
 
@@ -41,13 +42,13 @@ namespace Qoden.UI
             }
         }
 
-        public void AddTab(Tab tabConfig, Action<UITabBarItem> customize = null)
+        public void AddTab(Tab tabConfig)
         {
             var tab = new UITabBarItem();
             if (tabConfig.Title != null) tab.Title = tabConfig.Title;
             if (tabConfig.Image != null) tab.Image = tabConfig.Image;
 
-            customize?.Invoke(tab);
+            tabConfig.Customization?.Invoke(tab);
             _tabs.Add(tabConfig.Content);
             _items.Add(tab);
         }

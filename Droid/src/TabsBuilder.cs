@@ -11,6 +11,7 @@ namespace Qoden.UI
         public string Title;
         public Drawable Image;
         public View Content;
+        public Action<TabLayout.Tab> Customization;
     }
 
     public class TabsBuilder
@@ -42,13 +43,13 @@ namespace Qoden.UI
             }
         }
 
-        public void AddTab(Tab tabConfig, Action<TabLayout.Tab> customize = null)
+        public void AddTab(Tab tabConfig)
         {
             var tab = View.NewTab();
             if (tabConfig.Title != null) tab.SetText(tabConfig.Title);
             if (tabConfig.Image != null) tab.SetIcon(tabConfig.Image);
 
-            customize?.Invoke(tab);
+            tabConfig.Customization?.Invoke(tab);
             _tabs.Add(tabConfig.Content);
             _items.Add(tab);
         }
