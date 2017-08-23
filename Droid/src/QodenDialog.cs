@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
 using Android.Views;
+using Microsoft.Extensions.Logging;
 using Qoden.Binding;
 using Qoden.Validation;
 
@@ -12,6 +13,8 @@ namespace Qoden.UI
 {
     public class QodenDialog : DialogFragment, IControllerHost, IViewHost, IDetachedController
     {
+        public ILogger Logger { get; set; }
+        
         ViewHolder _view;
 
         protected QodenDialog(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
@@ -28,37 +31,55 @@ namespace Qoden.UI
         {
             _view = new ViewHolder(this);
         }
+        
+        protected virtual ILogger CreateLogger()
+        {
+            return Config.LoggerFactory?.CreateLogger(GetType().Name);
+        }
 
-        BindingListHolder bindings;
+        BindingListHolder _bindings;
         public BindingList Bindings
         {
-            get => bindings.Value;
-            set { bindings.Value = value; }
+            get => _bindings.Value;
+            set => _bindings.Value = value;
         }
 
         public override void OnAttach(Context context)
         {
             base.OnAttach(context);
+            Logger = CreateLogger();
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnAttach", GetType().Name);
+
             ChildControllers = new ChildViewControllersList(context, ChildFragmentManager);
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnCreateView", GetType().Name);
+
             return _view.Value;
         }
 
-        public override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
+        public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnViewCreated (ViewDidLoad)", GetType().Name);
+
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
         }
-
+        
         public override void OnDismiss(IDialogInterface dialog)
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnDismiss", GetType().Name);
+
             base.OnDismiss(dialog);
             IsDisplayed = false;
         }
-
+        
         public new View View
         {
             get => _view.Value;
@@ -71,17 +92,25 @@ namespace Qoden.UI
         {
         }
 
-        public override void OnResume()
+        public sealed override void OnResume()
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnResume (ViewWillAppear)", GetType().Name);
+
             base.OnResume();
             Bindings.Bind();
             Bindings.UpdateTarget();
+            ViewWillAppear();
         }
 
-        public override void OnStop()
+        public sealed override void OnPause()
         {
-            base.OnStop();
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnResume (ViewWillDisappear)", GetType().Name);
+
+            base.OnPause();
             Bindings.Unbind();
+            ViewWillDisappear();
         }
 
         public bool IsDisplayed
@@ -96,6 +125,9 @@ namespace Qoden.UI
 
         public void Show()
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} Show", GetType().Name);
+
             WillShow?.Invoke(this, EventArgs.Empty);
             var fm = ((IDetachedController)this).FragmentManager;
             if (fm == null)
@@ -110,6 +142,9 @@ namespace Qoden.UI
         {
             if (IsDisplayed)
             {
+                if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                    Logger.LogInformation("{controller} Hide", GetType().Name);
+
                 WillHide?.Invoke(this, EventArgs.Empty);
                 base.Dismiss();
             }
@@ -117,6 +152,14 @@ namespace Qoden.UI
 
         public virtual void LoadView()
         {
+        }
+
+        public virtual void ViewWillAppear()
+        {
+        }
+
+        public virtual void ViewWillDisappear()
+        {            
         }
 
         FragmentManager _fragmentManager;
@@ -144,13 +187,10 @@ namespace Qoden.UI
 
                 return _fragmentManager;
             }
-            set 
-            {
-                _fragmentManager = Assert.Property(value).NotNull().Value;
-            }
+            set => _fragmentManager = Assert.Property(value).NotNull().Value;
         }
 
-        Context _context;
+        private Context _context;
         Context IDetachedController.Context
         {
             get

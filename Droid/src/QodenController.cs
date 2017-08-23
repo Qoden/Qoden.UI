@@ -3,6 +3,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Views;
+using Microsoft.Extensions.Logging;
 using Qoden.Binding;
 using Qoden.Validation;
 
@@ -10,6 +11,8 @@ namespace Qoden.UI
 {
     public class QodenController : Fragment, IControllerHost, IViewHost
     {
+        public ILogger Logger { get; set; }
+        
         ViewHolder _view;
 
         protected QodenController(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
@@ -25,22 +28,36 @@ namespace Qoden.UI
         private void Initialize()
         {
             _view = new ViewHolder(this);
+            Logger = CreateLogger();
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} Created", GetType().Name);
+        }
+        
+        protected virtual ILogger CreateLogger()
+        {
+            return Config.LoggerFactory?.CreateLogger(GetType().Name);
         }
 
-        BindingListHolder bindings;
+        BindingListHolder _bindings;
         public BindingList Bindings
         {
-            get => bindings.Value;
-            set { bindings.Value = value; }
+            get => _bindings.Value;
+            set => _bindings.Value = value;
         }
 
         public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnCreateView", GetType().Name);
+
             return _view.Value;
         }
 
         public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnViewCreated (ViewDidLoad)", GetType().Name);
+
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
         }
@@ -75,6 +92,9 @@ namespace Qoden.UI
 
         public sealed override void OnResume()
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnResume (ViewWillAppear)", GetType().Name);
+
             base.OnResume();
             if (!Bindings.Bound)
             {
@@ -86,6 +106,9 @@ namespace Qoden.UI
 
         public sealed override void OnPause()
         {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+                Logger.LogInformation("{controller} OnPause (ViewWillDisappear)", GetType().Name);
+
             base.OnPause();
             Bindings.Unbind();
             ViewWillDisappear();

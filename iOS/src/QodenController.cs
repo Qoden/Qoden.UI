@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Foundation;
+using Microsoft.Extensions.Logging;
 using Qoden.Binding;
 using UIKit;
 
 namespace Qoden.UI
 {
     public class QodenController<T> : UIViewController where T : UIView, new()
-	{
-		//TODO implement logging and return it
-		//ILogger _log;
-		//protected ILogger LOG { get { return _log ?? (_log = LoggerFactory.GetLogger(GetType().Name)); } }
+    {
+	    public ILogger Logger { get; set; }
 
 		public QodenController()
 		{
@@ -39,21 +38,27 @@ namespace Qoden.UI
 
 		void Initialize()
 		{
-			//TODO implement logging and return it
-			//LOG.Info("Created");
+			Logger = CreateLogger();
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+				Logger.LogInformation("{controller} Created", GetType().Name);
 		}
 
-		public override void LoadView()
+	    protected virtual ILogger CreateLogger()
+	    {
+		    return Config.LoggerFactory?.CreateLogger(GetType().Name);
+	    }
+
+	    public override void LoadView()
 		{
 			base.View = new T();
 		}
 
 		public new T View
 		{
-			get { return base.View as T; }
+			get => base.View as T;
 			set 
             {
-                if (!this.IsViewLoaded)
+                if (!IsViewLoaded)
                 {
                     base.View = value;
                     ViewDidLoad();
@@ -67,15 +72,15 @@ namespace Qoden.UI
 
 		public override void ViewDidLoad()
 		{
-			//TODO implement logging and return it
-			//LOG.Info("View did load");
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+				Logger.LogInformation("{controller} View did load", GetType().Name);
 			base.ViewDidLoad();
 		}
 
 		public override void ViewWillAppear(bool animated)
 		{
-			//TODO implement logging and return it
-			//LOG.Info("View will appear");
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+				Logger.LogInformation("{controller} View will appear", GetType().Name);
 			base.ViewWillAppear(animated);
 			Bindings.Bind();
 			Bindings.UpdateTarget();
@@ -83,8 +88,8 @@ namespace Qoden.UI
 		}
 		public override void ViewWillDisappear(bool animated)
 		{
-			//TODO implement logging and return it
-			//LOG.Info("View will disappear");
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+				Logger.LogInformation("{controller} View will disappear", GetType().Name);
 			base.ViewWillDisappear(animated);
 			Bindings.Unbind();
             ViewWillDisappear();
@@ -96,24 +101,24 @@ namespace Qoden.UI
         protected virtual void ViewWillDisappear()
         { }
 
-        BindingListHolder bindings;
+        BindingListHolder _bindings;
         public BindingList Bindings
         {
-            get => bindings.Value;
-            set { bindings.Value = value; }
+            get => _bindings.Value;
+            set { _bindings.Value = value; }
         }
 
         protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
 			//TODO implement logging and return it
-			//LOG.Info("Disposed");
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) Logger?.LogInformation("{controller} Disposed", GetType().Name);
 		}
 
         public TController GetChildViewController<TController>(string key, Func<TController> factory) where TController : UIViewController
         {
             var childControllers = ChildViewControllers;
-            var childController = (TController)childControllers.Where(x => x.GetTag() == key).FirstOrDefault();
+            var childController = (TController)childControllers.FirstOrDefault(x => x.GetTag() == key);
             if (childController == null)
             {
                 childController = factory();
@@ -132,7 +137,7 @@ namespace Qoden.UI
             return GetChildViewController(key, () => new TController());
         }
 
-        internal IViewModelStore _viewModelStore = new ViewModelStore();
+        internal IViewModelStore ViewModelStore = new ViewModelStore();
         
 	}
 
@@ -140,23 +145,23 @@ namespace Qoden.UI
 	{
 		public static IViewModelStore GetViewModelStore<T>(this QodenController<T> controller) where T : UIView, new()
 		{
-			return controller._viewModelStore;
+			return controller.ViewModelStore;
 		}
 	}
 
     public static class QodenChildController
     {
-        public static readonly NSString TAG = new NSString("Qoden_ChildController_Tag");
+        public static readonly NSString Tag = new NSString("Qoden_ChildController_Tag");
 
         public static string GetTag(this UIViewController controller)
         {
-            var nsTag = (NSString)AssociatedObject.Get(controller, TAG);
+            var nsTag = (NSString)AssociatedObject.Get(controller, Tag);
             return nsTag.ToString();
         }
 
         public static void SetTag(this UIViewController controller, string tag)
         {
-            AssociatedObject.Set(controller, TAG, new NSString(tag), AssociationPolicy.COPY);
+            AssociatedObject.Set(controller, Tag, new NSString(tag), AssociationPolicy.COPY);
         }
     }
 
