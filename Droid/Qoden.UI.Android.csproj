@@ -95,7 +95,12 @@
 		<PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
 		<PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
 		<PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
-
+    <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
+    <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
+    <PackageReference Include="System.ComponentModel" Version="$(ComponentModelVersion)" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="$(ReflectionVersion)" />
+    <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)"/>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

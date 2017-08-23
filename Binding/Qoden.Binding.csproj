@@ -18,5 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="Qoden.Binding.csproj" />
+    <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
+    <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
   </ItemGroup>
 </Project>

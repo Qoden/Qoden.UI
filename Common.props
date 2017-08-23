@@ -2,12 +2,11 @@
 	<PropertyGroup>
 		<PackageVersion>1.5.2</PackageVersion>
 		<IncludeSymbols>true</IncludeSymbols>
+		<QodenUtilVersion>1.1.0</QodenUtilVersion>
+		<QodenValidationVersion>1.0.5</QodenValidationVersion>
+		<ComponentModelVersion>4.3.0</ComponentModelVersion>
+		<ReflectionVersion>4.4.0</ReflectionVersion>
+		<DrawingVersion>4.3.0</DrawingVersion>
+		<LoggingVersion>1.1.2</LoggingVersion>
 	</PropertyGroup>
-	<ItemGroup>		
-	    <PackageReference Include="Qoden.Util" Version="1.1.0" />
-	    <PackageReference Include="Qoden.Validation" Version="1.0.5" />
-    	<PackageReference Include="System.ComponentModel" Version="4.3.0" />
-    	<PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
-		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0"/>
-	</ItemGroup>
 </Project>
