@@ -4,6 +4,7 @@ using System.Threading;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Logging;
 using Qoden.Validation;
 using Qoden.Util;
 
@@ -181,9 +182,9 @@ namespace Qoden.Binding
             }
         }
 
-        bool _recursiveExecution;
+        private bool _recursiveExecution;
 
-        async Task ExecuteCommandAction(object parameter)
+        private async Task ExecuteCommandAction(object parameter)
         {
             if (_recursiveExecution)
             {
@@ -208,6 +209,8 @@ namespace Qoden.Binding
             }
             catch (Exception e)
             {
+                var logger = Config.LoggerFactory?.CreateLogger(GetType().FullName);
+                logger?.LogWarning("Command execution finished with error: {error}", e);
                 Error = e;
             }
             finally
@@ -280,7 +283,7 @@ namespace Qoden.Binding
         private int _isRunningCount;
         protected int IsRunningCount
         {
-            get { return _isRunningCount; }
+            get => _isRunningCount;
             set
             {
                 _isRunningCount = value;
@@ -292,7 +295,7 @@ namespace Qoden.Binding
 
         public bool IsRunning
         {
-            get { return _isRunning; }
+            get => _isRunning;
             private set
             {
                 if (_isRunning == value) return;
@@ -318,7 +321,7 @@ namespace Qoden.Binding
         private Exception _error;
         public Exception Error
         {
-            get { return _error; }
+            get => _error;
             set
             {
                 if (_error != value)
