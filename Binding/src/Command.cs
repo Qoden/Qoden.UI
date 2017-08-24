@@ -34,14 +34,7 @@ namespace Qoden.Binding
 
     public abstract class CommandBase : ICommand
     {
-        private string _name = "No Name";
         public ILogger Logger { get; set; }
-
-        public string Name
-        {
-            get => _name;
-            set { _name = Assert.Property(value).NotNull().Value; }
-        }
 
         public event EventHandler CanExecuteChanged;
 
@@ -63,7 +56,7 @@ namespace Qoden.Binding
             {
                 if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                 {
-                    Logger.LogDebug("'Execute' command '{command}'", Name);
+                    Logger.LogDebug("'Execute' command '{SourceContext}'");
                 }
                 DoExecute(parameter);
             }
@@ -71,7 +64,7 @@ namespace Qoden.Binding
             {
                 if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                 {
-                    Logger.LogDebug("Cannot 'Execute' command '{command}', CanExecute return false", Name);
+                    Logger.LogDebug("Cannot 'Execute' command '{SourceContext}', CanExecute return false");
                 }
             }
         }
@@ -203,13 +196,13 @@ namespace Qoden.Binding
             {
                 if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                 {
-                    Logger.LogDebug("Cannot 'ExecuteAsync' command '{command}', CanExecute return false", Name);
+                    Logger.LogDebug("Cannot 'ExecuteAsync' command '{SourceContext}', CanExecute return false");
                 }
                 return;
             }
             if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
             {
-                Logger.LogDebug("'ExecuteAsync' command '{command}'", Name);
+                Logger.LogDebug("'ExecuteAsync' command '{SourceContext}'");
             }
             await ExecuteCommandAction(parameter);
             if (Error != null)
@@ -222,7 +215,7 @@ namespace Qoden.Binding
 
         private async Task ExecuteCommandAction(object parameter)
         {
-            Assert.State(_recursiveExecution, Name).IsFalse("Cannot run command '{Key}' recursively");
+            Assert.State(_recursiveExecution).IsFalse("Cannot run command '{Key}' recursively");
             Error = null;
             IsRunningCount++;
             try
@@ -242,12 +235,12 @@ namespace Qoden.Binding
             catch (OperationCanceledException)
             {
                 if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-                    Logger.LogDebug("Command '{command}' execution canceled", Name);
+                    Logger.LogDebug("Command '{SourceContext}' execution canceled");
             }
             catch (Exception e)
             {
                 if (Logger != null && Logger.IsEnabled(LogLevel.Warning))
-                    Logger.LogWarning("Command '{command}' execution finished with error: {error}", Name, e);
+                    Logger.LogWarning("Command '{SourceContext}' execution finished with error: {error}", e);
                 Error = e;
             }
             finally
@@ -257,7 +250,7 @@ namespace Qoden.Binding
                 {
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                     {
-                        Logger.LogDebug("Command '{command}' cancel command finished", Name);
+                        Logger.LogDebug("Command '{SourceContext}' cancel command finished");
                     }
                     _cancelCommand.IsRunning = false;
                 }
@@ -408,7 +401,7 @@ namespace Qoden.Binding
                 {
                     if (_owner.Logger != null && _owner.Logger.IsEnabled(LogLevel.Debug))
                     {
-                        _owner.Logger.LogDebug("Command '{command}' cancelation requested", _owner.Name);
+                        _owner.Logger.LogDebug("Command '{SourceContext}' cancelation requested");
                     }
                     IsRunning = true;
                     _owner.Cancel();
@@ -423,12 +416,11 @@ namespace Qoden.Binding
                     {
                         if (e is OperationCanceledException)
                         {
-                            _owner.Logger.LogDebug("Cancelation of '{command}' canceled", _owner.Name);
+                            _owner.Logger.LogDebug("Cancelation of '{SourceContext}' canceled");
                         }
                         else
                         {
-                            _owner.Logger.LogDebug("Cancellation of '{command}' finished with error: {error}",
-                                _owner.Name,
+                            _owner.Logger.LogDebug("Cancellation of '{SourceContext}' finished with error: {error}",
                                 e);
                         }
                     }
@@ -522,7 +514,7 @@ namespace Qoden.Binding
                 {
                     if (Logger != null && Logger.IsEnabled(LogLevel.Trace))
                     {
-                        Logger.LogTrace("Command '{command}' delayed by {delay}", Name, Delay);
+                        Logger.LogTrace("Command '{SourceContext}' delayed by {delay}", Delay);
                     }
                     _delayToken = new CancellationTokenSource();
                     try
@@ -534,7 +526,7 @@ namespace Qoden.Binding
                         if (Logger != null && Logger.IsEnabled(LogLevel.Trace))
                         {
                             Logger.LogTrace(
-                                "Command '{command}' execution canceled since another command execution started", Name);
+                                "Command '{SourceContext}' execution canceled since another command execution started");
                         }
                         return;
                     }
@@ -543,8 +535,7 @@ namespace Qoden.Binding
                     {
                         if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                         {
-                            Logger.LogDebug("Cannot execute command '{command}', CanExecute return false after delay",
-                                Name);
+                            Logger.LogDebug("Cannot execute command '{SourceContext}', CanExecute return false after delay");
                         }
                         return;
                     }
@@ -554,7 +545,7 @@ namespace Qoden.Binding
                 {
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                     {
-                        Logger.LogDebug("Command '{command}' cancel previous command execution", Name);
+                        Logger.LogDebug("Command '{SourceContext}' cancel previous command execution");
                     }
                     try
                     {
@@ -566,7 +557,7 @@ namespace Qoden.Binding
                         if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                         {
                             Logger.LogDebug(
-                                "Command '{command}' previous execution cancelation finished with {error}", Name,
+                                "Command '{SourceContext}' previous execution cancelation finished with {error}",
                                 e);
                         }
                         //ignore
@@ -580,15 +571,14 @@ namespace Qoden.Binding
                         if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                         {
                             Logger.LogDebug(
-                                "Cannot execute command '{command}', CanExecute return false after previous command execution cancelled",
-                                Name);
+                                "Cannot execute command '{SourceContext}', CanExecute return false after previous command execution cancelled");
                         }
                         return;
                     }
                 }
 
                 _lastTask = Action(parameter);
-                Assert.State(_lastTask, Name).NotNull("Command '{Key}' Action returned null");
+                Assert.State(_lastTask).NotNull("Command Action returned null");
                 await _lastTask;
             }
         }
