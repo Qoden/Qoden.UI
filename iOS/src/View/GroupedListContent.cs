@@ -1,13 +1,13 @@
-﻿using System;
+﻿﻿using System;
 using Foundation;
 using Qoden.Validation;
 using UIKit;
 
 namespace Qoden.UI
 {
-    public abstract partial class GroupedListContent : UITableViewDataSource, IGroupedListContent, IKeepLastCell
+    public abstract partial class GroupedListContent : UITableViewDataSource, IGroupedListContent, IKeepLastCell, IKeepLastSection
     {
-        public GroupedListContent(ViewBuilder builder)
+        protected GroupedListContent(ViewBuilder builder)
         {
             Builder = builder;
         }
@@ -15,6 +15,8 @@ namespace Qoden.UI
         public ViewBuilder Builder { get; private set; }
         public UITableViewCell LastCell => _lastCell;
         public NSIndexPath LastIndexPath => _lastIndexPath;
+        public UIView LastSectionView => _lastSectionView;
+        public nint LastSection => _lastSection;
 
         #region Cross platform interface
 
@@ -36,8 +38,8 @@ namespace Qoden.UI
             return NumberOfSections();
         }
 
-        protected UITableViewCell _lastCell;
-        protected NSIndexPath _lastIndexPath;
+        private UITableViewCell _lastCell;
+        private NSIndexPath _lastIndexPath;
 
         public sealed override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
@@ -77,7 +79,7 @@ namespace Qoden.UI
 
             //If cell view lives inside UITableViewCellAdapter then resize cell
             //as per contents
-            if (cellView != context.CellView)
+            if (!ReferenceEquals(cellView, context.CellView))
             {
                 var heightDx = cellView.Frame.Height - cellView.ContentView.Frame.Height;
                 cellView.Frame = new CoreGraphics.CGRect(0, 0, 
@@ -95,6 +97,9 @@ namespace Qoden.UI
 
         #region Default implementations for common methods
 
+        UIView _lastSectionView;
+        nint _lastSection;
+        
         protected UIView DefaultGetViewForHeader(UITableView tableView, nint section)
         {
             var groupTypeId = GetSectionType((int)section);
@@ -106,14 +111,13 @@ namespace Qoden.UI
                 Section = (int)section
             };
 
-            UITableViewHeaderFooterView sectionView;
-            sectionView = tableView.DequeueReusableHeaderFooterView(groupTypeId.ToString());
+            var sectionView = tableView.DequeueReusableHeaderFooterView(groupTypeId.ToString());
 
             if (sectionView == null)
             {
                 context.IsFresh = true;
                 CreateSection(groupTypeId, ref context);
-                Assert.State(context.SectionHeaderView, "SectionHeaderView").NotNull();
+                Assert.State(context.SectionHeaderView, nameof(context.SectionHeaderView)).NotNull();
                 sectionView = TableViewUtil.ToTableViewHeaderFooter(context.SectionHeaderView, groupTypeId);
                 sectionView.Frame = new CoreGraphics.CGRect(0, 0, tableView.Bounds.Width, tableView.EstimatedSectionHeaderHeight);
             }
@@ -129,6 +133,9 @@ namespace Qoden.UI
 
             GetSection(context);
 
+            _lastSectionView = sectionView;
+            _lastSection = section;
+            
             return sectionView;
         }
 
@@ -154,12 +161,17 @@ namespace Qoden.UI
             }
         }
         #endregion
-
     }
 
-    public interface IKeepLastCell
+    public interface IKeepLastCell : IUITableViewDataSource, IUITableViewDelegate
     {
         UITableViewCell LastCell { get; }
         NSIndexPath LastIndexPath { get; }
+    }
+
+    public interface IKeepLastSection : IUITableViewDataSource, IUITableViewDelegate
+    {
+        UIView LastSectionView { get; }
+        nint LastSection { get; }
     }
 }

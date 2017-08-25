@@ -170,7 +170,7 @@ namespace Qoden.UI
         public override string ToString()
         {
             var rect = this.Frame();
-            return $"[LayoutBox: Left={rect.Left}, Top={rect.Top}, Right={rect.Right}, Bottom={rect.Bottom}";
+            return $"L={rect.Left}, T={rect.Top}, R={rect.Right}, B={rect.Bottom}";
         }
     }
 }

@@ -1,13 +1,16 @@
-﻿using System;
+﻿﻿using System;
 using System.Drawing;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 using UIKit;
 
 namespace Qoden.UI
 {
     public static class TableViewUtil
     {
+        public static readonly Selector ViewForHeaderInSection = new Selector("tableView:viewForHeaderInSection:");
+
         static TableViewUtil()
         {
             if (LinkerTrick.False)
@@ -16,7 +19,7 @@ namespace Qoden.UI
                 new UITableViewCell(UITableViewCellStyle.Default, "");
             }
         }
-        
+
         public static UITableViewCell ToTableViewCell(UIView view, int cellTypeId)
         {
             var cellView = view;
@@ -26,7 +29,7 @@ namespace Qoden.UI
             }
             else
             {
-                return (UITableViewCell)cellView;
+                return (UITableViewCell) cellView;
             }
         }
 
@@ -39,12 +42,35 @@ namespace Qoden.UI
             }
             else
             {
-                return (UITableViewHeaderFooterView)cellView;
+                return (UITableViewHeaderFooterView) cellView;
             }
         }
 
-        public static nfloat DefaultGetHeightForRow<T>(this T content, UITableView tableView, NSIndexPath indexPath)
-            where T : IUITableViewDataSource, IKeepLastCell
+        public static nfloat DefaultEstimatedHeightForHeader(this IKeepLastSection content, UITableView tableView,
+            nint section)
+        {
+            var header = content.LastSectionView;
+            if (section != content.LastSection || header == null)
+            {
+                header = content.GetViewForHeader(tableView, section);
+            }
+            return header.Frame.Height;
+        }
+        
+        public static nfloat DefaultEstimatedHeightForFooter(this IKeepLastSection content, UITableView tableView,
+            nint section)
+        {
+            var header = content.LastSectionView;
+            if (section != content.LastSection || header == null)
+            {
+                header = content.GetViewForFooter(tableView, section);
+            }
+            return header.Frame.Height;
+        }
+
+
+        public static nfloat DefaultGetHeightForRow(this IKeepLastCell content, UITableView tableView,
+            NSIndexPath indexPath)
         {
             UITableViewCell cell;
             if (indexPath.Equals(content.LastIndexPath))
@@ -63,13 +89,14 @@ namespace Qoden.UI
             var cellType = cellTypes[cellTypeId];
             if (typeof(UITableViewCell) == cellType)
             {
-                return (UITableViewCell)Activator.CreateInstance(cellType, UITableViewCellStyle.Default, cellTypeId.ToString());
+                return (UITableViewCell) Activator.CreateInstance(cellType, UITableViewCellStyle.Default,
+                    cellTypeId.ToString());
             }
             if (typeof(UITableViewCell).IsAssignableFrom(cellType))
             {
-                return (UITableViewCell)Activator.CreateInstance(cellType, cellTypeId.ToString());
+                return (UITableViewCell) Activator.CreateInstance(cellType, cellTypeId.ToString());
             }
-            return (UIView)Activator.CreateInstance(cellType);
+            return (UIView) Activator.CreateInstance(cellType);
         }
     }
 
@@ -99,25 +126,24 @@ namespace Qoden.UI
         }
     }
 
-    internal class UITableViewHeaderFooterViewAdapter : UITableViewHeaderFooterView
+    internal sealed class UITableViewHeaderFooterViewAdapter : UITableViewHeaderFooterView
     {
-        UIView _view;
-        public UIView View => _view;
+        public UIView View { get; }
 
         public UITableViewHeaderFooterViewAdapter(UIView cellView, string reuseId) : base(new NSString(reuseId))
         {
-            _view = cellView;
+            View = cellView;
             AddSubview(cellView);
         }
 
         public sealed override CGSize SizeThatFits(CGSize size)
         {
-            return _view.SizeThatFits((SizeF)size);
+            return View.SizeThatFits((SizeF) size);
         }
 
         public override void LayoutSubviews()
         {
-            _view.Frame = (RectangleF)Bounds;
+            View.Frame = (RectangleF) Bounds;
         }
     }
 }

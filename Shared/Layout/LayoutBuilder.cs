@@ -1,11 +1,13 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Qoden.UI
 {
 #if __IOS__
     using PlatformView = UIKit.UIView;
+
 #endif
 #if __ANDROID__
     using PlatformView = Android.Views.View;
@@ -34,6 +36,12 @@ namespace Qoden.UI
         /// </summary>
         public RectangleF OuterBounds { get; private set; }
 
+        public RectangleF PaddedOuterBounds =>
+            new RectangleF(Math.Min(OuterBounds.Right, OuterBounds.Left + Padding.Left),
+                Math.Min(OuterBounds.Bottom, OuterBounds.Top + Padding.Top),
+                Math.Max(0, OuterBounds.Width - Padding.Left - Padding.Right),
+                Math.Max(0, OuterBounds.Height - Padding.Top - Padding.Bottom));
+
         /// <summary>
         /// Default layout measurement units.
         /// </summary>
@@ -54,11 +62,7 @@ namespace Qoden.UI
         /// <param name="units">Optional units to override this builder <see cref="Units"/>.</param>
         public IViewLayoutBox View(PlatformView v, RectangleF? outerBounds = null, IUnit units = null)
         {
-            var layoutBounds = outerBounds ?? OuterBounds;
-            layoutBounds = new RectangleF(Math.Min(layoutBounds.Right, layoutBounds.Left + Padding.Left),
-                                          Math.Min(layoutBounds.Bottom, layoutBounds.Top + Padding.Top),
-                                          Math.Max(0, layoutBounds.Width - Padding.Left - Padding.Right),
-                                          Math.Max(0, layoutBounds.Height - Padding.Top - Padding.Bottom));
+            var layoutBounds = outerBounds ?? PaddedOuterBounds;
             var box = new ViewLayoutBox(v, layoutBounds, units ?? Units);
             _boxes.Add(box);
             return box;
@@ -72,7 +76,7 @@ namespace Qoden.UI
         /// <param name="units">Units.</param>
         public ILayoutBox Box(RectangleF? outerBounds = null, IUnit units = null)
         {
-            var layoutBounds = outerBounds ?? OuterBounds;
+            var layoutBounds = outerBounds ?? PaddedOuterBounds;
             return new LayoutBox(layoutBounds, units ?? Units);
         }
 
@@ -81,20 +85,18 @@ namespace Qoden.UI
         /// </summary>
         public RectangleF BoundingFrame(bool withPadding = true)
         {
+            if (_boxes.Count == 0) return new RectangleF(OuterBounds.Location, SizeF.Empty	);
+            
             var padding = withPadding ? Padding : EdgeInsets.Zero;
-            var combinedFrame = new RectangleF(padding.Left, padding.Top, 0, 0);
-            foreach (var v in Views)
-            {
-                var frame = v.Frame();
-                combinedFrame = RectangleF.Union(combinedFrame, frame);
-            }
+            var combinedFrame = _boxes.Select(x => x.Frame()).Aggregate(RectangleF.Union);
             return new RectangleF(combinedFrame.Left - padding.Left,
-                                  combinedFrame.Top - padding.Top,
-                                  combinedFrame.Width + padding.Left + padding.Right,
-                                  combinedFrame.Height + padding.Top + padding.Bottom);
+                combinedFrame.Top - padding.Top,
+                combinedFrame.Width + padding.Left + padding.Right,
+                combinedFrame.Height + padding.Top + padding.Bottom);
         }
 
         float? _preferredWidth;
+
         /// <summary>
         /// Get or set Preferred layout width in pixels
         /// </summary>
@@ -109,6 +111,7 @@ namespace Qoden.UI
         }
 
         float? _preferredHeight;
+
         /// <summary>
         /// Get or set Preferred layout height in pixels
         /// </summary>
@@ -139,7 +142,7 @@ namespace Qoden.UI
 
         public override string ToString()
         {
-            return string.Format("{0}, {1}", OuterBounds, PreferredSize);
+            return $"{OuterBounds}, {PreferredSize}";
         }
     }
 }
