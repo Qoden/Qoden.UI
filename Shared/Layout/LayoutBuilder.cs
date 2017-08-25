@@ -79,18 +79,19 @@ namespace Qoden.UI
         /// <summary>
         /// Calculate bounding frame in view coordinate system in pixels
         /// </summary>
-        public RectangleF BoundingFrame()
+        public RectangleF BoundingFrame(bool withPadding = true)
         {
-            RectangleF combinedFrame = new RectangleF(Padding.Left, Padding.Top, 0, 0);
+            var padding = withPadding ? Padding : EdgeInsets.Zero;
+            var combinedFrame = new RectangleF(padding.Left, padding.Top, 0, 0);
             foreach (var v in Views)
             {
                 var frame = v.Frame();
                 combinedFrame = RectangleF.Union(combinedFrame, frame);
             }
-            return new RectangleF(combinedFrame.Left - Padding.Left,
-                                  combinedFrame.Top - Padding.Top,
-                                  combinedFrame.Width + Padding.Left + Padding.Right,
-                                  combinedFrame.Height + Padding.Top + Padding.Bottom);
+            return new RectangleF(combinedFrame.Left - padding.Left,
+                                  combinedFrame.Top - padding.Top,
+                                  combinedFrame.Width + padding.Left + padding.Right,
+                                  combinedFrame.Height + padding.Top + padding.Bottom);
         }
 
         float? _preferredWidth;
@@ -104,7 +105,7 @@ namespace Qoden.UI
                 if (_preferredWidth.HasValue) return _preferredWidth.Value;
                 return BoundingFrame().Size.Width;
             }
-            set { _preferredWidth = value; }
+            set => _preferredWidth = value;
         }
 
         float? _preferredHeight;
@@ -118,7 +119,7 @@ namespace Qoden.UI
                 if (_preferredHeight.HasValue) return _preferredHeight.Value;
                 return BoundingFrame().Size.Height;
             }
-            set { _preferredHeight = value; }
+            set => _preferredHeight = value;
         }
 
         /// <summary>
