@@ -25,6 +25,30 @@ namespace Qoden.UI
         {
             return box.CenterVertically(box.Unit.ToPixels(dx));
         }
+
+        public static T CenterX<T>(this T box, float centerX) where T : ILayoutBox
+        {
+            return box.CenterX(box.Unit.ToPixels(centerX));
+        }
+        
+        public static T CenterX<T>(this T box, Pixel centerX) where T : ILayoutBox
+        {
+            box.CenterX = centerX.Value;
+            return box;
+        }
+        
+        public static T CenterY<T>(this T box, float centerY) where T : ILayoutBox
+        {
+            return box.CenterY(box.Unit.ToPixels(centerY));
+        }
+        
+        public static T CenterY<T>(this T box, Pixel centerY) where T : ILayoutBox
+        {
+            box.CenterY = centerY.Value;
+            return box;
+        }
+
+        
     }
 }
 
