@@ -26,7 +26,7 @@ namespace Qoden.Binding
     {
         Validator _validator;
         Dictionary<string, object> _originals;
-        IKeyValueCoding _kvc;
+        readonly IKeyValueCoding _kvc;
 
         public DataContext()
         {
@@ -51,26 +51,17 @@ namespace Qoden.Binding
                     _originals[key] = _kvc.Get(this, key);
                     if (_originals.Count == 1)
                     {
-                        RaisePropertyChanged("HasChanges");
+                        RaisePropertyChanged(nameof(HasChanges));
                     }
                 }
             }
         }
 
-        public IReadOnlyDictionary<string, object> Changes
-        {
-            get { return _originals; }
-        }
+        public IReadOnlyDictionary<string, object> Changes => _originals;
 
-        public bool Editing
-        {
-            get => _originals != null;
-        }
+        public bool Editing => _originals != null;
 
-        public bool HasChanges
-        {
-            get => _originals != null && _originals.Count > 0;
-        }
+        public bool HasChanges => _originals != null && _originals.Count > 0;
 
         public void BeginEdit()
         {
@@ -78,7 +69,7 @@ namespace Qoden.Binding
             {
                 _originals = new Dictionary<string, object>();
                 OnBeginEdit();
-                RaisePropertyChanged("Editing");
+                RaisePropertyChanged(nameof(Editing));
             }
         }
 
@@ -96,8 +87,8 @@ namespace Qoden.Binding
                     _kvc.Set(this, kv.Key, kv.Value);
                 }
                 _originals = null;
-                RaisePropertyChanged("HasChanges");
-                RaisePropertyChanged("Editing");
+                RaisePropertyChanged(nameof(HasChanges));
+                RaisePropertyChanged(nameof(Editing));
             }
         }
 
@@ -111,8 +102,8 @@ namespace Qoden.Binding
             {
                 OnEndEdit();
                 _originals = null;
-                RaisePropertyChanged("HasChanges");
-                RaisePropertyChanged("Editing");
+                RaisePropertyChanged(nameof(HasChanges));
+                RaisePropertyChanged(nameof(Editing));
             }
         }
 
@@ -245,8 +236,8 @@ namespace Qoden.Binding
         /// </summary>
 		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {
-            add { Validator.ErrorsChanged += value; }
-            remove { Validator.ErrorsChanged -= value; }
+            add => Validator.ErrorsChanged += value;
+            remove => Validator.ErrorsChanged -= value;
         }
 
         /// <summary>
@@ -263,17 +254,6 @@ namespace Qoden.Binding
         /// Indicate if <see cref="DataContext"/> has errors in it <see cref="Validator"/>.
         /// </summary>
 		public bool HasErrors => Validator.HasErrors;
-
-        private BindingList _bindings;
-        public BindingList Bindings
-        {
-            get { return _bindings ?? (_bindings = new BindingList()); }
-            set
-            {
-                Assert.Argument(value, "value").NotNull();
-                _bindings = value;
-            }
-        }
     }
 
     public static class DataContextExtensions
