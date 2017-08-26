@@ -8,7 +8,7 @@ namespace Qoden.UI
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Horizontal (same for vertical) offsets can be described in a few 
+    /// Horizontal (same for vertical) dimensions can be described in a few 
     /// different ways:
     /// <list>
     ///   <item>Left and Width</item>
@@ -22,8 +22,16 @@ namespace Qoden.UI
     /// <para>
     /// There are also few ambigious combinations like CenterX and Left and Right.
     /// If client set such combination then LayoutBox discards ambigious 
-    /// element. For example if client set Left, Right and then CenterX, 
-    /// LayoutBox discards Right and leave only Left and CenterX.
+    /// element. When doing so LayoutBox takes into account following offsets priorities:
+    /// <list>
+    ///   <item>Let and Top</item>
+    ///   <item>Width and Height</item>
+    ///   <item>CenterX and CenterY</item>
+    ///   <item>Right and Bottom</item>
+    /// </list>  
+    /// For example layout box has Left and Width set and then client set Right.
+    /// This is obviously ambigious and Left or Width has to be discarded. In this case Width is disacarded since
+    /// it is less important than Left.
     /// </para>
     /// <para>
     /// Most of calculations on LayoutBox implemented as extension methods.

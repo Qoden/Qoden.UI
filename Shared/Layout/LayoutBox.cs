@@ -23,7 +23,7 @@ namespace Qoden.UI
                 if (IsSet (_centerX) && IsSet (_width))
                     _centerX = NotSet;
                 if (IsSet (_right) && IsSet (_width))
-                    _width = NotSet;
+                    _right = NotSet;
                 _left = value;
             }
         }
@@ -49,7 +49,7 @@ namespace Qoden.UI
                 if (IsSet (_centerY) && IsSet (_height))
                     _centerY = NotSet;
                 if (IsSet (_bottom) && IsSet (_height))
-                    _height = NotSet;
+                    _bottom = NotSet;
                 _top = value;
             }
         }
@@ -73,12 +73,12 @@ namespace Qoden.UI
             set
             {
                 if (IsSet (_left) && IsSet (_right)) {
-                    _left = NotSet;
+                    _right = NotSet;
                 }
                 if (IsSet (_centerX) && IsSet (_left))
                     _centerX = NotSet;
                 if (IsSet (_centerX) && IsSet (_right))
-                    _centerX = NotSet;
+                    _right = NotSet;
                 _width = value;
             }
         }
@@ -89,12 +89,12 @@ namespace Qoden.UI
             set
             {
                 if (IsSet (_top) && IsSet (_bottom)) {
-                    _top = NotSet;
+                    _bottom = NotSet;
                 }
                 if (IsSet (_centerY) && IsSet (_top))
                     _centerY = NotSet;
                 if (IsSet (_centerY) && IsSet (_bottom))
-                    _centerY = NotSet;
+                    _bottom = NotSet;
                 _height = value;
             }
         }
@@ -104,14 +104,12 @@ namespace Qoden.UI
             get => _centerX;
             set
             {
-                if (IsSet (_left) && IsSet (_right)) {
-                    _width = OuterBounds.Width - _right - _left;
-                    _left = _right = NotSet;
-                }
+                if (IsSet (_left) && IsSet (_right))
+                    _right = NotSet;
                 if (IsSet (_left) && IsSet (_width))
                     _width = NotSet;
                 if (IsSet (_right) && IsSet (_width))
-                    _width = NotSet;
+                    _right = NotSet;
                 _centerX = value;
             }
         }
@@ -121,19 +119,17 @@ namespace Qoden.UI
             get => _centerY;
             set
             {
-                if (IsSet (_top) && IsSet (_bottom)) {
-                    _height = OuterBounds.Height - _bottom - _top;
-                    _top = _bottom = NotSet;
-                }
+                if (IsSet (_top) && IsSet (_bottom))
+                    _bottom = NotSet;
                 if (IsSet (_top) && IsSet (_height))
                     _height = NotSet;
                 if (IsSet (_bottom) && IsSet (_height))
-                    _height = NotSet;
+                    _bottom = NotSet;
                 _centerY = value;
             }
         }
 
-        const float NotSet = float.MaxValue;
+        private const float NotSet = float.MaxValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.
