@@ -2,7 +2,7 @@
 
 namespace Qoden.UI
 {
-    public static class LayoutBox_Center
+    public static class LayoutBoxCenter
     {
         public static T CenterHorizontally<T>(this T box, Pixel dx) where T : ILayoutBox
         {
