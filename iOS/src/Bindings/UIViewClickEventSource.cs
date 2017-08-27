@@ -5,11 +5,11 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public class UIViewClickEventSource : IEventSource<UIView>
+    public class UiViewClickCommandTrigger : ICommandTrigger
     {
-        UITapGestureRecognizer _tapRecognizer;
+        readonly UITapGestureRecognizer _tapRecognizer;
 
-        public UIViewClickEventSource(UIView view)
+        public UiViewClickCommandTrigger(UIView view)
         {
             Assert.Argument(view, nameof(view)).NotNull();
             Owner = view;
@@ -19,16 +19,14 @@ namespace Qoden.UI
 
         private void OnTap()
         {
-            Handler?.Invoke(Owner, EventArgs.Empty);
+            Trigger?.Invoke(null);
         }
 
-        object IEventSource.Owner => Owner;
-
-        public UIView Owner { get; private set; }
+        public UIView Owner { get; }
 
         public Func<object, EventArgs, object> ParameterExtractor { get; set; }
 
-        public event EventHandler Handler;
+        public event CommandHandler Trigger;
 
         public void SetEnabled(bool enabled)
         {

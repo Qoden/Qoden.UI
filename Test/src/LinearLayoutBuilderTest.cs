@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Qoden.UI.Test
 {
-    [TestClass]
     public class LinearLayoutBuilderTest
     {
         PlatformView view1, view2, view3;
@@ -19,7 +18,7 @@ namespace Qoden.UI.Test
             view3 = new PlatformView(0, 0, 100, 100);
         }
 
-        [TestMethod]
+        [Fact]
         public void LayoutStep()
         {
             var layout = StartFlowLayout(LinearLayoutDirection.TopBottom, LinearLayoutDirection.LeftRight);
@@ -34,7 +33,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(25, 0, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOverflow()
         {
             var layout = StartFlowLayout(LinearLayoutDirection.LeftRight, LinearLayoutDirection.TopBottom);
@@ -49,7 +48,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(0, 50, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void LeftRightTopBottom()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Top(5).Left(5);
@@ -70,7 +69,7 @@ namespace Qoden.UI.Test
             return layout;
         }
 
-        [TestMethod]
+        [Fact]
         public void LeftRightBottomTop()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Bottom(5).Left(5);
@@ -84,7 +83,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(5, -40, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void TopBottomLeftRight()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Top(5).Left(5);
@@ -98,7 +97,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(30, 5, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void TopBottomRightLeft()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Top(5).Right(5);
@@ -112,7 +111,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(-30, 5, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void BottomTopLeftRight()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Bottom(5).Left(5);
@@ -126,7 +125,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(30, -5, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void BottomTopRightLeft()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Bottom(5).Right(5);
@@ -140,7 +139,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(-30, -5, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void RightLeftTopBottom()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Top(5).Right(5);
@@ -154,7 +153,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(-5, 40, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void RightLeftBottomTop()
         {
             Action<IViewLayoutBox> margins = v => v.AutoSize().Bottom(5).Right(5);
@@ -168,7 +167,7 @@ namespace Qoden.UI.Test
             AreEqualRectangles(new RectangleF(-5, -40, 100, 100), view3.Frame);
         }
 
-        [TestMethod]
+        [Fact]
         public void LayoutBounds()
         {
             var nonZeroBounds = new RectangleF(20, 30, 100, 100);
@@ -187,7 +186,7 @@ namespace Qoden.UI.Test
                                     (float)Math.Round(actual.Top),
                                     (float)Math.Round(actual.Width),
                                     (float)Math.Round(actual.Height));
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
     }
 }

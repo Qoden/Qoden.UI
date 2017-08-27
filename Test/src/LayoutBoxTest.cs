@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Drawing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Qoden.UI.Test
 {
-    [TestClass]
     public class LayoutBoxTest
     {
-        [TestMethod]
+        [Fact]
         public void CenterVertically()
         {
             var lb = new LayoutBox(new RectangleF(0, 0, 375, 44));
             lb.Left(20).CenterVertically().Height(18).Right(0);
-            Assert.AreEqual(new RectangleF(20, 13, 355, 18), lb.Frame());
+            Assert.Equal(new RectangleF(20, 13, 355, 18), lb.Frame());
         }
 
-        [TestMethod]
+        [Fact]
         public void CenterHorizontaly()
         {
             var lb = new LayoutBox(new RectangleF(20, 20, 100, 100));
             lb.CenterHorizontally().Height(20).Width(20).Top(0);
-            Assert.AreEqual(new RectangleF(60, 20, 20, 20), lb.Frame());
+            Assert.Equal(new RectangleF(60, 20, 20, 20), lb.Frame());
         }
     }
 }

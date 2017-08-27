@@ -40,9 +40,9 @@ namespace Qoden.UI
             return control.GetProperty(_ => _.Enabled, KVCBindingStrategy.Instance);
         }
 
-        public static EventHandlerSource ClickTarget(this UIControl control)
+        public static EventCommandTrigger ClickTarget(this UIControl control)
         {
-            return new EventHandlerSource(TouchUpInsideEvent, control)
+            return new EventCommandTrigger(TouchUpInsideEvent, control)
             {
                 SetEnabledAction = SetControlEnabled
             };

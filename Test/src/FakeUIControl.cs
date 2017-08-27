@@ -1,15 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
+using Qoden.Binding;
 using Qoden.Util;
 
-namespace Qoden.Binding.Test
+namespace Qoden.UI.Test
 {
-    public class FakeUIControl : INotifyPropertyChanged
+    public class FakeUiControl : INotifyPropertyChanged
     {
         string _text;
         public string Text
         {
-            get { return _text; }
+            get => _text;
             set
             {
                 _text = value;
@@ -25,8 +26,19 @@ namespace Qoden.Binding.Test
         {
             return this.GetProperty(_ => _.Text, TextChangedBinding);
         }
-
-        public static readonly RuntimeEvent TextChangedEvent = new RuntimeEvent(typeof(FakeUIControl), "TextChanged");
+        public static readonly RuntimeEvent TextChangedEvent = new RuntimeEvent(typeof(FakeUiControl), nameof(TextChanged));
         public static readonly IPropertyBindingStrategy TextChangedBinding = new EventHandlerBindingStrategy<EventArgs>(TextChangedEvent);
+
+        public event EventHandler FakeControlClick;
+        public static readonly RuntimeEvent ButtonClickEvent = new RuntimeEvent(typeof(FakeUiControl), nameof(FakeControlClick));
+        public ICommandTrigger ButtonClickTrigger()
+        {
+            return new EventCommandTrigger(ButtonClickEvent, this);
+        }
+
+        public void TriggerClick()
+        {
+            FakeControlClick?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

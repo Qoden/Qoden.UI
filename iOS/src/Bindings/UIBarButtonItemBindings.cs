@@ -7,7 +7,9 @@ namespace Qoden.UI
 {
     public static class UIBarButtonItemBindings
     {
-        static readonly RuntimeEvent _ClickedEvent = new RuntimeEvent(typeof(UIBarButtonItem), "Clicked");
+        private static readonly RuntimeEvent _clickedEvent = new RuntimeEvent(
+            typeof(UIBarButtonItem), 
+            nameof(UIBarButtonItem.Clicked));
         public static RuntimeEvent ClickedEvent
         {
             get
@@ -16,23 +18,23 @@ namespace Qoden.UI
                 {
                     new UIBarButtonItem().Clicked += (o, a) => { };
                 }
-                return _ClickedEvent;
+                return _clickedEvent;
             }
         }
 
-        public static EventHandlerSource<T> ClickedTarget<T>(this T control)
+        public static EventCommandTrigger ClickedTarget<T>(this T control)
             where T : UIBarButtonItem
         {
-            return new EventHandlerSource<T>(ClickedEvent, control)
+            return new EventCommandTrigger(ClickedEvent, control)
             {
                 SetEnabledAction = SetControlEnabled,
                 ParameterExtractor = (object sender, EventArgs eventArgs) => sender
             };
         }
 
-        static void SetControlEnabled(UIBarButtonItem control, bool enabled)
+        static void SetControlEnabled(object control, bool enabled)
         {
-            control.Enabled = enabled;
+            ((UIControl)control).Enabled = enabled;
         }
     }
 }

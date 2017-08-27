@@ -40,7 +40,7 @@ namespace Qoden.UI
 		{
 			Logger = CreateLogger();
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-				Logger.LogInformation("{controller} Created", GetType().Name);
+				Logger.LogInformation("Created");
 		}
 
 	    protected virtual ILogger CreateLogger()
@@ -73,14 +73,14 @@ namespace Qoden.UI
 		public override void ViewDidLoad()
 		{
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-				Logger.LogInformation("{controller} View did load", GetType().Name);
+				Logger.LogInformation("View did load");
 			base.ViewDidLoad();
 		}
 
 		public override void ViewWillAppear(bool animated)
 		{
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-				Logger.LogInformation("{controller} View will appear", GetType().Name);
+				Logger.LogInformation("View will appear");
 			base.ViewWillAppear(animated);
 			Bindings.Bind();
 			Bindings.UpdateTarget();
@@ -89,7 +89,7 @@ namespace Qoden.UI
 		public override void ViewWillDisappear(bool animated)
 		{
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-				Logger.LogInformation("{controller} View will disappear", GetType().Name);
+				Logger.LogInformation("View will disappear");
 			base.ViewWillDisappear(animated);
 			Bindings.Unbind();
             ViewWillDisappear();
@@ -112,7 +112,7 @@ namespace Qoden.UI
 		{
 			base.Dispose(disposing);
 			//TODO implement logging and return it
-			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) Logger?.LogInformation("{controller} Disposed", GetType().Name);
+			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) Logger?.LogInformation("Disposed");
 		}
 
         public TController GetChildViewController<TController>(string key, Func<TController> factory) where TController : UIViewController

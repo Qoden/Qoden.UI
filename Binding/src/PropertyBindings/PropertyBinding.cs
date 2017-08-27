@@ -1,5 +1,4 @@
 using System;
-using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -10,6 +9,9 @@ namespace Qoden.Binding
     {
         Source, Target
     };
+	/// <summary>
+	/// Binding between two properties (see <see cref="IProperty"/>). 
+	/// </summary>
 	public interface IPropertyBinding : IBinding
 	{
 		/// <summary>
@@ -42,14 +44,14 @@ namespace Qoden.Binding
 
 	public class PropertyBinding : IPropertyBinding
 	{
-		IDisposable sourceSubscription;
-		IDisposable targetSubscription;
+		private IDisposable _sourceSubscription;
+		private IDisposable _targetSubscription;
 
 		public PropertyBinding ()
 		{
 			Enabled = true;
-			updateSource = DefaultUpdateSource;
-			updateTarget = DefaultUpdateTarget;
+			_updateSource = DefaultUpdateSource;
+			_updateTarget = DefaultUpdateTarget;
 		}
 
 		static void DefaultUpdateSource (IPropertyBinding binding, ChangeSource change)
@@ -71,9 +73,9 @@ namespace Qoden.Binding
 			if (Bound)
 				return;
 			Assert.State (Source != null).IsTrue ("Source is not set");
-			sourceSubscription = Source.OnPropertyChange (Source_Change);
+			_sourceSubscription = Source.OnPropertyChange (Source_Change);
             if (Target != null && this.UpdatesSource())
-                targetSubscription = Target.OnPropertyChange(Target_Change);
+                _targetSubscription = Target.OnPropertyChange(Target_Change);
 		}
 
 		void Source_Change (IProperty _)
@@ -90,17 +92,15 @@ namespace Qoden.Binding
 		{
 			if (!Bound)
 				return;
-			sourceSubscription.Dispose ();
-			sourceSubscription = null;
-			if (targetSubscription != null) {
-				targetSubscription.Dispose ();
-				targetSubscription = null;
+			_sourceSubscription.Dispose ();
+			_sourceSubscription = null;
+			if (_targetSubscription != null) {
+				_targetSubscription.Dispose ();
+				_targetSubscription = null;
 			}
 		}
 
-		public bool Bound {
-			get { return sourceSubscription != null; }
-		}
+		public bool Bound => _sourceSubscription != null;
 
 		public void UpdateTarget ()
 		{	
@@ -114,64 +114,90 @@ namespace Qoden.Binding
 				PerformAction (UpdateSourceAction);
 		}
 
-		bool performingAction;
+		bool _performingAction;
 
 		void PerformAction (PropertyBindingAction action)
 		{
-			if (Enabled && !performingAction) {
+			if (Enabled && !_performingAction) {
 				Assert.State (Source != null).IsTrue ("Source is not set");
 				try {
-					performingAction = true;
+					_performingAction = true;
                     action (this, action == UpdateSourceAction ? ChangeSource.Source : ChangeSource.Target);
 				} finally {
-					performingAction = false;
+					_performingAction = false;
 				}
 			}
 		}
 
-		IProperty source;
+		private IProperty _source;
 
 		public IProperty Source {
-			get { return source; }
+			get => _source;
 			set { 
 				Assert.Argument (value, "value").NotNull ();
 				Assert.State (Bound).IsFalse ();
-				source = value;
+				_source = value;
 			}
 		}
 
-		IProperty target;
+		private IProperty _target;
 
 		public IProperty Target {
-			get { return target; }
+			get => _target;
 			set {
 				Assert.Argument (value, "value").NotNull ();
 				Assert.State (Bound).IsFalse ();
-				target = value;
+				_target = value;
 			}
 		}
 
-		PropertyBindingAction updateTarget;
+		private PropertyBindingAction _updateTarget;
 
 		public PropertyBindingAction UpdateTargetAction {
-			get { return updateTarget; }
+			get => _updateTarget;
 			set { 
 				Assert.Argument (value, "value").NotNull ();
-				updateTarget = value;
+				_updateTarget = value;
 			}
 		}
 
-		PropertyBindingAction updateSource;
+		private PropertyBindingAction _updateSource;
 
 		public PropertyBindingAction UpdateSourceAction {
-			get { return updateSource; }
+			get => _updateSource;
 			set { 
 				Assert.Argument (value, "value").NotNull ();
-				updateSource = value;
+				_updateSource = value;
 			}
 		}
 
 		public bool Enabled { get; set; }
 	}
+	
+	public static class PropertyBindingExtensions
+	{
+		static void DoNotUpdate (IPropertyBinding binding, ChangeSource source)
+		{
+		}
 
+		public static void DontUpdateTarget (this IPropertyBinding binding)
+		{
+			binding.UpdateTargetAction = DoNotUpdate;
+		}
+
+		public static void DontUpdateSource (this IPropertyBinding binding)
+		{
+			binding.UpdateSourceAction = DoNotUpdate;
+		}
+
+		public static bool UpdatesSource (this IPropertyBinding binding)
+		{
+			return binding.UpdateSourceAction != DoNotUpdate;
+		}
+
+		public static bool UpdatesTarget (this IPropertyBinding binding)
+		{
+			return binding.UpdateTargetAction != DoNotUpdate;
+		}
+	}
 }

@@ -20,6 +20,6 @@
     <None Include="Qoden.Binding.csproj" />
     <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
     <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
   </ItemGroup>
 </Project>

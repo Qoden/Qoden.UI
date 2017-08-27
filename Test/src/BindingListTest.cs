@@ -1,13 +1,13 @@
 ﻿using System;
 using Qoden.Binding;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Qoden.UI.Test;
+using Xunit;
 
 namespace Qoden.Binding.Test
 {
-	[TestClass]
 	public class BindingListTest
 	{
-        FakeUIControl ui = new FakeUIControl();
+        FakeUiControl ui = new FakeUiControl();
         FakeModel model = new FakeModel();
         BindingList bl = new BindingList();
 
@@ -16,7 +16,7 @@ namespace Qoden.Binding.Test
             model.Name = "This is my name";
         }
 
-        [TestMethod]
+        [Fact]
         public void CanBindOneWay()
         {
             bl.Property(model, x => x.Name)
@@ -24,14 +24,14 @@ namespace Qoden.Binding.Test
               .OneWay();
             bl.Bind();
             bl.UpdateTarget();
-            Assert.AreEqual(model.Name, ui.Text);
+            Assert.Equal(model.Name, ui.Text);
 
             model.Name = "Updated value";
-            Assert.AreEqual(model.Name, ui.Text);
+            Assert.Equal(model.Name, ui.Text);
         }
 
 
-		[TestMethod]
+		[Fact]
 		public void Constructor()
 		{
 			var bl = new BindingList();
@@ -47,19 +47,19 @@ namespace Qoden.Binding.Test
 			//Bound
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Add()
 		{
 			
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Remove()
 		{
 			
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Clear()
 		{
 			

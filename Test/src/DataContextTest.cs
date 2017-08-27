@@ -1,61 +1,61 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Qoden.Binding;
 using Qoden.Validation;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Xunit;
+using Assert = Xunit.Assert;
 
-namespace Qoden.Binding.Test
+namespace Qoden.UI.Test
 {
-	[TestClass]
     public class DataContextTest
     {
-        [TestMethod]
+        [Fact]
         public void PropertyChanges()
         {
             var ctx = new TestContext();
-            Assert.IsTrue(ctx.HasErrors, "Valid/Invalid state indicated correctly right after data context instantiated");
-            Assert.IsNotNull(ctx.GetErrors("Id"));
+            Assert.True(ctx.HasErrors, "Valid/Invalid state indicated correctly right after data context instantiated");
+            Assert.NotNull(ctx.GetErrors("Id"));
             ctx.Id = "Some Id";
             ctx.Industry = "Finance";
             ctx.Name = "Andrew";
-            Assert.IsFalse(ctx.HasErrors, "Property changes affect context validtity status");
+            Assert.False(ctx.HasErrors, "Property changes affect context validtity status");
         }
 
-		[TestMethod]
+		[Fact]
         public void PropertyChangeEvents()
         {
             var ctx = new TestContext();
             var propertyName = "";
             ctx.PropertyChanged += (o, e) => { propertyName = e.PropertyName; };
             ctx.Name = "Andrew";
-            Assert.AreEqual(propertyName, "Name", "Thanks to Field support property change events raised automatically");
+            Assert.Equal(propertyName, "Name");
         }
 
-		[TestMethod]
+		[Fact]
         public void NoPropertyChangeDuringValidation()
         {
             var ctx = ValidContext();
             var propertyName = "";
             ctx.PropertyChanged += (o, e) => { propertyName = e.PropertyName; };
             ctx.Validate();
-            Assert.AreEqual(propertyName, "", "Property change events not raised during validation");
+            Assert.Equal(propertyName, "");
         }
 
-        [TestMethod]
+        [Fact]
         public void EditingStatusFlags()
         {
             var ctx = ValidContext();
-            Assert.IsFalse(ctx.Editing);
+            Assert.False(ctx.Editing);
 
             ctx.BeginEdit();
-            Assert.IsTrue(ctx.Editing);
-            Assert.IsFalse(ctx.HasChanges);
+            Assert.True(ctx.Editing);
+            Assert.False(ctx.HasChanges);
 
             ctx.EndEdit();
-            Assert.IsFalse(ctx.HasChanges);
-            Assert.IsFalse(ctx.Editing);
+            Assert.False(ctx.HasChanges);
+            Assert.False(ctx.Editing);
         }
 
-        [TestMethod]
+        [Fact]
         public void CancelEditRestoreStates()
         {
             var ctx = ValidContext();
@@ -70,12 +70,12 @@ namespace Qoden.Binding.Test
 
             ctx.CancelEdit();
 
-            Assert.AreEqual(oldIndustru, ctx.Industry);
-            Assert.AreEqual(oldName, ctx.Name);
-            Assert.AreEqual(oldId, ctx.Id);
+            Assert.Equal(oldIndustru, ctx.Industry);
+            Assert.Equal(oldName, ctx.Name);
+            Assert.Equal(oldId, ctx.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void CancelEditFiresPropertyChange()
         {
             var ctx = ValidContext();
@@ -86,7 +86,7 @@ namespace Qoden.Binding.Test
             ctx.Id = "New ID";
             ctx.CancelEdit();
 
-            CollectionAssert.AreEquivalent(new[] { "Industry", "Id" }, props);
+            Assert.Equal(new[] { "Industry", "Id" }, props);
         }
 
 		private TestContext ValidContext()
@@ -111,7 +111,7 @@ namespace Qoden.Binding.Test
         public static string[] ValidIndsutries = {"Finance", "Healthcare", "Education"};
 
         private string _id;
-        private MyDto _dto;
+        private readonly MyDto _dto;
 
         public TestContext()
         {
@@ -121,20 +121,20 @@ namespace Qoden.Binding.Test
 
         public string Id
         {
-            get { return _id; }
+            get => _id;
             set
             {
                 Validator.CheckProperty(value)
                     .NotNull()
                     .NotEmpty();
-                Remember();
-                SetProperty(ref _id, value);
+                Remember(nameof(Id));
+                SetProperty(ref _id, value, nameof(Id));
             }
         }
 
         public string Name
         {
-            get { return _dto.Name; }
+            get => _dto.Name;
             set
             {
                 Validator.CheckProperty(value)
@@ -143,25 +143,25 @@ namespace Qoden.Binding.Test
                     .MaxLength(100);
                 if (!Validating && _dto.Name != value)
                 {
-                    Remember();
+                    Remember(nameof(Name));
                     _dto.Name = value;
-                    RaisePropertyChanged();
+                    RaisePropertyChanged(nameof(Name));
                 }
             }
         }
 
         public string Industry
         {
-            get { return _dto.Industry; }
+            get => _dto.Industry;
             set
             {
                 Validator.CheckProperty(value)
                     .In(ValidIndsutries);
                 if (!Validating && _dto.Industry != value)
                 {
-                    Remember();
+                    Remember(nameof(Industry));
                     _dto.Industry = value;
-                    RaisePropertyChanged();
+                    RaisePropertyChanged(nameof(Industry));
                 }
             }
         }

@@ -3,7 +3,7 @@
 namespace Qoden.Binding
 {
 	/// <summary>
-	/// Abstract connection (binding) between source (usually model) object and target (usually view) object.
+	/// Abstract connection (binding) between a source object (usually model) and a target object (usually view).
 	/// </summary>
 	/// <remarks>
 	/// Concrete <see cref="IBinding"/> implementations provides means to specify target and source objects. 

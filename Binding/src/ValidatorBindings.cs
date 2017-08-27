@@ -15,7 +15,7 @@ namespace Qoden.Binding
 		public static Property<IEnumerable<Error>> ErrorsProperty<T>(this T list)
 			where T : IValidator
 		{
-			return list.GetProperty(_ => _.Errors, ErrorsChangedBindingStrategy, () => list.Errors);
+			return list.GetProperty(_ => _.Errors, ErrorsChangedBindingStrategy, _ => _.Errors);
 		}
 
 	}

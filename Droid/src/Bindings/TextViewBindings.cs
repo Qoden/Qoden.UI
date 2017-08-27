@@ -41,10 +41,10 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> EditorActionTarget<T>(this T view)
+        public static EventCommandTrigger EditorActionTarget<T>(this T view)
             where T : TextView
         {
-            return new EventHandlerSource<T>(EditorActionEvent, view)
+            return new EventCommandTrigger(EditorActionEvent, view)
             {
                 ParameterExtractor = (sender, args) => { return ((TextView.EditorActionEventArgs)args).ActionId; } // TODO: pass both args
             };

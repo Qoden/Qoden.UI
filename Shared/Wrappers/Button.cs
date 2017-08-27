@@ -68,7 +68,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
 
-        public EventHandlerSource ClickTarget()
+        public EventCommandTrigger ClickTarget()
         {
             return PlatformView.ClickTarget();
         }

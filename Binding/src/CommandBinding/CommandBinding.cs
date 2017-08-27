@@ -1,5 +1,4 @@
 using System;
-using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -11,12 +10,12 @@ namespace Qoden.Binding
         /// <summary>
         /// Event source which executes Source command
         /// </summary>
-        IEventSource Target { get; set; }
+        ICommandTrigger Trigger { get; set; }
 
         /// <summary>
         /// Command to execute
         /// </summary>
-        ICommand Source { get; set; }
+        ICommand Command { get; set; }
 
         /// <summary>
         /// Action to update Target enabled/disabled status when command CanExecute changes
@@ -35,14 +34,10 @@ namespace Qoden.Binding
         CommandBindingAction AfterExecuteAction { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameter to be passed to command Execute method.
+        /// Gets or sets the parameter to be passed to command Execute method. If not null then it overrides 
+        /// any parameter passed to <see cref="Trigger"/> <see cref="ICommandTrigger.Trigger"/>.
         /// </summary>
         object Parameter { get; set; }
-
-        /// <summary>
-        /// Func to convert Parameter from Target
-        /// </summary>
-        Func<object, object> ParameterConverter { get; set; }
     }
 
     public interface IAsyncCommandBinding : ICommandBinding
@@ -77,14 +72,12 @@ namespace Qoden.Binding
 
         public object Parameter { get; set; }
 
-        public Func<object, object> ParameterConverter { get; set; }
-
         void DefaultUpdateTargetAction(ICommandBinding binding)
         {
-            if (binding.Target != null)
+            if (binding.Trigger != null)
             {
-                var parameter = GetParameter(binding.Target.Owner, EventArgs.Empty);
-                binding.Target.SetEnabled(binding.Source.CanExecute(parameter));
+                var parameter = binding.Parameter;
+                binding.Trigger.SetEnabled(binding.Command.CanExecute(parameter));
             }
         }
 
@@ -99,13 +92,13 @@ namespace Qoden.Binding
 
         protected virtual void OnBind()
         {
-            Assert.State(Source).NotNull("Source is not set");
-            Source.CanExecuteChanged += Source_CanExecuteChanged;
+            Assert.State(Command).NotNull("Source is not set");
+            Command.CanExecuteChanged += Source_CanExecuteChanged;
 
-            if (Target != null)
-                Target.Handler += Target_ExecuteCommand;
+            if (Trigger != null)
+                Trigger.Trigger += Target_ExecuteCommand;
 
-            var asyncCommand = Source as IAsyncCommand;
+            var asyncCommand = Command as IAsyncCommand;
             if (asyncCommand != null)
             {
                 asyncCommand.PropertyChanged += AsyncCommand_PropertyChanged;
@@ -123,10 +116,10 @@ namespace Qoden.Binding
 
         protected virtual void OnUnbind()
         {
-            Source.CanExecuteChanged -= Source_CanExecuteChanged;
-            if (Target != null)
-                Target.Handler -= Target_ExecuteCommand;
-            var asyncCommand = Source as IAsyncCommand;
+            Command.CanExecuteChanged -= Source_CanExecuteChanged;
+            if (Trigger != null)
+                Trigger.Trigger -= Target_ExecuteCommand;
+            var asyncCommand = Command as IAsyncCommand;
             if (asyncCommand != null)
             {
                 asyncCommand.PropertyChanged -= AsyncCommand_PropertyChanged;
@@ -138,40 +131,25 @@ namespace Qoden.Binding
             UpdateTarget();
         }
 
-        object GetParameter(object sender, EventArgs e)
-        {
-            var parameter = Parameter;
-            if (Target?.ParameterExtractor != null && parameter == null)
-            {
-                var extractedParameter = Target.ParameterExtractor(sender, e);
-                if (ParameterConverter != null)
-                {
-                    extractedParameter = ParameterConverter(extractedParameter);
-                }
-                parameter = extractedParameter;
-            }
-            return parameter;
-        }
-
-        void Target_ExecuteCommand(object sender, EventArgs e)
+        void Target_ExecuteCommand(object parameter)
         {
             if (Enabled)
             {
-                var isAsyncCommand = Source is IAsyncCommand;
+                parameter = Parameter ?? parameter;
+                var isAsyncCommand = Command is IAsyncCommand;
 
                 BeforeExecuteAction?.Invoke(this);
-                if (!isAsyncCommand && CommandStarted != null)
-                    CommandStarted(this);
-                var parameter = GetParameter(sender, e);
+                if (!isAsyncCommand)
+                    CommandStarted?.Invoke(this);
                 try
                 {
-                    Source.Execute(Parameter);
+                    Command.Execute(parameter);
                 }
                 finally
                 {
                     AfterExecuteAction?.Invoke(this);
-                    if (!isAsyncCommand && CommandFinished != null)
-                        CommandFinished(this);
+                    if (!isAsyncCommand)
+                        CommandFinished?.Invoke(this);
                 }
             }
         }
@@ -179,7 +157,7 @@ namespace Qoden.Binding
         void AsyncCommand_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var command = (IAsyncCommand)sender;
-            if (e.PropertyName == "IsRunning")
+            if (e.PropertyName == nameof(IAsyncCommand.IsRunning))
             {
                 if (command.IsRunning)
                 {
@@ -205,27 +183,27 @@ namespace Qoden.Binding
             throw new NotSupportedException();
         }
 
-        IEventSource target;
+        private ICommandTrigger _target;
 
-        public IEventSource Target
+        public ICommandTrigger Trigger
         {
-            get { return target; }
+            get => _target;
             set
             {
                 Assert.State(Bound, "Bound").IsFalse();
-                target = value;
+                _target = value;
             }
         }
 
-        ICommand source;
+        private ICommand _source;
 
-        public ICommand Source
+        public ICommand Command
         {
-            get { return source; }
+            get => _source;
             set
             {
                 Assert.State(Bound, "Bound").IsFalse();
-                source = value;
+                _source = value;
             }
         }
 

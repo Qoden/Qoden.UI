@@ -39,10 +39,10 @@ namespace Qoden.UI
 
         public static readonly IPropertyBindingStrategy ItemSelectedEventBinding = new EventHandlerBindingStrategy<AdapterView.ItemSelectedEventArgs>(ItemSelectedEvent);
 
-        public static EventHandlerSource<T> ItemSelectedTarget<T>(this T view)
+        public static EventCommandTrigger ItemSelectedTarget<T>(this T view)
             where T : AdapterView
         {
-            return new EventHandlerSource<T>(ItemSelectedEvent, view)
+            return new EventCommandTrigger(ItemSelectedEvent, view)
             {
                 SetEnabledAction = SetViewEnabled,
                 ParameterExtractor = (sender, args) => ((AdapterView.ItemSelectedEventArgs)args).Position
@@ -63,10 +63,10 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ItemClickTarget<T>(this T view)
+        public static EventCommandTrigger ItemClickTarget<T>(this T view)
             where T : AdapterView
         {
-            return new EventHandlerSource<T>(ItemClickEvent, view)
+            return new EventCommandTrigger(ItemClickEvent, view)
             {
                 SetEnabledAction = SetViewEnabled,
                 ParameterExtractor = (sender, args) => ((AdapterView.ItemClickEventArgs)args).Position

@@ -2,220 +2,183 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Qoden.Util;
-
-#if __ANDROID__
-using Android.Text;
-#endif
+using Qoden.Validation;
 
 namespace Qoden.Binding
 {
-	/// <summary>
-	/// Source of events which trigget commands.
-	/// </summary>
-	public interface IEventSource
-	{
-		/// <summary>
-		/// Owner of event
-		/// </summary>
-		object Owner { get; }
 
-		/// <summary>
-		/// Proxy event handler to susbcribe/unsubscribe from event this source represents.
-		/// </summary>
-		event EventHandler Handler;
-
-		/// <summary>
-		/// Enable/Disable event owner so it start/stop generate events.
-		/// </summary>
-		void SetEnabled (bool enabled);
+    public delegate void CommandHandler(object parameter); 
+    
+    /// <summary>
+    /// Represent event in an object. This could be .NET event or something more complicated like NSNotificationCenter
+    /// subscription in iOS.
+    /// </summary>
+    public interface ICommandTrigger
+    {
+        /// <summary>
+        /// Proxy event handler to susbcribe/unsubscribe underlying event.
+        /// </summary>
+        event CommandHandler Trigger;
 
         /// <summary>
-        /// Func to extract Parameter from Target EventArgs.
-        /// EventArgs could be EventArgs.Empty or corresponding event arguments.
+        /// Enable/Disable <see cref="ICommandTrigger"/>. It only raise <see cref="Trigger"/> if enabled.
         /// </summary>
-        Func<object, EventArgs, object> ParameterExtractor { get; set; }
+        void SetEnabled(bool enabled);
     }
-
-	public interface IEventSource<T> : IEventSource
-	{
-		new T Owner { get; }
-	}
-
-	/// <summary>
-	/// IEventSource adapter for .NET events
-	/// </summary>
-    public class EventHandlerSource : IEventSource
+    
+    /// <summary>
+    /// ICommandTrigger for .NET events
+    /// </summary>
+    public class EventCommandTrigger : ICommandTrigger
     {
-        readonly RuntimeEvent @event;
-        readonly object owner;
-        readonly Delegate eventHandler;
-        static readonly MethodInfo HandleOwnerEventMethodInfo = typeof(EventHandlerSource)
-            .GetMethod("HandleOwnerEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly RuntimeEvent _event;
+        private readonly Delegate _eventHandler;
 
-        event EventHandler handler;
-        int subscriptions = 0;
+        private static readonly MethodInfo HandleOwnerEventMethodInfo = typeof(EventCommandTrigger)
+            .GetMethod(nameof(HandleOwnerEvent), BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public EventHandlerSource(RuntimeEvent @event, object owner)
-        {            
-            this.@event = @event;
-            this.owner = owner;
+        private CommandHandler _handler;
+        private int _subscriptions;
 
-            eventHandler = @event.CreateDelegate(this, HandleOwnerEventMethodInfo);
+        public EventCommandTrigger(RuntimeEvent @event, object owner)
+        {
+            _event = @event;
+            Owner = owner;
+
+            _eventHandler = @event.CreateDelegate(this, HandleOwnerEventMethodInfo);
         }
 
         [Preserve]
-        void HandleOwnerEvent(object sender, EventArgs args)
+        private void HandleOwnerEvent(object sender, EventArgs args)
         {
-            handler?.Invoke(sender, args);
+            var parameter = ParameterExtractor?.Invoke(sender, args);
+            _handler?.Invoke(parameter);
         }
 
         public void SetEnabled(bool enabled)
         {
             SetEnabledAction?.Invoke(Owner, enabled);
         }
-
+        /// <summary>
+        /// Func to extract <see cref="ICommand"/> <see cref="ICommand.Execute"/> parameter from Target EventArgs.
+        /// EventArgs could be EventArgs.Empty or corresponding event arguments.
+        /// </summary>
         public Func<object, EventArgs, object> ParameterExtractor { get; set; }
 
-        public object Owner { get { return owner; } }
+        public object Owner { get; }
 
         public Action<object, bool> SetEnabledAction { get; set; }
 
-        public event EventHandler Handler
+        public event CommandHandler Trigger
         {
             add
             {
-                handler += value;
-                if (subscriptions == 0)
-                    this.@event.AddEventHandler(Owner, eventHandler);
-                subscriptions++;
+                _handler += value;
+                if (_subscriptions == 0)
+                    _event.AddEventHandler(Owner, _eventHandler);
+                _subscriptions++;
             }
             remove
             {
-                handler -= value;
-                subscriptions--;
-                if (subscriptions == 0)
-                    this.@event.RemoveEventHandler(Owner, eventHandler);
+                // ReSharper disable once DelegateSubtraction
+                _handler -= value;
+                _subscriptions--;
+                if (_subscriptions == 0)
+                    _event.RemoveEventHandler(Owner, _eventHandler);
             }
         }
     }
-
-	/// <summary>
-	/// IEventSource adapter for .NET events with typed Owner
-	/// </summary>
-	public class EventHandlerSource<T> : EventHandlerSource, IEventSource<T>
-	{
-		public EventHandlerSource (RuntimeEvent @event, T owner) : base (@event, owner)
-		{
-		}
-
-		public new T Owner {
-			get { return (T)base.Owner; }
-		}
-
-		public new Action<T, bool> SetEnabledAction { 
-			get { 
-				return (o, b) => SetEnabledAction (o, b);
-			}
-			set { 
-				base.SetEnabledAction = (o, b) => value ((T)o, b);
-			}
-		}
-	}
 
     /// <summary>
     /// EventListSource allows to subscribe to an event of multiple objects.
     /// T is the type of object with the event
     /// </summary>
-    public class EventListSource<T> : IEventSource
+    public class EventListCommandTrigger<T> : ICommandTrigger
     {
-        readonly RuntimeEvent @event;
-        readonly List<T> owners = new List<T>();
-        readonly List<object> replacementSenders = new List<object>();
-        readonly Delegate eventHandler;
-        static readonly MethodInfo HandleOwnerEventMethodInfo = typeof(EventListSource<T>)
-            .GetMethod("HandleOwnerEvent", BindingFlags.NonPublic | BindingFlags.Instance);
+        private readonly RuntimeEvent _event;
+        private readonly Delegate _eventHandler;
 
-        event EventHandler handler;
-        int subscriptions = 0;
+        private static readonly MethodInfo HandleOwnerEventMethodInfo = typeof(EventListCommandTrigger<T>)
+            .GetMethod(nameof(HandleOwnerEvent), BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public EventListSource(RuntimeEvent @event)
+        private CommandHandler _handler;
+        private int _subscriptions;
+
+        public EventListCommandTrigger(RuntimeEvent @event)
         {
-            this.@event = @event;
-
-            eventHandler = @event.CreateDelegate(this, HandleOwnerEventMethodInfo);
+            _event = @event;
+            _eventHandler = @event.CreateDelegate(this, HandleOwnerEventMethodInfo);
         }
 
         /// <summary>
         /// Listen to the event on this object
         /// </summary>
         /// <param name="owner">Object to subscribe to</param>
-        /// <param name="replacementSender">Replace sender in the callback with this object if it is not null</param>
-        public void Listen(T owner, object replacementSender = null)
+        public void Listen(T owner)
         {
+            Assert.Argument(owner, nameof(owner)).NotNull();
             Owners.Add(owner);
-            replacementSenders.Add(replacementSender);
-            if (subscriptions > 0)
+            if (_subscriptions > 0)
             {
-                @event.AddEventHandler(owner, eventHandler);
+                _event.AddEventHandler(owner, _eventHandler);
             }
         }
-
-        void HandleOwnerEvent(object sender, EventArgs args)
+        
+        [Preserve]
+        private void HandleOwnerEvent(object sender, EventArgs args)
         {
-            if (handler != null)
-            {
-                var index = Owners.IndexOf((T)sender);
-                var replacementSender = replacementSenders[index] ?? sender;
-                handler(replacementSender, args);
-            }
+            var parameter = ParameterExtractor?.Invoke(sender, args);
+            _handler?.Invoke(parameter);
         }
 
         public void SetEnabled(bool enabled)
         {
             if (SetEnabledAction != null)
             {
-                foreach(var owner in Owners)
+                foreach (var owner in Owners)
                 {
                     SetEnabledAction(owner, enabled);
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Func to extract <see cref="ICommand"/> <see cref="ICommand.Execute"/> parameter from Target EventArgs.
+        /// EventArgs could be EventArgs.Empty or corresponding event arguments.
+        /// </summary>
         public Func<object, EventArgs, object> ParameterExtractor { get; set; }
 
-        public object Owner { get { return Owners; } }
-
-        public List<T> Owners { get { return owners; } }
+        public List<T> Owners { get; } = new List<T>();
 
         public Action<object, bool> SetEnabledAction { get; set; }
 
-        public event EventHandler Handler
+        public event CommandHandler Trigger
         {
             add
             {
-                handler += value;
-                if (subscriptions == 0)
+                _handler += value;
+                if (_subscriptions == 0)
                 {
                     foreach (var owner in Owners)
                     {
-                        @event.AddEventHandler(owner, eventHandler);
-					}
+                        _event.AddEventHandler(owner, _eventHandler);
+                    }
                 }
-                subscriptions++;
+                _subscriptions++;
             }
             remove
             {
-                handler -= value;
-                subscriptions--;
-                if (subscriptions == 0)
+                // ReSharper disable once DelegateSubtraction
+                _handler -= value;
+                _subscriptions--;
+                if (_subscriptions == 0)
                 {
                     foreach (var owner in Owners)
                     {
-                        @event.RemoveEventHandler(owner, eventHandler);
+                        _event.RemoveEventHandler(owner, _eventHandler);
                     }
                 }
             }
         }
     }
-
 }

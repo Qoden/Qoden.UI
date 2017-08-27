@@ -30,7 +30,7 @@ namespace Qoden.UI
             _view = new ViewHolder(this);
             Logger = CreateLogger();
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-                Logger.LogInformation("{controller} Created", GetType().Name);
+                Logger.LogInformation("Created");
         }
         
         protected virtual ILogger CreateLogger()
@@ -48,7 +48,7 @@ namespace Qoden.UI
         public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-                Logger.LogInformation("{controller} OnCreateView", GetType().Name);
+                Logger.LogInformation("OnCreateView");
 
             return _view.Value;
         }
@@ -56,7 +56,7 @@ namespace Qoden.UI
         public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-                Logger.LogInformation("{controller} OnViewCreated (ViewDidLoad)", GetType().Name);
+                Logger.LogInformation("OnViewCreated (ViewDidLoad)");
 
             base.OnViewCreated(view, savedInstanceState);
             ViewDidLoad();
@@ -93,7 +93,7 @@ namespace Qoden.UI
         public sealed override void OnResume()
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-                Logger.LogInformation("{controller} OnResume (ViewWillAppear)", GetType().Name);
+                Logger.LogInformation("OnResume (ViewWillAppear)");
 
             base.OnResume();
             if (!Bindings.Bound)
@@ -107,7 +107,7 @@ namespace Qoden.UI
         public sealed override void OnPause()
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
-                Logger.LogInformation("{controller} OnPause (ViewWillDisappear)", GetType().Name);
+                Logger.LogInformation("OnPause (ViewWillDisappear)");
 
             base.OnPause();
             Bindings.Unbind();

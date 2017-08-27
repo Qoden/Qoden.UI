@@ -217,8 +217,8 @@ for specific object to tweak the way properties are accessed.
 
 #### Command bindings ####
 
-ICommandBinding is a connection between ICommand and IEventSource. ICommand enable/disable IEventSource and IEventSource fire a command.
-Concrete implementation of IEventSource is EventHandlerSource which can be created like this:
+ICommandBinding is a connection between ICommand and ICommandTrigger. ICommand enable/disable ICommandTrigger and ICommandTrigger fires a command.
+Concrete implementation of ICommandTrigger is EventCommandTrigger which can be created like this:
 
 ```
 public static class UIButtonEvents 
@@ -226,7 +226,7 @@ public static class UIButtonEvents
 	public static readonly RuntimeEvent TouchUpInsideEvent = new RuntimeEvent(typeof(UIControl), "TouchUpInside");
 	public static EventHandlerSource ClickSource(this UIButton button)
 	{
-		return new EventHandlerSource(TouchUpInsideEvent, button);
+		return new EventCommandTrigger(TouchUpInsideEvent, button);
 	}
 }
 ```
@@ -237,7 +237,7 @@ and later on can be used like this:
 Bindings.Command(command).To(button.ClickSource());
 ```
 
-ParameterExtractor is a function to extract meaningful data from EventArgs of IEventSource and pass it to ICommand action argument.
+ParameterExtractor is a function to extract meaningful data from EventArgs of ICommandTrigger and pass it to ICommand action argument.
 Or for Android it can be used like this:
 
 ```
@@ -246,7 +246,7 @@ public static class AdapterViewBindings
     public static readonly RuntimeEvent ItemSelectedEvent = new RuntimeEvent (typeof(AdapterView), "ItemSelected");
     public static EventHandlerSource<T> ItemSelectedTarget<T>(this T view)
         where T : AdapterView   {
-        return new EventHandlerSource<T>(ItemSelectedEvent, view)
+        return new EventCommandTrigger(ItemSelectedEvent, view)
         {
             SetEnabledAction = SetViewEnabled,
             ParameterExtractor = (args) => ((AdapterView.ItemSelectedEventArgs)args).Position
@@ -258,7 +258,7 @@ public static class AdapterViewBindings
 **Summary**
 
 1. ICommand act as source on model side
-2. IEventSource act as event trigger on UI side
+2. ICommandTrigger act as an event trigger on UI side
 3. ICommandBinding has Source and Target as well as several properties 
 
 #### BindingList ####

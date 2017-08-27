@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.UI.Test", "Test\Qoden
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.Binding", "Binding\Qoden.Binding.csproj", "{275AD67F-E85A-4BA9-AD48-08247E5E06DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binding.Test", "Binding.Test\Binding.Test.csproj", "{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.UI.Test", "Test\Qoden.UI.Test.csproj", "{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{97AA675C-6614-4766-BE7D-6F64157368CE}"
 	ProjectSection(SolutionItems) = preProject

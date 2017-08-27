@@ -100,13 +100,13 @@ namespace Qoden.UI
             return ViewLayoutUtil.PreferredSize(this, bounds);
         }
 
-        IEventSource _clickTarget;
+        ICommandTrigger _clickTarget;
 
-        public IEventSource ClickTarget()
+        public ICommandTrigger ClickTarget()
         {
             if (_clickTarget == null)
             {
-                _clickTarget = new UIViewClickEventSource(this);
+                _clickTarget = new UiViewClickCommandTrigger(this);
             }
             return _clickTarget;
         }

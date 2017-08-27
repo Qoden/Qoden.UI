@@ -39,10 +39,10 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ItemSelectedTarget<T>(this T dataSource)
+        public static EventCommandTrigger ItemSelectedTarget<T>(this T dataSource)
             where T : IUITableViewBinding
         {
-            return new EventHandlerSource<T>(ItemSelectedEvent, dataSource)
+            return new EventCommandTrigger(ItemSelectedEvent, dataSource)
             {
                 ParameterExtractor = (sender, args) => ((ItemSelectedEventArgs)args).Item
             };

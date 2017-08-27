@@ -20,10 +20,10 @@ namespace Qoden.UI
             }
         }
 
-        public static EventHandlerSource<T> ClickTarget<T>(this T view)
+        public static EventCommandTrigger ClickTarget<T>(this T view)
             where T : Android.Views.View
         {
-            return new EventHandlerSource<T>(ClickEvent, view)
+            return new EventCommandTrigger(ClickEvent, view)
             {
                 SetEnabledAction = SetViewEnabled
             };

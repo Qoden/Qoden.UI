@@ -208,7 +208,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
 
-        public EventHandlerSource ClickTarget()
+        public EventCommandTrigger ClickTarget()
         {
 #if __IOS__
             var control = PlatformView as UIControl;

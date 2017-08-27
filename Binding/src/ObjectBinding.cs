@@ -17,38 +17,38 @@ namespace Qoden.Binding
 
         public IDisposable SubscribeToChanges(object @object, PropertyChangedEventHandler action)
         {
-            Assert.Argument(@object, "object").NotNull();
-            var o = Assert.Argument(@object as INotifyPropertyChanged, "object")
+            Assert.Argument(@object, nameof(@object)).NotNull();
+            var o = Assert.Argument(@object as INotifyPropertyChanged, nameof(@object))
                           .NotNull("Object does not implement INotifyPropertyChanged")
                           .Value;
-            Assert.Argument(action, "action").NotNull();
+            Assert.Argument(action, nameof(action)).NotNull();
             return new EventSubscription(PropertyChanged, action, @object);
         }
     }
 
+    /// <summary>
+    /// Bind handlers to all property changes inside given object.
+    /// </summary>
     public class ObjectBinding : IBinding
     {
-        IDisposable sourceSubscription;
+        private IDisposable _sourceSubscription;
 
-        INotifyPropertyChanged source;
+        INotifyPropertyChanged _source;
 
         public INotifyPropertyChanged Source
         {
-            get { return source; }
+            get => _source;
             set
             {
                 Assert.Property(value).NotNull();
                 Assert.State(Bound).IsFalse("Cannot change Source of already Bound binding");
-                source = value;
+                _source = value;
             }
         }
 
         public bool Enabled { get; set; }
 
-        public bool Bound
-        {
-            get { return sourceSubscription != null; }
-        }
+        public bool Bound => _sourceSubscription != null;
 
         IObjectBindingStrategy _bindingStrategy = NotifyPropertyChangedStrategy.Instance;
         public IObjectBindingStrategy BindingStrategy 
@@ -66,7 +66,7 @@ namespace Qoden.Binding
             if (Bound)
                 return;
             Assert.State(Source != null).IsTrue("Source is not set");
-            sourceSubscription = BindingStrategy.SubscribeToChanges(Source, Source_Change);
+            _sourceSubscription = BindingStrategy.SubscribeToChanges(Source, Source_Change);
         }
 
         void Source_Change(object sender, PropertyChangedEventArgs e)
@@ -81,8 +81,8 @@ namespace Qoden.Binding
         public void Unbind()
         {
             if (!Bound) return;
-            sourceSubscription.Dispose();
-            sourceSubscription = null;
+            _sourceSubscription.Dispose();
+            _sourceSubscription = null;
         }
 
         public void UpdateSource()
@@ -106,7 +106,7 @@ namespace Qoden.Binding
         }
     }
 
-    public static class ObjectBinding_BindingList_Extensions 
+    public static class ObjectBindingBindingListExtensions 
     {
         public static void Object(this BindingList list, INotifyPropertyChanged @object, PropertyChangedEventHandler handler)
         {
