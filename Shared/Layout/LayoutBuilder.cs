@@ -88,7 +88,8 @@ namespace Qoden.UI
             if (_boxes.Count == 0) return new RectangleF(OuterBounds.Location, SizeF.Empty	);
             
             var padding = withPadding ? Padding : EdgeInsets.Zero;
-            var combinedFrame = _boxes.Select(x => x.Frame()).Aggregate(RectangleF.Union);
+            var rectangleFs = _boxes.Select(x => x.Frame());
+            var combinedFrame = rectangleFs.Aggregate(RectangleF.Union);
             return new RectangleF(combinedFrame.Left - padding.Left,
                 combinedFrame.Top - padding.Top,
                 combinedFrame.Width + padding.Left + padding.Right,
@@ -105,9 +106,21 @@ namespace Qoden.UI
             get
             {
                 if (_preferredWidth.HasValue) return _preferredWidth.Value;
-                return BoundingFrame().Size.Width;
+                return BoundingFrame().Right - OuterBounds.Left;
             }
             set => _preferredWidth = value;
+        }
+
+        public LayoutBuilder SetPreferredWidth(float width, bool addPadding = false)
+        {
+            PreferredWidth = width + (addPadding ? Padding.Left + Padding.Right : 0);
+            return this;
+        }
+        
+        public LayoutBuilder SetPreferredHeight(float height, bool addPadding = false)
+        {
+            PreferredHeight = height + (addPadding ? Padding.Top + Padding.Bottom: 0);
+            return this;
         }
 
         float? _preferredHeight;
@@ -120,7 +133,7 @@ namespace Qoden.UI
             get
             {
                 if (_preferredHeight.HasValue) return _preferredHeight.Value;
-                return BoundingFrame().Size.Height;
+                return BoundingFrame().Bottom - OuterBounds.Top;
             }
             set => _preferredHeight = value;
         }
