@@ -124,7 +124,7 @@ namespace Qoden.Binding
                 {
                     error = e;
                     if (Logger != null && Logger.IsEnabled(LogLevel.Warning))
-                        Logger.LogWarning("Task '{commandTask}' execution '{commandExecution}' finished with error.",
+                        Logger.LogWarning(e, "Task '{commandTask}' execution '{commandExecution}' finished with error.", 
                             Task.Id, CommandExecution?.Id);
                 }
             }
@@ -240,7 +240,7 @@ namespace Qoden.Binding
                 {
                     if (_owner.Logger != null && _owner.Logger.IsEnabled(LogLevel.Debug))
                     {
-                        _owner.Logger.LogDebug("Cancellation finished with error.", e);
+                        _owner.Logger.LogDebug(e, "Cancellation finished with error.");
                     }
                 }
             }

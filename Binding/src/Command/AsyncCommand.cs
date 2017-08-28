@@ -116,7 +116,7 @@ namespace Qoden.Binding
                 if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                 {
                     Logger.LogDebug(
-                        "Previous execution '{commandExecution}' cancelation finished with error.", prevTask?.Id, e);
+                        e, "Previous execution '{commandExecution}' cancellation finished with error.", prevTask?.Id);
                 }
             }
 
