@@ -46,7 +46,7 @@ namespace Qoden.Binding
             Delay = TimeSpan.Zero;
         }
 
-        protected override async Task PrepareAsyncCommandExecution(object o, Task executingTask)
+        protected override async Task PrepareCommandExecution(object o)
         {
             if (Action != null)
             {
@@ -67,14 +67,14 @@ namespace Qoden.Binding
                     await Task.Delay(Delay, _delayToken.Token);
                 }
 
-                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Cancel && executingTask != null && !executingTask.IsCompleted)
+                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Cancel && CommandExecution != null && !CommandExecution.IsCompleted)
                 {
-                    await CancelRunningTask(executingTask);
+                    await CancelRunningTask(CommandExecution);
                 }
 
-                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Wait && executingTask != null && !executingTask.IsCompleted)
+                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Wait && CommandExecution != null && !CommandExecution.IsCompleted)
                 {
-                    await WaitForRunningTask(executingTask);
+                    await WaitForRunningTask(CommandExecution);
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -12,15 +13,15 @@ namespace Qoden.Binding
     public abstract class AsyncCommandBase : CommandBase, IAsyncCommand
     {
         /// <summary>
-        /// Prepare for new command execution.   
+        /// Prepare for new command execution. If <see cref="CommandExecution"/> is not completed after this call then 
+        /// command will join existing execution.
         /// </summary>
         /// <param name="parameter">parameter passed to <see cref="ICommand.Execute"/></param>
-        /// <param name="executingTask"></param>
         /// <remarks>
-        /// This method primary responsibility is to make sure that <see cref="executingTask"/> either shutdown or awaited before
-        /// new execution starts.
+        /// This method primary responsibility is to make sure that <see cref="CommandExecution"/> either shutdown 
+        /// or awaited before new execution starts.
         /// </remarks>
-        protected virtual Task PrepareAsyncCommandExecution(object parameter, Task executingTask)
+        protected virtual Task PrepareCommandExecution(object parameter)
         {
             return Task.FromResult(0);
         }
@@ -32,82 +33,128 @@ namespace Qoden.Binding
         /// <param name="token">async execution cancellation token</param>
         /// <returns>async command task</returns>
         protected abstract Task ExecuteAsyncCommand(object parameter, CancellationToken token);
-        
-        public Task Task { get; private set; }
+
+        public Task Task => _commandTaskSource?.Task;
+
+        private int _isRunning;
+        private TaskCompletionSource<object> _commandTaskSource;
+
+        public Task CommandExecution { get; private set; }
 
         protected sealed override async void ExecuteCommand(object parameter)
         {
-            var oldTask = Task;
-            var tcs = new TaskCompletionSource<object>();
-            var runningTask = Task = tcs.Task;
-            
+            bool canceled = false;
+            Exception error = null;
             try
             {
                 Error = null;
-                IsRunning = true;
+
+                _isRunning++;
+                if (_isRunning == 1)
+                {
+                    _commandTaskSource = new TaskCompletionSource<object>();
+                    if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
+                    {
+                        Logger.LogDebug("Task '{commandTask}' started.", Task.Id);
+                    }
+                    RaisePropertyChanged(nameof(Task));
+                    RaisePropertyChanged(nameof(IsRunning));
+                    RaiseCanExecuteChanged();
+                    _cancelCommand?.RaiseCanExecuteChanged();
+                }
 
                 try
                 {
-                    await PrepareAsyncCommandExecution(parameter, oldTask);
+                    await PrepareCommandExecution(parameter);
                 }
                 catch (OperationCanceledException)
                 {
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                     {
-                        Logger.LogDebug("Command execution canceled during preparation.");
+                        if (CommandExecution == null)
+                        {
+                            Logger.LogDebug("Task '{commandTask}' execution canceled during preparation.",
+                                Task.Id);
+                        }
+                        else
+                        {
+                            Logger.LogDebug(
+                                "Task '{commandTask}' execution canceled during preparation. Continue with already running execution {commandExecution}",
+                                Task.Id, CommandExecution.Id);
+                        }
                     }
-                    return;
-                }
-
-                //check if action still can be executed after preparations
-                if (!CanExecuteCommand(parameter))
-                {
-                    if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-                    {
-                        Logger.LogDebug(
-                            "Cannot execute command, CanExecute return false after command preparation.");
-                    }
-                    return;
-                }
-
-                if (oldTask != null && !oldTask.IsCompleted)
-                {
-                    if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-                    {
-                        Logger.LogDebug(
-                            "Already running, join to existing execution with id '{commandExecution}'.",
-                            runningTask.Id);
-                    }
-                    await oldTask;
                     return;
                 }
 
                 try
                 {
-                    CancellationTokenSource = new CancellationTokenSource();
+                    if (CommandExecution != null && !CommandExecution.IsCompleted)
+                    {
+                        if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
+                        {
+                            Logger.LogDebug(
+                                "Task '{commandTask}', join to running command execution '{commandExecution}'.",
+                                Task.Id, CommandExecution.Id);
+                        }
+                        await CommandExecution;
+                        return;
+                    }
+                    
+                    var cts = CancellationTokenSource = new CancellationTokenSource();
                     RaisePropertyChanged(nameof(IsCancellationRequested));
+
+                    CommandExecution = ExecuteAsyncCommand(parameter, cts.Token);
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                     {
-                        Logger.LogDebug("Execution '{commandExecution}' started.", runningTask.Id);
+                        Logger.LogDebug(
+                            "Task '{commandTask}' started new execution '{commandExecution}'.",
+                            Task.Id, CommandExecution.Id);
                     }
-                    await ExecuteAsyncCommand(parameter, CancellationTokenSource.Token);
+                    await CommandExecution;
+                    cts.Token.ThrowIfCancellationRequested();
                 }
                 catch (OperationCanceledException)
                 {
+                    canceled = true;
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-                        Logger.LogDebug("Execution '{commandExecution}' canceled.", runningTask.Id);
+                        Logger.LogDebug("Task '{commandTask}' execution '{commandExecution}' canceled.", Task.Id,
+                            CommandExecution?.Id);
                 }
                 catch (Exception e)
                 {
+                    error = e;
                     if (Logger != null && Logger.IsEnabled(LogLevel.Warning))
-                        Logger.LogWarning("Execution '{commandExecution}' finished with error.", runningTask.Id, e);
-                    Error = e;
+                        Logger.LogWarning("Task '{commandTask}' execution '{commandExecution}' finished with error.",
+                            Task.Id, CommandExecution?.Id);
                 }
             }
             finally
             {
-                IsRunning = false;
-                tcs.SetResult(null);
+                _isRunning--;
+                if (_isRunning == 0)
+                {
+                    var tcs = _commandTaskSource;
+                    Error = error;
+                    CommandExecution = null;
+                    _commandTaskSource = null;
+                    RaisePropertyChanged(nameof(Task));
+                    RaisePropertyChanged(nameof(IsRunning));
+                    RaiseCanExecuteChanged();
+                    _cancelCommand?.RaiseCanExecuteChanged();
+
+                    if (canceled)
+                    {
+                        tcs.SetCanceled();
+                    }
+                    else if (Error != null)
+                    {
+                        tcs.SetException(Error);
+                    }
+                    else
+                    {
+                        tcs.SetResult(null);    
+                    }
+                }
             }
         }
 
@@ -141,20 +188,7 @@ namespace Qoden.Binding
             RaisePropertyChanged(new PropertyChangedEventArgs(key));
         }
 
-        private bool _isRunning;
-
-        public bool IsRunning
-        {
-            get => _isRunning;
-            private set
-            {
-                if (_isRunning == value) return;
-                _isRunning = value;
-                RaisePropertyChanged(nameof(IsRunning));
-                RaiseCanExecuteChanged();
-                _cancelCommand?.RaiseCanExecuteChanged();
-            }
-        }
+        public bool IsRunning => _isRunning > 0;
 
         public bool IsCancellationRequested => CancellationTokenSource?.IsCancellationRequested ?? false;
 
