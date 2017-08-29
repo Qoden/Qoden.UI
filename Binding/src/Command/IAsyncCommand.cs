@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,28 +12,29 @@ namespace Qoden.Binding
     /// </summary>
     /// <remarks>
     /// <para>
-    ///     <see cref="IAsyncCommand"/> instances going thru certain state transitions during execution.
-    ///     <list type="number">
+    /// Command can control concurrent executions by checking <see cref="Task"/> property when 
+    /// run. If <see cref="Task"/> is not null then another execution is already running. Command then can do many things 
+    /// including
+    /// <list type="number">
     ///     <item>
-    ///         <description><see cref="ICommand.Execute"/> moves command to <see cref="IsRunning"/> state.</description>
+    ///     <term>Wait</term>
+    ///     <description> - wait until <see cref="Task"/> finish and continue</description>
     ///     </item>
     ///     <item>
-    ///         <description>Command starts it <see cref="Task"/> and start command action execution (see <see cref="CommandExecution"/>).</description>
+    ///     <term>Join</term>
+    ///     <description> - do nothing and return <see cref="Task"/></description>
     ///     </item>
     ///     <item>
-    ///         <description>Subsequent calls to <see cref="ICommand.Execute"/> await, terminate or join <see cref="CommandExecution"/>.</description>
+    ///     <term>Cancel</term>
+    ///     <description> - cancel <see cref="Task"/> using implementation specific API</description>
     ///     </item>
-    ///     <item>
-    ///         <description>When last <see cref="CommandExecution"/> finishes command transition to not running state as indicated by <see cref="IsRunning"/>.</description>
-    ///     </item>
-    ///     </list>
-    /// </para>
-    /// <para>
-    ///     
+    /// </list> 
     /// </para>
     /// <para>
     /// Async command can be canceled with <see cref="CancelCommand"/>. Right after a call to <see cref="CancelCommand"/>
-    ///  <see cref="ICommand.Execute"/> method command could be either still running with <see cref="IsCancellationRequested"/> flag  
+    ///  <see cref="ICommand.Execute"/> method command could be either still running with <see cref="IsCancellationRequested"/> 
+    /// flag or already finished with <see cref="IsRunning"/> equal to false and <see cref="Task"/> equal to null.
+    /// <see cref="CancelCommand"/> cancels current and all pending executions (if command is waiting for them internaly).
     /// </para>
     /// </remarks>
     public interface IAsyncCommand : ICommand, INotifyPropertyChanged
@@ -42,19 +45,13 @@ namespace Qoden.Binding
         bool IsRunning { get; }
 
         /// <summary>
-        /// Running command task. Not null when command is running (see <see cref="IsRunning"/>, also see <see cref="IAsyncCommand"/> remarks section for details). 
+        /// Running command task. Not null when command is running (see <see cref="IsRunning"/>, also 
+        /// see <see cref="IAsyncCommand"/> remarks section for details). 
         /// </summary>
         Task Task { get; }
         
         /// <summary>
-        /// Running command execution. It is different from <see cref="Task"/> since command might have several 
-        /// <see cref="CommandExecution"/> as part of a single <see cref="Task"/> if <see cref="ICommand.Execute"/>
-        /// called multiple times while command is running (see <see cref="IAsyncCommand"/> remarks section for details).
-        /// </summary>
-        Task CommandExecution { get; }
-
-        /// <summary>
-        /// Error produced by last execution (see <see cref="CommandExecution"/>).
+        /// Error produced by last execution.
         /// </summary>
         Exception Error { get; }
 
@@ -63,20 +60,13 @@ namespace Qoden.Binding
         /// </summary>
         /// <remarks>
         /// Command could be still running (see <see cref="IsRunning"/>) after a call to <see cref="CancelCommand"/> 
-        /// <see cref="ICommand.Execute"/>. if you want to make sure it is finshed then wait for <see cref="Task"/> 
-        /// and make sure you handle <see cref="OperationCanceledException"/>.       
+        /// <see cref="ICommand.Execute"/>. if you want to make sure it is finshed then use snippet below.
         /// </remarks>
         /// <code>
         /// var command = new AsyncCommand() { ... };
         /// command.Execute();
         /// command.CancelCommand.Execute();
-        /// try 
-        /// {
-        ///     if (command.Task != null) await command.Task;
-        /// } 
-        /// catch(OperationCanceledException)
-        /// {
-        /// }
+        /// await command.WhenFinished();
         /// </code>
         ICommand CancelCommand { get; } 
 
@@ -88,22 +78,18 @@ namespace Qoden.Binding
     
     public static class AsyncCommandExtensions
     {
-        public static Task ExecuteAsync(this IAsyncCommand command, object parameter)
+        public static async Task ExecuteAsync(this IAsyncCommand command, object parameter)
         {
             command.Execute(parameter);
             var task = command.Task;
-            if (task == null) //means command finished execution right away
+            if (task != null)
             {
-                if (command.Error != null)
-                {
-                    task = Task.FromException(command.Error);
-                }
-                else
-                {
-                    task = Task.FromResult(0);
-                }
+                await task;
             }
-            return task;
+            if (command.Error != null)
+            {
+                ExceptionDispatchInfo.Capture(command.Error).Throw();
+            }
         }
 
         public static Task ExecuteAsync(this IAsyncCommand command)
@@ -125,5 +111,25 @@ namespace Qoden.Binding
         {
             return command.Property<T, bool>(nameof(command.Error));
         }
+
+        public static Task WhenFinished(this IAsyncCommand command)
+        {
+            if (command.IsRunning)
+            {
+                var tcs = new TaskCompletionSource<object>();
+                void Done(object sender, PropertyChangedEventArgs p)
+                {
+                    if (!command.IsRunning)
+                    {
+                        tcs.SetResult(null);
+                        command.PropertyChanged -= Done;
+                    }
+                }
+
+                command.PropertyChanged += Done;
+                return tcs.Task;
+            }
+            return Task.FromResult(0);
+        }        
     }
 }

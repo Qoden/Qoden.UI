@@ -14,7 +14,7 @@ namespace Qoden.UI.Test
             public int Executed;
             private AsyncCommand _command;
             public bool UseCancellationToken { get; set; } = true;
-            public AsyncCommandExecutionPolicy Policy { get; set; } = AsyncCommandExecutionPolicy.Join;
+            public AsyncCommandSerializationPolicy Policy { get; set; } = AsyncCommandSerializationPolicy.None;
 
             public IAsyncCommand Command
             {
@@ -25,7 +25,7 @@ namespace Qoden.UI.Test
                         _command = new AsyncCommand()
                         {
                             Action = (p, t) => CommandAction(p, t),
-                            ExecutionPolicy = Policy
+                            SerializationPolicy = Policy
                         };
                     }
                     return _command;
@@ -63,59 +63,35 @@ namespace Qoden.UI.Test
             
             Assert.True(command.IsRunning);
             Assert.NotNull(command.Task);
-            Assert.NotNull(command.CommandExecution);
             Assert.Equal(0, fixture.Executed);
             
             await command.Task;
             
             Assert.Equal(1, fixture.Executed);
             Assert.False(command.IsRunning);
-            Assert.Null(command.Task);
-            Assert.Null(command.CommandExecution);
         }
 
         [Fact]
-        public void MultipleExecutions_SameTask()
+        public void MultipleExecutions_DifferentTasks()
         {
             var fixture = new CommandFixture();
             var command = fixture.Command;
             
             command.Execute();
             var t1 = command.Task;
-            command.Execute();
-            var t2 = command.Task;
-            command.Execute();
-            var t3 = command.Task;
-            
-            Assert.Same(t1, t2);
-            Assert.Same(t2, t3);
-            command.Task?.Wait();
-        }
-
-        [Fact]
-        public void MultipleExecutions_DifferentTask()
-        {
-            var fixture = new CommandFixture();
-            var command = fixture.Command;
-            
-            command.Execute();
-            var t1 = command.Task;
-            command.Task.Wait();
             
             command.Execute();
             var t2 = command.Task;
-            command.Task.Wait();
             
             command.Execute();
             var t3 = command.Task;
-            command.Task.Wait();
             
             Assert.NotSame(t1, t2);
             Assert.NotSame(t2, t3);
         }
 
         [Fact]
-        public void SyncExecutionFinishesRightAway()
+        public void SyncExecutionFinishRightAway()
         {
             var fixture = new CommandFixture()
             {
@@ -129,14 +105,13 @@ namespace Qoden.UI.Test
         }
 
         [Fact]
-        public void ExecuteAsyncThrows()
+        public async Task ExecuteAsyncThrows()
         {
             var command = new AsyncCommand()
             {
                 Action = (p, token) => throw new NotImplementedException()
             };
-            var task = command.ExecuteAsync();
-            Assert.Throws<NotImplementedException>(() => task.GetAwaiter().GetResult());
+            await Assert.ThrowsAsync<NotImplementedException>(async () => await command.ExecuteAsync());
         }
 
         [Fact]
@@ -163,12 +138,11 @@ namespace Qoden.UI.Test
             command.CancelCommand.Execute();
             Assert.True(command.IsCancellationRequested);
             Assert.False(command.IsRunning);
-            Assert.Null(command.Task);
             Assert.Equal(0, fixture.Executed);
         }
         
         [Fact]
-        public void CancelCommand_ActionDoesNotHonourCancelToken()
+        public void CancelCommand_ActionDoesNotUseCancelToken()
         {
             var fixture = new CommandFixture()
             {
@@ -179,74 +153,38 @@ namespace Qoden.UI.Test
             command.Execute();
             command.CancelCommand.Execute();
             Assert.True(command.IsCancellationRequested);
-            Assert.True(command.IsRunning);
-            Assert.NotNull(command.Task);
+            Assert.False(command.IsRunning);
             Assert.Throws<TaskCanceledException>(() => command.Task.GetAwaiter().GetResult());
-            Assert.Equal(1, fixture.Executed);
+            Assert.Equal(0, fixture.Executed);
         }
 
         [Fact]
-        public void AsyncCommandExecutionPolicy_Join()
+        public async Task SerializationPolicy_Wait()
         {
             var fixture = new CommandFixture()
             {
-                Policy = AsyncCommandExecutionPolicy.Join
-            };
-            var command = fixture.Command;
-            
-            command.Execute();
-            var task1 = command.Task;
-            var execution1 = command.CommandExecution;
-            
-            command.Execute();
-            var task2 = command.Task;
-            var execution2 = command.CommandExecution;
-            
-            Assert.Same(task1, task2);
-            Assert.Same(execution1, execution2);
-            command.Task.Wait();
-            Assert.Equal(1, fixture.Executed);
-        }
-        
-        [Fact]
-        public async Task AsyncCommandExecutionPolicy_Wait()
-        {
-            var fixture = new CommandFixture()
-            {
-                Policy = AsyncCommandExecutionPolicy.Wait
+                Policy = AsyncCommandSerializationPolicy.Wait
             };
             var command = fixture.Command;
 
             command.Execute();
-            var task1 = command.Task;
-            var execution1 = command.CommandExecution;
-            
             command.Execute();
-            var task2 = command.Task;
-            var execution2 = command.CommandExecution;
-            
-            Assert.Same(task1, task2);
-            Assert.Same(execution1, execution2);
-
-            await task1;
-            execution2 = command.CommandExecution;
-            Assert.NotSame(execution1, execution2);
-            
-            await Task.WhenAll(task1, task2);
+            await command.Task;
+            Assert.False(command.IsRunning);
             Assert.Equal(2, fixture.Executed);
         }
         
         [Fact]
-        public void AsyncCommandExecutionPolicy_Cancel()
+        public void SerializationPolicy_WaitCancel()
         {
             var fixture = new CommandFixture()
             {
-                Policy = AsyncCommandExecutionPolicy.Cancel
+                Policy = AsyncCommandSerializationPolicy.Wait | AsyncCommandSerializationPolicy.Cancel
             };
             var command = fixture.Command;
 
             command.Execute();
-            var execution1 = command.CommandExecution;
+            var execution1 = command.Task;
             command.Execute();
             Assert.Throws<TaskCanceledException>(() => execution1.GetAwaiter().GetResult());
             command.Task.Wait();
@@ -267,37 +205,22 @@ namespace Qoden.UI.Test
         }
 
         [Fact]
-        public void CancelWhile_Join()
-        {
-            var fixture = new CommandFixture()
-            {
-                Policy = AsyncCommandExecutionPolicy.Join
-            };
-            var command = fixture.Command;
-            command.Execute();
-            command.Execute();            
-            command.CancelCommand.Execute();
-            command.Task?.Wait();
-            Assert.False(command.IsRunning);
-            Assert.Equal(0, fixture.Executed);
-        }        
-        
-        [Fact]
         public void CancelWhile_Wait()
         {
             var fixture = new CommandFixture()
             {
-                Policy = AsyncCommandExecutionPolicy.Wait
+                Policy = AsyncCommandSerializationPolicy.Wait
             };
             var command = fixture.Command;
             command.Execute();
+            var task1 = command.Task;
             command.Execute();
-            //since command waits for previous execution this actually cancel first execution
-            //and then command proceed to second one
-            command.CancelCommand.Execute(); 
-            command.Task?.Wait();
+            var task2 = command.Task;
+            command.CancelCommand.Execute();
+            Assert.Throws<TaskCanceledException>(() => task1.GetAwaiter().GetResult());
+            Assert.Throws<TaskCanceledException>(() => task2.GetAwaiter().GetResult());
             Assert.False(command.IsRunning);
-            Assert.Equal(1, fixture.Executed);
+            Assert.Equal(0, fixture.Executed);
         }
         
         [Fact]
@@ -305,13 +228,13 @@ namespace Qoden.UI.Test
         {
             var fixture = new CommandFixture()
             {
-                Policy = AsyncCommandExecutionPolicy.Cancel
+                Policy = AsyncCommandSerializationPolicy.Cancel | AsyncCommandSerializationPolicy.Wait
             };
             var command = fixture.Command;
             command.Execute();
             command.Execute();            
             command.CancelCommand.Execute();
-            command.Task?.Wait();
+            Assert.Throws<TaskCanceledException>(() => command.Task.GetAwaiter().GetResult());
             Assert.False(command.IsRunning);
             Assert.Equal(0, fixture.Executed);
         }

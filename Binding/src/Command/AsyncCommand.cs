@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Qoden.Binding
 {
-    public enum AsyncCommandExecutionPolicy
+    [Flags]
+    public enum AsyncCommandSerializationPolicy
     {
         /// <summary>
-        /// Join to existing command task if possible.
+        /// Do nothing
         /// </summary>
-        Join,
+        None = 0,
+        
+        /// <summary>
+        /// Cancel running command task.
+        /// </summary>
+        Cancel = 1,
 
         /// <summary>
-        /// Wait until command task finish before executing.
+        /// Wait until command task finish.
         /// </summary>
-        Wait,
-
-        /// <summary>
-        /// Cancel running command task before esecuting it.
-        /// </summary>
-        Cancel
+        Wait = 2,
     }
 
     public sealed class AsyncCommand : AsyncCommandBase
     {
-        CancellationTokenSource _delayToken;
-        public AsyncCommandExecutionPolicy ExecutionPolicy { get; set; } = AsyncCommandExecutionPolicy.Join;
-
+        private CancellationTokenSource _delayToken;
+        
         public AsyncCommand()
         {
         }
@@ -43,13 +42,13 @@ namespace Qoden.Binding
                 CanExecute = canExecute;
             else
                 CanExecute = DefaultCanExecute;
-            Delay = TimeSpan.Zero;
         }
 
-        protected override async Task PrepareCommandExecution(object o)
+        protected override async Task ExecuteAsyncCommand(object parameter, CancellationToken token)
         {
             if (Action != null)
             {
+                
                 if (_delayToken != null && !_delayToken.IsCancellationRequested)
                 {
                     _delayToken.Cancel();
@@ -58,79 +57,30 @@ namespace Qoden.Binding
 
                 if (Delay > TimeSpan.Zero)
                 {
-                    if (Logger != null && Logger.IsEnabled(LogLevel.Trace))
-                    {
-                        Logger.LogTrace("Delayed by {delay}", Delay);
-                    }
-                    _delayToken = new CancellationTokenSource();
-                    //If this throws OperationCanceledException then entire command execution is canceled
+                    _delayToken = new CancellationTokenSource();                
                     await Task.Delay(Delay, _delayToken.Token);
                 }
-
-                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Cancel && CommandExecution != null && !CommandExecution.IsCompleted)
+                
+                if (Task != null)
                 {
-                    await CancelRunningTask(CommandExecution);
+                    if ((SerializationPolicy & AsyncCommandSerializationPolicy.Cancel) != 0)
+                    {
+                        CancelRunningTask();
+                    }
+                    if ((SerializationPolicy & AsyncCommandSerializationPolicy.Wait) != 0)
+                    {
+                        try
+                        {
+                            await Task;
+                        }
+                        catch
+                        {
+                            //ignore
+                        }
+                    }
                 }
 
-                if (ExecutionPolicy == AsyncCommandExecutionPolicy.Wait && CommandExecution != null && !CommandExecution.IsCompleted)
-                {
-                    await WaitForRunningTask(CommandExecution);
-                }
-            }
-        }
-
-        private async Task WaitForRunningTask(Task prevTask)
-        {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-            {
-                Logger.LogDebug(
-                    "Wait for command execution '{commandExecution}'", prevTask.Id);
-            }
-            try
-            {
-                await prevTask;
-            }
-            catch
-            {
-                //ignore
-            }
-        }
-
-        private async Task CancelRunningTask(Task prevTask)
-        {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-            {
-                Logger.LogDebug(
-                    "Cancel previous command execution '{commandExecution}'", prevTask.Id);
-            }
-            try
-            {
-                ((IAsyncCommand) this).CancelCommand.Execute();
-                await prevTask;
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception e)
-            {
-                if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-                {
-                    Logger.LogDebug(
-                        e, "Previous execution '{commandExecution}' cancellation finished with error.", prevTask?.Id);
-                }
-            }
-
-            if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
-            {
-                Logger.LogDebug(
-                    "Pervious execution '{commandExecution}' canceled. Command execution continue.", prevTask?.Id);
-            }
-        }
-
-        protected override async Task ExecuteAsyncCommand(object parameter, CancellationToken token)
-        {
-            if (Action != null)
-            {
+                if (IsCanceled) return;
                 await Action(parameter, token);
             }
         }
@@ -156,26 +106,13 @@ namespace Qoden.Binding
             set => _canExecute = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public TimeSpan Delay { get; set; }
-
-        public Task ExecuteWithoutDelay(object param)
-        {
-            var oldDelay = Delay;
-            try
-            {
-                Delay = TimeSpan.Zero;
-                Execute(param);
-            }
-            finally
-            {
-                Delay = oldDelay;
-            }
-            return Task;
-        }
-
         private bool DefaultCanExecute(object arg)
         {
             return true;
         }
+        
+        public TimeSpan Delay { get; set; } = TimeSpan.Zero;
+        
+        public AsyncCommandSerializationPolicy SerializationPolicy { get; set; } = AsyncCommandSerializationPolicy.None;
     }
 }
