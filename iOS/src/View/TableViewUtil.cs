@@ -47,14 +47,14 @@ namespace Qoden.UI
         }
 
         public static nfloat DefaultEstimatedHeightForHeader(this IKeepLastSection content, UITableView tableView,
-            nint section)
+            nint section, float defaultHeight = 0.01f)
         {
             var header = content.LastSectionView;
             if (section != content.LastSection || header == null)
             {
                 header = content.GetViewForHeader(tableView, section);
             }
-            return header.Frame.Height;
+            return header?.Frame.Height ?? (nfloat)defaultHeight;
         }
         
         public static nfloat DefaultEstimatedHeightForFooter(this IKeepLastSection content, UITableView tableView,
