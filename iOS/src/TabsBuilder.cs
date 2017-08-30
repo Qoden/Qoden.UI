@@ -56,8 +56,13 @@ namespace Qoden.UI
         public void Build()
         {
             View.Items = _items.ToArray();
-            View.SelectedItem = _items[0];
-            OnTabSelected(0);
+            SelectTab(0);
+        }
+
+        public void SelectTab(int index)
+        {
+            View.SelectedItem = View.Items[index];
+            OnTabSelected(index);
         }
 
         public UITabBar View { get; private set; }
