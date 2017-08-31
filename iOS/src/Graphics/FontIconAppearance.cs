@@ -7,22 +7,23 @@ namespace Qoden.UI
 {
     public class FontIconAppearance
     {
-        public FontIconAppearance(CTFont font)
+        public FontIconAppearance(Font font)
         {
-            Font = font;
+            UIKitFont = font.ToFont();
+            CoreTextFont = font.ToCTFont();
             Colors = new[] { UIColor.DarkGray.CGColor };
             StrokeColor = UIColor.Black.CGColor;
             StrokeWidth = 0;
             RenderingMode = UIImageRenderingMode.Automatic;
         }
 
-        public FontIconAppearance(CTFont font,
+        public FontIconAppearance(CTFont coreTextFont,
                                   CGColor[] colors = null,
                                   UIImageRenderingMode renderingMode = UIImageRenderingMode.Automatic,
                                   CGColor strokeColor = null,
                                   float strokeWidth = 0)
         {
-            Font = font;
+            CoreTextFont = coreTextFont;
             Colors = colors ?? new[] { UIColor.DarkGray.CGColor };
             RenderingMode = renderingMode;
             StrokeColor = strokeColor ?? UIColor.Black.CGColor;
@@ -53,11 +54,18 @@ namespace Qoden.UI
             set { _strokeWidth = (value >= 0 ? value : throw new ArgumentException()); }
         }
 
-        CTFont _font;
-        public CTFont Font
+        CTFont _coreTextFont;
+        public CTFont CoreTextFont
         {
-            get => _font;
-            set { _font = (value ?? throw new ArgumentNullException()); }
+            get => _coreTextFont;
+            set { _coreTextFont = (value ?? throw new ArgumentNullException()); }
+        }
+        
+        UIFont _UIKitFont;
+        public UIFont UIKitFont
+        {
+            get => _UIKitFont;
+            set { _UIKitFont = (value ?? throw new ArgumentNullException()); }
         }
     }
 }

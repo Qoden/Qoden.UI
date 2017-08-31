@@ -60,7 +60,14 @@ namespace Qoden.UI
             {
                 View.AddTab(tab);
             }
-            OnTabSelected(View.SelectedTabPosition);
+            
+            SelectTab(View.SelectedTabPosition);
+        }
+
+        public void SelectTab(int index)
+        {
+            View.SelectedTabPosition = index;
+            OnTabSelected(index);
         }
 
         public TabLayout View { get; private set; }
