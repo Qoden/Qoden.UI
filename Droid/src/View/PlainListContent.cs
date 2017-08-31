@@ -1,42 +1,37 @@
-﻿using System;
-using Android.Widget;
+﻿using Android.Widget;
 using Android.Views;
-using Qoden.Validation;
+using Qoden.UI.Wrappers;
 
 namespace Qoden.UI
 {
-    public abstract partial class PlainListContent : BaseAdapter<object>, IPlainListContent
+    public abstract class PlainListContent : BaseAdapter<object>, IPlainListContent
     {
-        public PlainListContent(ViewBuilder builder)
-        {
-            Builder = builder;
-        }
+        #region Cross platform API
 
-        public ViewBuilder Builder { get; private set; }
+        public abstract int NumberOfRows();
 
-        #region Redirects from iOS API to IPlainListContent methods
+        public abstract int GetCellType(int row);
+
+        public abstract int CellTypeCount { get; }
+        
+        public abstract TableViewCell GetCell(PlainListCellContext context);
+
+        #endregion
+        
+        #region Redirects from Android API to IPlainListContent methods
 
         public sealed override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var context = new PlainListCellContext()
             {
-                IsFresh = false,
-                CellView = convertView,
+                ReusableCell = convertView.AsCell(),
                 Row = position,
+                Parent = parent.AsView()
             };
-
-            if (convertView == null)
-            {
-                var childTypeId = GetCellType(context.Row);
-                CreateCell(childTypeId, ref context);
-                Assert.State(context.CellView, "CellView").NotNull();
-                context.IsFresh = true;
-            }
-            GetCell(context);
-            return context.CellView;
+            return GetCell(context);
         }
 
-        public sealed override int ViewTypeCount => CellTypes.Length;
+        public sealed override int ViewTypeCount => CellTypeCount;
 
         public sealed override int GetItemViewType(int position)
         {
@@ -46,22 +41,7 @@ namespace Qoden.UI
         public sealed override int Count => NumberOfRows();
 
         #endregion
-
-        #region Internal API overrides
-
-        object[] ActivatorArgs = new object[1];
-
-        protected virtual void CreateCell(int cellTypeId, ref PlainListCellContext cellContext)
-        {
-            var childViewType = CellTypes[cellTypeId];
-            ActivatorArgs[0] = Builder.Context;
-            var convertView = (Android.Views.View)Activator.CreateInstance(childViewType, ActivatorArgs);
-            cellContext.CellView = convertView;
-        }
-
-        #endregion
-
-
+        
         #region Convenience overrides
 
         public override long GetItemId(int position)

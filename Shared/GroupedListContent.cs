@@ -1,17 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using Qoden.Validation;
+﻿using Qoden.UI.Wrappers;
 
 namespace Qoden.UI
 {
 #if __IOS__
     using PlatformView = UIKit.UIView;
+    using PlatformCellView = UIKit.UITableViewCell;
 #endif
 #if __ANDROID__
     using PlatformView = Android.Views.View;
+    using PlatformCellView = Android.Views.View;
 #endif
 
-    public interface IGroupedListContent
+    public struct GroupedListSectionContext
+    {
+        public int Section;
+        public PlatformView SectionHeaderView;
+#if __ANDROID__
+        public bool IsExpanded;
+        public PlatformView Parent;
+#endif
+        public bool IsFresh => SectionHeaderView == null;
+    }
+    
+    public struct GroupedListCellContext
+    {
+        public int Section;
+        public int Row;
+        public PlatformCellView ReusableCell;
+#if __ANDROID__
+        public bool IsExpanded;
+        public View Parent;
+#endif
+        public bool IsFresh => ReusableCell == null;
+    }
+    
+    public interface INewGroupedListContent
     {
         /// <summary>
         /// Return numbers sections in list view.
@@ -22,66 +45,41 @@ namespace Qoden.UI
         /// </summary>
         int RowsInSection(int section);
         /// <summary>
-        /// Get all possible types of section headers. This list might have dublicates.
+        /// Get number of types of section headers.
         /// </summary>
-        Type[] SectionTypes { get; }
+        int SectionTypeCount { get; }
         /// <summary>
-        /// Get all possible types of cells. This list might have dublicates.
+        /// Get number of possible types of cells.
         /// </summary>
-        Type[] CellTypes { get; }
+        int CellTypeCount { get; }
         /// <summary>
-        /// Get index of a cell type in <see cref="CellTypes"/> array for given section and cell index.
+        /// Get cell type.
         /// </summary>
         int GetCellType(int section, int row);
         /// <summary>
-        /// Get index of a section view type in <see cref="SectionTypes"/> array for given section index.
+        /// Get section view type.
         /// </summary>
         int GetSectionType(int section);
         /// <summary>
-        /// Populate section view with data.
+        /// Get section view.
         /// </summary>
-        void GetSection(GroupedListSectionContext sectionContext);
+        View GetSection(GroupedListSectionContext context);
         /// <summary>
-        /// Populate cell view with data.
+        /// Get cell.
         /// </summary>
-        void GetCell(GroupedListCellContext cellContext);
+        TableViewCell GetCell(GroupedListCellContext context);
     }
-
-    public struct GroupedListCellContext
+    
+    public static class GroupedListContentExtensions
     {
-        public bool IsFresh;
-        public PlatformView CellView;
-        public int Section;
-        public int Row;
-    }
-
-    public struct GroupedListSectionContext
-    {
-        public bool IsFresh;
-        public PlatformView SectionHeaderView;
-        public int Section;
-    }
-
-    public abstract partial class GroupedListContent
-    {
-#if __IOS__
-        static Type[] _SectionTypes = { typeof(UIKit.UITableViewHeaderFooterView) };
-        static Type[] _CellTypes = { typeof(UIKit.UITableViewCell) };
-#endif
-#if __ANDROID__
-        static Type[] _SectionTypes = { typeof(Android.Views.View) };
-        static Type[] _CellTypes = { typeof(Android.Views.View) };
-#endif
-        public virtual Type[] SectionTypes { get; } = _SectionTypes;
-        public virtual Type[] CellTypes { get; } = _CellTypes;
-
-        public virtual int GetCellType(int section, int childPosition)
+        public static int GetCellTypeFromContext(this INewGroupedListContent content, GroupedListCellContext context)
         {
-            return 0;
+            return content.GetCellType(context.Section, context.Row);
         }
-        public virtual int GetSectionType(int section)
+        
+        public static int GetSectionTypeFromContext(this INewGroupedListContent content, GroupedListSectionContext context)
         {
-            return 0;
+            return content.GetSectionType(context.Section);
         }
     }
 }

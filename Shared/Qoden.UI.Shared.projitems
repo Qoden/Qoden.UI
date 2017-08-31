@@ -52,6 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\GroupTableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QodenTableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Debug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />

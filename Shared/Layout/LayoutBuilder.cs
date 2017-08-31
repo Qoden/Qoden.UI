@@ -18,6 +18,9 @@ namespace Qoden.UI
     /// </summary>
     public class LayoutBuilder
     {
+        float? _preferredHeight;
+        float? _preferredWidth;
+        private EdgeInsets _padding;
         List<IViewLayoutBox> _boxes = new List<IViewLayoutBox>();
 
         /// <summary>
@@ -96,8 +99,6 @@ namespace Qoden.UI
                 combinedFrame.Height + padding.Top + padding.Bottom);
         }
 
-        float? _preferredWidth;
-
         /// <summary>
         /// Get or set Preferred layout width in pixels
         /// </summary>
@@ -123,8 +124,6 @@ namespace Qoden.UI
             return this;
         }
 
-        float? _preferredHeight;
-
         /// <summary>
         /// Get or set Preferred layout height in pixels
         /// </summary>
@@ -143,7 +142,20 @@ namespace Qoden.UI
         /// </summary>
         public SizeF PreferredSize => new SizeF(PreferredWidth, PreferredHeight);
 
-        public EdgeInsets Padding { get; set; }
+        public EdgeInsets Padding
+        {
+            get => _padding;
+            set
+            {
+                if (!value.Equals(_padding))
+                {
+                    _padding = value;
+                    var minWidth = Math.Max(OuterBounds.Width, _padding.Left + _padding.Right);
+                    var minHeight = Math.Max(OuterBounds.Height, _padding.Bottom + _padding.Top);
+                    OuterBounds = new RectangleF(OuterBounds.Location, new SizeF(minWidth, minHeight));
+                }
+            }
+        }
 
         public virtual void Layout()
         {

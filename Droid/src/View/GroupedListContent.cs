@@ -1,28 +1,30 @@
-﻿using System;
-using Android.Views;
+﻿using Android.Views;
 using Android.Widget;
-using Qoden.Validation;
+using Qoden.UI.Wrappers;
+using View = Qoden.UI.Wrappers.View;
 
 namespace Qoden.UI
 {
-    public abstract partial class GroupedListContent : BaseExpandableListAdapter, IHeterogeneousExpandableList, IGroupedListContent
+    public abstract class NewGroupedListContent : BaseExpandableListAdapter, INewGroupedListContent
     {
-        public GroupedListContent(ViewBuilder builder)
+        protected NewGroupedListContent(ViewBuilder builder)
         {            
             Builder = builder;
         }
 
-        public ViewBuilder Builder { get; private set; }
-
-        #region Cross Platform interface
-
+        public ViewBuilder Builder { get; }
+        
+        #region Cross platform interface
         public abstract int NumberOfSections();
         public abstract int RowsInSection(int section);
-        public abstract void GetSection(GroupedListSectionContext sectionContext);
-        public abstract void GetCell(GroupedListCellContext cellContext);
-
+        public abstract int SectionTypeCount { get; }
+        public abstract int CellTypeCount { get; }
+        public abstract int GetCellType(int section, int row);
+        public abstract int GetSectionType(int section);
+        public abstract View GetSection(GroupedListSectionContext context);
+        public abstract TableViewCell GetCell(GroupedListCellContext context);
         #endregion
-
+        
         #region Redirects from Android API to IGroupedListContent methods
 
         public sealed override int GetChildType(int groupPosition, int childPosition)
@@ -30,14 +32,14 @@ namespace Qoden.UI
             return GetCellType(groupPosition, childPosition);
         }
 
-        public sealed override int ChildTypeCount => CellTypes.Length;
+        public sealed override int ChildTypeCount => CellTypeCount;
 
         public sealed override int GetGroupType(int groupPosition)
         {
             return GetSectionType(groupPosition);
         }
 
-        public sealed override int GroupTypeCount => SectionTypes.Length;
+        public sealed override int GroupTypeCount => SectionTypeCount;
 
         public sealed override int GetChildrenCount(int groupPosition)
         {
@@ -50,71 +52,35 @@ namespace Qoden.UI
         {
             var context = new GroupedListCellContext()
             {
-                IsFresh = false,
-                CellView = convertView,
+                ReusableCell = convertView.AsCell(),
                 Row = childPosition,
-                Section = groupPosition
+                Section = groupPosition,
+                IsExpanded = isLastChild,
+                Parent = parent.AsView()
             };
-
-            if (convertView == null)
-            {
-                var childTypeId = GetCellType(groupPosition, childPosition);
-                CreateCell(childTypeId, ref context);
-                Assert.State(context.CellView, "CellView").NotNull();
-                context.IsFresh = true;
-            }
-            GetCell(context);
-            return context.CellView;
+            return GetCell(context);
         }
 
         public sealed override Android.Views.View GetGroupView(int groupPosition, bool isExpanded, Android.Views.View convertView, ViewGroup parent)
         {
             var context = new GroupedListSectionContext()
             {
-                IsFresh = false,
-                SectionHeaderView = convertView,
-                Section = groupPosition
+                SectionHeaderView = convertView.AsView(),
+                Section = groupPosition,
+                IsExpanded = isExpanded,
+                Parent = parent.AsView()
             };
+            var section = GetSection(context);
             if (convertView == null)
             {
-                var groupTypeId = GetSectionType(groupPosition);
-                CreateSection(groupTypeId, ref context);
-                Assert.State(context.SectionHeaderView, "SectionHeaderView").NotNull();
-
                 var mExpandableListView = parent as ExpandableListView;
-                if (mExpandableListView != null)
-                    mExpandableListView.ExpandGroup(groupPosition);
-                context.IsFresh = true;
+                mExpandableListView?.ExpandGroup(groupPosition);
             }
-
-            GetSection(context);
-            return context.SectionHeaderView;
+            return section;
         }
 
         #endregion
-
-        #region Internal API overrides
-
-        protected virtual void CreateCell(int cellTypeId, ref GroupedListCellContext cellContext)
-        {
-            var childViewType = CellTypes[cellTypeId];
-            ActivatorArgs[0] = Builder.Context;
-            var convertView = (Android.Views.View)Activator.CreateInstance(childViewType, ActivatorArgs);
-            cellContext.CellView = convertView;
-        }
-
-        object[] ActivatorArgs = new object[1];
-
-        protected virtual void CreateSection(int sectionTypeId, ref GroupedListSectionContext sectionContext)
-        {
-            var groupType = SectionTypes[sectionTypeId];
-            ActivatorArgs[0] = Builder.Context;
-            var convertView = (Android.Views.View)Activator.CreateInstance(groupType, ActivatorArgs);
-            sectionContext.SectionHeaderView = convertView;
-        }
-
-        #endregion
-
+        
         #region Convenience overrides
 
         public override long GetChildId(int groupPosition, int childPosition)
@@ -134,7 +100,7 @@ namespace Qoden.UI
             return groupPosition;
         }
 
-        public override bool HasStableIds { get { return true; } }
+        public override bool HasStableIds => true;
 
         public override Java.Lang.Object GetChild(int groupPosition, int childPosition)
         {
