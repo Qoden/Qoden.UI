@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -68,6 +69,22 @@ namespace Qoden.Binding
 			}
 		}
 
+
+		private ILogger _logger;
+
+		public ILogger Logger
+		{
+			get
+			{
+				if (_logger == null)
+				{
+					_logger = Config.LoggerFactory?.CreateLogger(GetType().FullName);
+				}
+				return _logger;
+			}
+			set => _logger = value;
+		}
+		
 		public void Bind ()
 		{
 			if (Bound)
@@ -76,6 +93,13 @@ namespace Qoden.Binding
 			_sourceSubscription = Source.OnPropertyChange (Source_Change);
             if (Target != null && this.UpdatesSource())
                 _targetSubscription = Target.OnPropertyChange(Target_Change);
+
+			if (Target != null && this.UpdatesTarget() && Target.IsReadOnly && UpdateTargetAction == DefaultUpdateTarget)
+			{
+				Logger?.LogWarning("Source property '{source}' is bound to target property '{target}' which is readonly. Default update action cannot update such properties.", 
+					(Source?.Key ?? ""),
+					Target.Key);
+			}
 		}
 
 		void Source_Change (IProperty _)
