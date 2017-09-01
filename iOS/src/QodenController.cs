@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using Foundation;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
@@ -7,9 +7,9 @@ using UIKit;
 
 namespace Qoden.UI
 {
-    public class QodenController<T> : UIViewController where T : UIView, new()
-    {
-	    public ILogger Logger { get; set; }
+	public class QodenController : UIViewController
+	{
+		public ILogger Logger { get; set; }
 
 		public QodenController()
 		{
@@ -43,33 +43,11 @@ namespace Qoden.UI
 				Logger.LogInformation("Created");
 		}
 
-	    protected virtual ILogger CreateLogger()
-	    {
-		    return Config.LoggerFactory?.CreateLogger(GetType().Name);
-	    }
-
-	    public override void LoadView()
+		protected virtual ILogger CreateLogger()
 		{
-			base.View = new T();
+			return Config.LoggerFactory?.CreateLogger(GetType().Name);
 		}
-
-		public new T View
-		{
-			get => base.View as T;
-			set 
-            {
-                if (!IsViewLoaded)
-                {
-                    base.View = value;
-                    ViewDidLoad();
-                }
-                else
-                {
-                    throw new InvalidOperationException("Cannot change loaded view");
-                }
-            }
-		}
-
+		
 		public override void ViewDidLoad()
 		{
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
@@ -105,7 +83,7 @@ namespace Qoden.UI
         public BindingList Bindings
         {
             get => _bindings.Value;
-            set { _bindings.Value = value; }
+            set => _bindings.Value = value;
         }
 
         protected override void Dispose(bool disposing)
@@ -115,54 +93,91 @@ namespace Qoden.UI
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) Logger?.LogInformation("Disposed");
 		}
 
+	    private Dictionary<string, UIViewController> _childControllers;
+	    
         public TController GetChildViewController<TController>(string key, Func<TController> factory) where TController : UIViewController
         {
-            var childControllers = ChildViewControllers;
-            var childController = (TController)childControllers.FirstOrDefault(x => x.GetTag() == key);
-            if (childController == null)
-            {
-                childController = factory();
-                childController.SetTag(key);
-            }
-            return childController;
-        }
-
-        public TController GetChildViewController<TController>() where TController : UIViewController, new()
-        {
-            return GetChildViewController<TController>(typeof(TController).FullName);
-        }
-
-        public TController GetChildViewController<TController>(string key) where TController : UIViewController, new()
-        {
-            return GetChildViewController(key, () => new TController());
+	        if (_childControllers == null)
+	        {
+		        _childControllers = new Dictionary<string, UIViewController>();
+	        }
+	       	UIViewController childController;
+	        if (!_childControllers.TryGetValue(key, out childController))
+	        {
+		        childController = factory();
+		        _childControllers[key] = childController;
+	        }
+	        return (TController)childController;
         }
 
         internal IViewModelStore ViewModelStore = new ViewModelStore();
-        
 	}
+	
+    public class QodenController<T> : QodenController where T : UIView, new()
+    {
+	    public QodenController()
+	    {
+	    }
 
-	public static class QodenControllerExtnerions
-	{
-		public static IViewModelStore GetViewModelStore<T>(this QodenController<T> controller) where T : UIView, new()
+	    public QodenController(NSCoder coder) : base(coder)
+	    {
+	    }
+
+	    public QodenController(NSObjectFlag t) : base(t)
+	    {
+	    }
+
+	    public QodenController(IntPtr handle) : base(handle)
+	    {
+	    }
+
+	    public QodenController(string nibName, NSBundle bundle) : base(nibName, bundle)
+	    {
+	    }
+
+	    public override void LoadView()
 		{
-			return controller.ViewModelStore;
+			base.View = new T();
+		}
+
+		public new T View
+		{
+			get => base.View as T;
+			set 
+            {
+                if (!IsViewLoaded)
+                {
+                    base.View = value;
+                    ViewDidLoad();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot change loaded view");
+                }
+            }
 		}
 	}
 
-    public static class QodenChildController
-    {
-        public static readonly NSString Tag = new NSString("Qoden_ChildController_Tag");
+	public static class QodenControllerExtentions
+	{
+		public static IViewModelStore GetViewModelStore(this QodenController controller)
+		{
+			return controller.ViewModelStore;
+		}
+		
+		public static T GetChildViewController<T>(this QodenController host, string key, Func<T> factory) where T : UIViewController
+		{
+			return host.GetChildViewController(key, factory);
+		}
 
-        public static string GetTag(this UIViewController controller)
-        {
-            var nsTag = (NSString)AssociatedObject.Get(controller, Tag);
-            return nsTag.ToString();
-        }
+		public static T GetChildViewController<T>(this QodenController host) where T : UIViewController, new()
+		{
+			return host.GetChildViewController<T>(typeof(T).FullName);
+		}
 
-        public static void SetTag(this UIViewController controller, string tag)
-        {
-            AssociatedObject.Set(controller, Tag, new NSString(tag), AssociationPolicy.COPY);
-        }
-    }
-
+		public static T GetChildViewController<T>(this QodenController host, string key) where T : UIViewController, new()
+		{
+			return host.GetChildViewController(key, () => new T());
+		}
+	}
 }
