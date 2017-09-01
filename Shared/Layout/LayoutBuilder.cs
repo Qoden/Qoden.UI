@@ -72,6 +72,17 @@ namespace Qoden.UI
         }
 
         /// <summary>
+        /// Build <see cref="IViewLayoutBox"/>. 
+        /// </summary>
+        /// <param name="v">View geometry (usually cross platform View wrapper)</param>
+        /// <param name="outerBounds">Optional outer bounds to override this builder <see cref="OuterBounds"/>.</param>
+        /// <param name="units">Optional units to override this builder <see cref="Units"/>.</param>
+        public IViewLayoutBox View(PlatformView v, ILayoutBox outerBounds, IUnit units = null)
+        {
+            return View(v, outerBounds.Frame(), units);
+        }
+
+        /// <summary>
         /// Builds box with specified outerBounds, padding and units.
         /// </summary>
         /// <returns>The box.</returns>
@@ -81,6 +92,17 @@ namespace Qoden.UI
         {
             var layoutBounds = outerBounds ?? PaddedOuterBounds;
             return new LayoutBox(layoutBounds, units ?? Units);
+        }
+
+        /// <summary>
+        /// Builds box with specified outerBounds, padding and units.
+        /// </summary>
+        /// <returns>The box.</returns>
+        /// <param name="outerBounds">Outer bounds.</param>
+        /// <param name="units">Units.</param>
+        public ILayoutBox Box(ILayoutBox outerBounds, IUnit units = null)
+        {
+            return Box(outerBounds.Frame(), units);
         }
 
         /// <summary>
