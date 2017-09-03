@@ -17,21 +17,22 @@ namespace Qoden.UI
 #endif
         public static readonly IUnit PlatformDefault = Dp;
         public static readonly IUnit Px = IdentityUnit.Instance;
+        public static readonly IUnit Id = IdentityUnit.Instance;
     }
 
     public static class UnitsExtensions
     {
         public static float Dp(this float f)
         {
-            return Units.Dp.ToFloatPixels(f);
+            return Units.Dp.ToPixels(f);
         }
         public static float Dp(this int f)
         {
-            return Units.Dp.ToFloatPixels(f);
+            return Units.Dp.ToPixels(f);
         }
         public static float Dp(this double f)
         {
-            return Units.Dp.ToFloatPixels((float)f);
+            return Units.Dp.ToPixels((float)f);
         }
     }
 
@@ -51,16 +52,16 @@ namespace Qoden.UI
 
     public interface IUnit
     {
-        Pixel ToPixels(float unit);
+        float ToPixels(float unit);
     }
 
     public class IdentityUnit : IUnit
     {
         public static readonly IUnit Instance = new IdentityUnit();
 
-        public Pixel ToPixels(float unit)
+        public float ToPixels(float unit)
         {
-            return Pixel.Val(unit);
+            return unit;
         }
     }
 
@@ -68,34 +69,29 @@ namespace Qoden.UI
     {
         public static int ToIntPixels(this IUnit unit, float x)
         {
-            return (int)Math.Round(unit.ToPixels(x).Value);
-        }
-
-        public static float ToFloatPixels(this IUnit unit, float x)
-        {
-            return unit.ToPixels(x).Value;
+            return (int)Math.Round(unit.ToPixels(x));
         }
 
         public static RectangleF ToPixels(this RectangleF rect, IUnit unit)
         {
-            return new RectangleF(unit.ToPixels(rect.Left).Value,
-                                  unit.ToPixels(rect.Top).Value,
-                                  unit.ToPixels(rect.Width).Value,
-                                  unit.ToPixels(rect.Height).Value);
+            return new RectangleF(unit.ToPixels(rect.Left),
+                                  unit.ToPixels(rect.Top),
+                                  unit.ToPixels(rect.Width),
+                                  unit.ToPixels(rect.Height));
         }
 
         public static SizeF ToPixels(this SizeF rect, IUnit unit)
         {
-            return new SizeF(unit.ToPixels(rect.Width).Value, unit.ToPixels(rect.Height).Value);
+            return new SizeF(unit.ToPixels(rect.Width), unit.ToPixels(rect.Height));
         }
     }
 
 #if __ANDROID__
     public class Dpi : IUnit
     {
-        Pixel IUnit.ToPixels(float dp)
+        public float ToPixels(float dp)
         {
-            return Pixel.Val(ToPixles(dp));
+            return Dpi.ToPixles(dp);
         }
 
         public static float ToPixles(float dp)

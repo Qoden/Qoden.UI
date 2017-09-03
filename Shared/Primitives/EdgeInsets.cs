@@ -1,8 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 #if __IOS__
 using UIKit;
-
 #endif
 
 namespace Qoden.UI
@@ -16,12 +14,12 @@ namespace Qoden.UI
 
         public EdgeInsets(float left = 0, float top = 0, float right = 0, float bottom = 0, IUnit unit = null)
         {
-            unit = unit ?? Units.PlatformDefault;
+            unit = unit ?? Units.Id;
 
-            Left = unit.ToPixels(left).Value;
-            Top = unit.ToPixels(top).Value;
-            Right = unit.ToPixels(right).Value;
-            Bottom = unit.ToPixels(bottom).Value;
+            Left = unit.ToPixels(left);
+            Top = unit.ToPixels(top);
+            Right = unit.ToPixels(right);
+            Bottom = unit.ToPixels(bottom);
         }
 
         public static readonly EdgeInsets Zero = new EdgeInsets();

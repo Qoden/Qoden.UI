@@ -202,27 +202,12 @@ namespace Qoden.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.
         /// </summary>
-        /// <param name="outerBounds">Layout bounds in view coordinate system in pixels</param>
-        public LayoutBox(RectangleF outerBounds) : this(outerBounds, Units.PlatformDefault)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBox"/> class.
-        /// </summary>
-        /// <param name="outerBounds">Layout bounds in view coordinate system in pixels</param>
-        /// <param name="unit">Unit to be used for relative offsets</param>
-        public LayoutBox(RectangleF outerBounds, IUnit unit)
+        /// <param name="outerBounds">Layout bounds in view coordinate system</param>
+        public LayoutBox(RectangleF outerBounds)
         {
             OuterBounds = outerBounds;
             MarginLeft = MarginRight = MarginTop = MarginBottom = Width = Height = CenterX = CenterY = NotSet;
-            Unit = unit ?? Units.PlatformDefault;
         }
-
-        /// <summary>
-        /// Measurement unit for relative offsets
-        /// </summary>
-        public IUnit Unit { get; }
 
         public static bool IsSet(float val)
         {

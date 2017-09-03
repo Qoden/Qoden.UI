@@ -17,7 +17,7 @@ namespace Qoden.UI
     {
         SizeF? _measuredSize;
 
-        public ViewLayoutBox(PlatformView v, RectangleF r, IUnit unit) : base(r, unit)
+        public ViewLayoutBox(PlatformView v, RectangleF r) : base(r)
         {
             View = v;
         }
@@ -25,16 +25,13 @@ namespace Qoden.UI
         public SizeF MeasuredSize
         {
             get => _measuredSize.GetValueOrDefault();
-            private set
-            {
-                _measuredSize = value;
-            }
+            private set => _measuredSize = value;
         }
 
         private SizeF BoundingSize(float? maxWidth = null, float? maxHeight = null)
         {
-            var w = maxWidth.HasValue ? Unit.ToPixels(maxWidth.Value).Value : OuterBounds.Width;
-            var h = maxHeight.HasValue ? Unit.ToPixels(maxHeight.Value).Value : OuterBounds.Height;
+            var w = maxWidth ?? OuterBounds.Width;
+            var h = maxHeight ?? OuterBounds.Height;
             return new SizeF(w, h);
         }
 
@@ -42,7 +39,7 @@ namespace Qoden.UI
         {
             var size = BoundingSize(maxWidth);
             MeasuredSize = View.PreferredSize(size);
-            this.Width(Pixel.Val(MeasuredSize.Width));
+            this.Width(MeasuredSize.Width);
             return this;
         }
 
@@ -50,7 +47,7 @@ namespace Qoden.UI
         {
             var size = BoundingSize(null, maxHeight);
             MeasuredSize = View.PreferredSize(size);
-            this.Height(Pixel.Val(MeasuredSize.Height));
+            this.Height(MeasuredSize.Height);
             return this;
         }
 
@@ -58,8 +55,8 @@ namespace Qoden.UI
         {
             var size = BoundingSize(maxWidth, maxHeight);
             MeasuredSize = View.PreferredSize(size);
-            this.Width(Pixel.Val(MeasuredSize.Width));
-            this.Height(Pixel.Val(MeasuredSize.Height));
+            this.Width(MeasuredSize.Width);
+            this.Height(MeasuredSize.Height);
             return this;
         }
 

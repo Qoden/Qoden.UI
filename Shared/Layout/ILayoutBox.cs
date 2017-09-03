@@ -4,7 +4,7 @@
 namespace Qoden.UI
 {
     /// <summary>
-    /// Describes rectangle in terms of relative offsets from edges of <see cref="OuterBounds"/>.
+    /// Describes rectangle in terms of margins from edges of <see cref="OuterBounds"/>.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -22,7 +22,7 @@ namespace Qoden.UI
     /// <para>
     /// There are also few ambigious combinations like CenterX and Left and Right.
     /// If client set such combination then LayoutBox discards ambigious 
-    /// element. When doing so LayoutBox takes into account following offsets priorities:
+    /// element. When doing so LayoutBox takes into account following priorities:
     /// <list>
     ///   <item>Let and Top</item>
     ///   <item>Width and Height</item>
@@ -33,36 +33,23 @@ namespace Qoden.UI
     /// This is obviously ambigious and Left or Width has to be discarded. In this case Width is disacarded since
     /// it is less important than Left.
     /// </para>
-    /// <para>
-    /// Most of calculations on LayoutBox implemented as extension methods.
-    /// You can implement simple ILayoutBox interface on any object and get all 
-    /// of LayoutBox calculation for free.
-    /// </para>
-    /// <para>
-    /// LayoutBox can also calculate size required to correctly wrap given 
-    /// box, see <see cref="T:LayoutBox_Frame.BoundingFrame"/>.
-    /// </para>
     /// </remarks>
     public interface ILayoutBox
     {
         /// <summary>
-        /// Measurement unit for relative values.
-        /// </summary>
-        IUnit Unit { get; }
-        /// <summary>
-        /// Distance in pixels from <see cref="OuterBounds"/> left edge to box left edge.
+        /// Distance from <see cref="OuterBounds"/> left edge to box left edge.
         /// </summary>
         float MarginLeft { get; set; }
         /// <summary>
-        /// Distance in pixels from <see cref="OuterBounds"/> right edge to view right edge.
+        /// Distance from <see cref="OuterBounds"/> right edge to view right edge.
         /// </summary>
         float MarginRight { get; set; }
         /// <summary>
-        /// Distance in pixels from <see cref="OuterBounds"/> top edge to view top edge.
+        /// Distance from <see cref="OuterBounds"/> top edge to view top edge.
         /// </summary>
         float MarginTop { get; set; }
         /// <summary>
-        /// Distance in pixels from <see cref="OuterBounds"/> bottom edge to view bottom edge.
+        /// Distance from <see cref="OuterBounds"/> bottom edge to view bottom edge.
         /// </summary>
         float MarginBottom { get; set; }
         /// <summary>
@@ -74,11 +61,11 @@ namespace Qoden.UI
         /// </summary>
         float Height { get; set; }
         /// <summary>
-        /// Box center X position in pixels relative to <see cref="OuterBounds"/>.
+        /// Box center X position relative to <see cref="OuterBounds"/>.
         /// </summary>
         float CenterX { get; set; }
         /// <summary>
-        /// Box center Y position in pixels relative to <see cref="OuterBounds"/>.
+        /// Box center Y position relative to <see cref="OuterBounds"/>.
         /// </summary>
         float CenterY { get; set; }
         /// <summary>

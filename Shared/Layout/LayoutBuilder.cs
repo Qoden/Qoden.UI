@@ -21,17 +21,15 @@ namespace Qoden.UI
         float? _preferredHeight;
         float? _preferredWidth;
         private EdgeInsets _padding;
-        List<IViewLayoutBox> _boxes = new List<IViewLayoutBox>();
+        readonly List<IViewLayoutBox> _boxes = new List<IViewLayoutBox>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBuilder"/> class.
         /// </summary>
         /// <param name="bounds">Layout outer bounds.</param>
-        /// <param name="units">Layout measurement units.</param>
-        public LayoutBuilder(RectangleF bounds, IUnit units = null)
+        public LayoutBuilder(RectangleF bounds)
         {
             OuterBounds = bounds;
-            Units = units;
         }
 
         /// <summary>
@@ -44,12 +42,6 @@ namespace Qoden.UI
                 Math.Min(OuterBounds.Bottom, OuterBounds.Top + Padding.Top),
                 Math.Max(0, OuterBounds.Width - Padding.Left - Padding.Right),
                 Math.Max(0, OuterBounds.Height - Padding.Top - Padding.Bottom));
-
-        /// <summary>
-        /// Default layout measurement units.
-        /// </summary>
-        /// <value>The units.</value>
-        public IUnit Units { get; private set; }
 
         /// <summary>
         /// Gets the views.
@@ -66,7 +58,7 @@ namespace Qoden.UI
         public IViewLayoutBox View(PlatformView v, RectangleF? outerBounds = null, IUnit units = null)
         {
             var layoutBounds = outerBounds ?? PaddedOuterBounds;
-            var box = new ViewLayoutBox(v, layoutBounds, units ?? Units);
+            var box = new ViewLayoutBox(v, layoutBounds);
             _boxes.Add(box);
             return box;
         }
@@ -76,10 +68,9 @@ namespace Qoden.UI
         /// </summary>
         /// <param name="v">View geometry (usually cross platform View wrapper)</param>
         /// <param name="outerBounds">Optional outer bounds to override this builder <see cref="OuterBounds"/>.</param>
-        /// <param name="units">Optional units to override this builder <see cref="Units"/>.</param>
-        public IViewLayoutBox View(PlatformView v, ILayoutBox outerBounds, IUnit units = null)
+        public IViewLayoutBox View(PlatformView v, ILayoutBox outerBounds)
         {
-            return View(v, outerBounds.Frame(), units);
+            return View(v, outerBounds.Frame());
         }
 
         /// <summary>
@@ -87,11 +78,10 @@ namespace Qoden.UI
         /// </summary>
         /// <returns>The box.</returns>
         /// <param name="outerBounds">Outer bounds.</param>
-        /// <param name="units">Units.</param>
-        public ILayoutBox Box(RectangleF? outerBounds = null, IUnit units = null)
+        public ILayoutBox Box(RectangleF? outerBounds = null)
         {
             var layoutBounds = outerBounds ?? PaddedOuterBounds;
-            return new LayoutBox(layoutBounds, units ?? Units);
+            return new LayoutBox(layoutBounds);
         }
 
         /// <summary>
@@ -99,10 +89,9 @@ namespace Qoden.UI
         /// </summary>
         /// <returns>The box.</returns>
         /// <param name="outerBounds">Outer bounds.</param>
-        /// <param name="units">Units.</param>
-        public ILayoutBox Box(ILayoutBox outerBounds, IUnit units = null)
+        public ILayoutBox Box(ILayoutBox outerBounds)
         {
-            return Box(outerBounds.Frame(), units);
+            return Box(outerBounds.Frame());
         }
 
         /// <summary>

@@ -6,28 +6,18 @@ namespace Qoden.UI
     {
         public static T MinWidth<T>(this T box, float mw) where T : ILayoutBox
         {
-            return box.MinWidth(box.Unit.ToPixels(mw));
-        }
-
-        public static T MinHeight<T>(this T box, float mh) where T : ILayoutBox
-        {
-            return box.MinHeight(box.Unit.ToPixels(mh));
-        }
-
-        public static T MinWidth<T>(this T box, Pixel mw) where T : ILayoutBox
-        {
-            if (box.Width < mw.Value)
+            if (box.Width < mw)
             {
-                box.Width = mw.Value;
+                box.Width = mw;
             }
             return box;
         }
 
-        public static T MinHeight<T>(this T box, Pixel mh) where T : ILayoutBox
+        public static T MinHeight<T>(this T box, float mh) where T : ILayoutBox
         {
-            if (box.Height < mh.Value)
+            if (box.Height < mh)
             {
-                box.Height = mh.Value;
+                box.Height = mh;
             }
 
             return box;
@@ -35,28 +25,18 @@ namespace Qoden.UI
 
         public static T MaxWidth<T>(this T box, float mw) where T : ILayoutBox
         {
-            return box.MaxWidth(box.Unit.ToPixels(mw));
-        }
-
-        public static T MaxHeight<T>(this T box, float mh) where T : ILayoutBox
-        {
-            return box.MaxHeight(box.Unit.ToPixels(mh));
-        }
-
-        public static T MaxWidth<T>(this T box, Pixel mw) where T : ILayoutBox
-        {
-            if (box.Width > mw.Value)
+            if (box.Width > mw)
             {
-                box.Width = mw.Value;
+                box.Width = mw;
             }
             return box;
         }
 
-        public static T MaxHeight<T>(this T box, Pixel mh) where T : ILayoutBox
+        public static T MaxHeight<T>(this T box, float mh) where T : ILayoutBox
         {
-            if (box.Height > mh.Value)
+            if (box.Height > mh)
             {
-                box.Height = mh.Value;
+                box.Height = mh;
             }
 
             return box;

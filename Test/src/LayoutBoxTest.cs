@@ -10,7 +10,7 @@ namespace Qoden.UI.Test
         public void CenterVertically()
         {
             var lb = new LayoutBox(new RectangleF(0, 0, 375, 44));
-            lb.Left(20).CenterVertically().Height(18).Right(0);
+            lb.Left(20.Dp()).CenterVertically().Height(18.Dp()).Right(0);
             Assert.Equal(new RectangleF(20, 13, 355, 18), lb.Frame());
         }
 
@@ -18,7 +18,7 @@ namespace Qoden.UI.Test
         public void CenterHorizontaly()
         {
             var lb = new LayoutBox(new RectangleF(20, 20, 100, 100));
-            lb.CenterHorizontally().Height(20).Width(20).Top(0);
+            lb.CenterHorizontally().Height(20.Dp()).Width(20.Dp()).Top(0);
             Assert.Equal(new RectangleF(60, 20, 20, 20), lb.Frame());
         }
     }
