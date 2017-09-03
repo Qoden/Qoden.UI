@@ -36,7 +36,7 @@ namespace Qoden.UI
 
         public static T Left<T>(this T box, Pixel l) where T : ILayoutBox
         {
-            box.Left = l.Value;
+            box.MarginLeft = l.Value;
             return box;
         }
 
@@ -48,7 +48,7 @@ namespace Qoden.UI
 
         public static T Right<T>(this T box, Pixel r) where T : ILayoutBox
         {
-            box.Right = r.Value;
+            box.MarginRight = r.Value;
             return box;
         }
 
@@ -60,7 +60,7 @@ namespace Qoden.UI
 
         public static T Top<T>(this T box, Pixel t) where T : ILayoutBox
         {
-            box.Top = t.Value;
+            box.MarginTop = t.Value;
             return box;
         }
 
@@ -72,7 +72,7 @@ namespace Qoden.UI
 
         public static T Bottom<T>(this T box, Pixel b) where T : ILayoutBox
         {
-            box.Bottom = b.Value;
+            box.MarginBottom = b.Value;
             return box;
         }
     }

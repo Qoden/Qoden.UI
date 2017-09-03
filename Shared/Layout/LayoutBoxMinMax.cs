@@ -2,7 +2,7 @@
 
 namespace Qoden.UI
 {
-    public static class LayoutBox_MinMax
+    public static class LayoutBoxMinMax
     {
         public static T MinWidth<T>(this T box, float mw) where T : ILayoutBox
         {
@@ -16,7 +16,7 @@ namespace Qoden.UI
 
         public static T MinWidth<T>(this T box, Pixel mw) where T : ILayoutBox
         {
-            if (box.FrameWidth() < mw.Value)
+            if (box.Width < mw.Value)
             {
                 box.Width = mw.Value;
             }
@@ -25,7 +25,7 @@ namespace Qoden.UI
 
         public static T MinHeight<T>(this T box, Pixel mh) where T : ILayoutBox
         {
-            if (box.FrameHeight() < mh.Value)
+            if (box.Height < mh.Value)
             {
                 box.Height = mh.Value;
             }
@@ -45,7 +45,7 @@ namespace Qoden.UI
 
         public static T MaxWidth<T>(this T box, Pixel mw) where T : ILayoutBox
         {
-            if (box.FrameWidth() > mw.Value)
+            if (box.Width > mw.Value)
             {
                 box.Width = mw.Value;
             }
@@ -54,7 +54,7 @@ namespace Qoden.UI
 
         public static T MaxHeight<T>(this T box, Pixel mh) where T : ILayoutBox
         {
-            if (box.FrameHeight() > mh.Value)
+            if (box.Height > mh.Value)
             {
                 box.Height = mh.Value;
             }

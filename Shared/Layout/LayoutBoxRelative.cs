@@ -11,7 +11,7 @@ namespace Qoden.UI
         public static T Before<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
             var referenceOffset = box.OuterBounds.Right - reference.Left;
-            box.Right = Pixel.Val(referenceOffset + dx.Value).Value;
+            box.MarginRight = Pixel.Val(referenceOffset + dx.Value).Value;
             return box;
         }
         
@@ -45,7 +45,7 @@ namespace Qoden.UI
         public static T After<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
             var referenceOffset = reference.Right - box.OuterBounds.Left;
-            box.Left = Pixel.Val(referenceOffset + dx.Value).Value;
+            box.MarginLeft = Pixel.Val(referenceOffset + dx.Value).Value;
             return box;
         }
 
@@ -79,7 +79,7 @@ namespace Qoden.UI
         public static T Below<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
             var referenceOffset = reference.Bottom - box.OuterBounds.Top;
-            box.Top = Pixel.Val(referenceOffset + dx.Value).Value;
+            box.MarginTop = Pixel.Val(referenceOffset + dx.Value).Value;
             return box;
         }
 
@@ -113,7 +113,7 @@ namespace Qoden.UI
         public static T Above<T>(this T box, RectangleF reference, Pixel dx) where T : ILayoutBox
         {
             var referenceOffset = box.OuterBounds.Bottom - reference.Top;
-            box.Bottom = Pixel.Val(referenceOffset + dx.Value).Value;
+            box.MarginBottom = Pixel.Val(referenceOffset + dx.Value).Value;
             return box;
         }
         

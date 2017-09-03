@@ -16,12 +16,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ILayoutBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\IViewLayoutBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Center.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Frame.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_LTRBWH.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_MinMax.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Relative.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Unit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxCenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxFrame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxLTRBWH.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxMinMax.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxRelative.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxUnit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LinearLayoutBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutBox.cs" />
@@ -54,7 +54,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\GroupTableView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QodenTableViewCell.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBox_Debug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
   </ItemGroup>
   <ItemGroup>

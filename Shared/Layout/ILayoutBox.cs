@@ -52,19 +52,19 @@ namespace Qoden.UI
         /// <summary>
         /// Distance in pixels from <see cref="OuterBounds"/> left edge to box left edge.
         /// </summary>
-        float Left { get; set; }
+        float MarginLeft { get; set; }
         /// <summary>
         /// Distance in pixels from <see cref="OuterBounds"/> right edge to view right edge.
         /// </summary>
-        float Right { get; set; }
+        float MarginRight { get; set; }
         /// <summary>
         /// Distance in pixels from <see cref="OuterBounds"/> top edge to view top edge.
         /// </summary>
-        float Top { get; set; }
+        float MarginTop { get; set; }
         /// <summary>
         /// Distance in pixels from <see cref="OuterBounds"/> bottom edge to view bottom edge.
         /// </summary>
-        float Bottom { get; set; }
+        float MarginBottom { get; set; }
         /// <summary>
         /// Set box width in pixels.
         /// </summary>
@@ -85,6 +85,36 @@ namespace Qoden.UI
         /// Outer bounds in view coordinate system in pixels
         /// </summary>
         RectangleF OuterBounds { get; }
+        
+        /// <summary>
+        /// Left coordinate inside <see cref="OuterBounds"/>
+        /// </summary>
+        float Left  {get; }
+        /// <summary>
+        /// Right coordinate inside <see cref="OuterBounds"/>
+        /// </summary>
+        float Right  {get; }
+        /// <summary>
+        /// Top coordinate inside <see cref="OuterBounds"/>
+        /// </summary>
+        float Top  {get; }
+        /// <summary>
+        /// Bottom coordinate inside <see cref="OuterBounds"/>
+        /// </summary>
+        float Bottom  {get; }
+
+        /// <summary>
+        /// Layout box rectangle inside <see cref="OuterBounds"/>.
+        /// </summary>
+        RectangleF Bounds  {get; }
+        /// <summary>
+        /// Layout box size.
+        /// </summary>
+        SizeF Size  {get; }
+        /// <summary>
+        /// Layout box rectangle inside view.
+        /// </summary>
+        RectangleF Frame  {get; }
     }
 }
 
