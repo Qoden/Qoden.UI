@@ -120,11 +120,11 @@ namespace Qoden.UI
                 if (IsSet(_width))
                     return _width;
                 if (IsSet(_centerX) && IsSet(_left))
-                    return (_centerX - _left) * 2;
+                    return Math.Max(0, (_centerX - _left) * 2);
                 if (IsSet(_centerX) && IsSet(_right))
-                    return (OuterBounds.Width - _right - _centerX) * 2;
+                    return Math.Max(0, (OuterBounds.Width - _right - _centerX) * 2);
                 if (IsSet(_left) && IsSet(_right))
-                    return OuterBounds.Width - _right - _left;
+                    return Math.Max(0, OuterBounds.Width - _right - _left);
                 return OuterBounds.Width;
             }
             set
@@ -147,11 +147,11 @@ namespace Qoden.UI
                 if (IsSet(_height))
                     return _height;
                 if (IsSet(_top) && IsSet(_bottom))
-                    return OuterBounds.Height - _bottom - _top;
+                    return Math.Max(0, OuterBounds.Height - _bottom - _top);
                 if (IsSet(_centerY) && IsSet(_top))
-                    return (_centerY - _top) * 2;
+                    return Math.Max(0, (_centerY - _top) * 2);
                 if (IsSet(_centerY) && IsSet(_bottom))
-                    return (OuterBounds.Height - _bottom - _centerY) * 2;
+                    return Math.Max(0, (OuterBounds.Height - _bottom - _centerY) * 2);
                 return OuterBounds.Height;
             }
             set
