@@ -3,6 +3,7 @@ using Qoden.Binding;
 
 #if __IOS__
 using UIKit;
+using Foundation;
 using PlatformButton = UIKit.UIButton;
 #endif
 #if __ANDROID__
@@ -36,6 +37,13 @@ namespace Qoden.UI.Wrappers
             PlatformView.Text = value;
 #endif
         }
+
+#if __IOS__
+        public void SetText(NSAttributedString text)
+        {
+            PlatformView.SetAttributedTitle(text, UIControlState.Normal);
+        }
+#endif
 
         public void SetFont(Font font)
         {
