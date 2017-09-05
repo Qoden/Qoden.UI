@@ -49,6 +49,9 @@
     <Compile Include="..\Shared\Layout\LayoutBuilder.cs">
       <Link>src\Layout\LayoutBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Layout\LayoutBuilderDistribute.cs">
+      <Link>src\Layout\LayoutBuilderDistribute.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Layout\LinearLayoutBuilder.cs">
       <Link>src\Layout\LinearLayoutBuilder.cs</Link>
     </Compile>

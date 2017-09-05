@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxMinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBoxRelative.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutBuilderDistribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\LinearLayoutBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutUtil.cs" />
