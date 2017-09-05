@@ -18,7 +18,7 @@ namespace Qoden.UI.Test
 
         public IViewLayoutBox AutoHeight(float? maxHeight = null)
         {
-            this.SetHeight(Math.Max(View.Frame.Height, maxHeight.GetValueOrDefault()));
+            this.Height(Math.Max(View.Frame.Height, maxHeight.GetValueOrDefault()));
             return this;
         }
 
@@ -29,7 +29,7 @@ namespace Qoden.UI.Test
 
         public IViewLayoutBox AutoWidth(float? maxWidth = null)
         {
-            this.SetWidth(Math.Max(View.Frame.Width, maxWidth.GetValueOrDefault()));
+            this.Width(Math.Max(View.Frame.Width, maxWidth.GetValueOrDefault()));
             return this;
         }
 

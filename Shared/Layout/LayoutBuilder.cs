@@ -21,7 +21,7 @@ namespace Qoden.UI
         float? _preferredHeight;
         float? _preferredWidth;
         private EdgeInsets _padding;
-        readonly List<IViewLayoutBox> _boxes = new List<IViewLayoutBox>();
+        readonly Dictionary<PlatformView, ViewLayoutBox> _boxes = new Dictionary<PlatformView, ViewLayoutBox>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Qoden.UI.LayoutBuilder"/> class.
@@ -47,7 +47,7 @@ namespace Qoden.UI
         /// Gets the views.
         /// </summary>
         /// <value>The views.</value>
-        public IEnumerable<IViewLayoutBox> Views => _boxes;
+        public IEnumerable<IViewLayoutBox> Views => _boxes.Values;
 
         /// <summary>
         /// Build <see cref="IViewLayoutBox"/>. 
@@ -58,8 +58,20 @@ namespace Qoden.UI
         public IViewLayoutBox View(PlatformView v, RectangleF? outerBounds = null, IUnit units = null)
         {
             var layoutBounds = outerBounds ?? PaddedOuterBounds;
-            var box = new ViewLayoutBox(v, layoutBounds);
-            _boxes.Add(box);
+            ViewLayoutBox box;
+            if (_boxes.TryGetValue(v, out box))
+            {
+                if (box.OuterBounds != layoutBounds)
+                {
+                    _boxes.Remove(v);
+                    box = null;
+                }
+            }
+            if (box == null)
+            {
+                box = new ViewLayoutBox(v, layoutBounds);
+            }
+            _boxes[v] = box;
             return box;
         }
 
@@ -102,12 +114,21 @@ namespace Qoden.UI
             if (_boxes.Count == 0) return new RectangleF(OuterBounds.Location, SizeF.Empty	);
             
             var padding = withPadding ? Padding : EdgeInsets.Zero;
-            var rectangleFs = _boxes.Select(x => x.Frame());
-            var combinedFrame = rectangleFs.Aggregate(RectangleF.Union);
+            var frames = _boxes.Select(x => x.Value.Frame());
+            var combinedFrame = frames.Aggregate(RectangleF.Union);
             return new RectangleF(combinedFrame.Left - padding.Left,
                 combinedFrame.Top - padding.Top,
                 combinedFrame.Width + padding.Left + padding.Right,
                 combinedFrame.Height + padding.Top + padding.Bottom);
+        }
+
+        /// <summary>
+        /// Returns bounding frame for views. Frame coordinates is in view coordinates.
+        /// </summary>
+        public RectangleF BoundingFrame(params PlatformView[] views)
+        {
+            var frames = _boxes.Where(x => views.Any(y => y == x.Key)).Select(x => x.Value.Frame);
+            return frames.Aggregate(RectangleF.Union);
         }
 
         /// <summary>

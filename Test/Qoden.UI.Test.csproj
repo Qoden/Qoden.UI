@@ -13,9 +13,6 @@
     <ProjectReference Include="../Binding/Qoden.Binding.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Binding.Test.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
@@ -34,23 +31,20 @@
     <Compile Include="..\Shared\Layout\LayoutBox.cs">
       <Link>src\Layout\LayoutBox.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_Center.cs">
-      <Link>src\Layout\LayoutBox_Center.cs</Link>
+    <Compile Include="..\Shared\Layout\LayoutBoxCenter.cs">
+      <Link>src\Layout\LayoutBoxCenter.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_Frame.cs">
-      <Link>src\Layout\LayoutBox_Frame.cs</Link>
+    <Compile Include="..\Shared\Layout\LayoutBoxFrame.cs">
+      <Link>src\Layout\LayoutBoxFrame.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_LTRBWH.cs">
-      <Link>src\Layout\LayoutBox_LTRBWH.cs</Link>
+    <Compile Include="..\Shared\Layout\LayoutBoxLTRBWH.cs">
+      <Link>src\Layout\LayoutBoxLTRBWH.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_MinMax.cs">
-      <Link>src\Layout\LayoutBox_MinMax.cs</Link>
+    <Compile Include="..\Shared\Layout\LayoutBoxMinMax.cs">
+      <Link>src\Layout\LayoutBoxMinMax.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_Relative.cs">
-      <Link>src\Layout\LayoutBox_Relative.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\Layout\LayoutBox_Unit.cs">
-      <Link>src\Layout\LayoutBox_Unit.cs</Link>
+    <Compile Include="..\Shared\Layout\LayoutBoxRelative.cs">
+      <Link>src\Layout\LayoutBoxRelative.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Layout\LayoutBuilder.cs">
       <Link>src\Layout\LayoutBuilder.cs</Link>
