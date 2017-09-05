@@ -37,7 +37,7 @@ namespace Qoden.Binding
             CancellationTokenSource cts = null;
 
             if (IsCanceled) return;
-            
+
             var executionId = 0;
             try
             {
@@ -66,9 +66,9 @@ namespace Qoden.Binding
                         {
                             if (t.Exception != null)
                             {
-                                ExceptionDispatchInfo.Capture(t.Exception.InnerException).Throw();
+                                ExceptionDispatchInfo.Capture(t.Exception.Flatten().InnerException).Throw();
                             }
-                        }, cts.Token);
+                        }, cts.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
                     if (Logger != null && Logger.IsEnabled(LogLevel.Debug))
                     {
                         Logger.LogDebug("{executionId} started new Task {commandTask}", executionId, execution.Id);
@@ -252,7 +252,8 @@ namespace Qoden.Binding
                     {
                         _owner.Logger.LogDebug("Cancelation requested.");
                     }
-                    _owner._commandCancellationTokenSource.Cancel();;
+                    _owner._commandCancellationTokenSource.Cancel();
+                    ;
                     _owner.CancelRunningTask();
                 }
                 catch (ObjectDisposedException)
