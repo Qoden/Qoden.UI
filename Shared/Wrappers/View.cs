@@ -38,6 +38,7 @@ namespace Qoden.UI.Wrappers
 #if __ANDROID__
             var view = PlatformView as PlatformViewGroup;
             if (view == null) throw new InvalidOperationException("PlatformView is not ViewGroup");
+            if (child.Parent != null) child.AsView().RemoveFromSuperview();
             view.AddView(child);
 #endif
             return this;
@@ -237,7 +238,12 @@ namespace Qoden.UI.Wrappers
             var view = new View() { PlatformView = new PlatformView() };
 #endif
 #if __ANDROID__
-            var view = new View() { PlatformView = new PlatformView(b.Context) };
+            //View in android cannot have children while in iOS this is ok.
+            //Sometimes iOS code creates view and manage it by itself.
+            //To make this case work in Android as well return not view, but something
+            //which can contain children. First thing which comes in mind is QodenView, 
+            //since ViewGroup is abstract.
+            var view = new View() { PlatformView = new QodenView(b.Context) };
 #endif
             if (addSubview) b.AddSubview(view.PlatformView);
             return view;
