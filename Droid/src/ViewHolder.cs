@@ -8,7 +8,7 @@ namespace Qoden.UI
         IViewHost _host;
         Android.Views.View _view;
 
-        public ViewHolder(IViewHost host) : this()
+        public ViewHolder(IViewHost host)
         {            
             this._host = host ?? throw new ArgumentNullException(nameof(host));
             this._view = null;
@@ -26,7 +26,7 @@ namespace Qoden.UI
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Console.WriteLine($"{_host.GetType()} failed to create view: " + e);
                         throw;
                     }
                 }
