@@ -57,5 +57,10 @@ namespace Qoden.UI
         public override bool HasStableIds { get { return true; } }
 
         #endregion
+
+#if __ANDROID__
+        // We don't use this
+        public override object this[int position] => throw new NotImplementedException();
+#endif
     }
 }
