@@ -1,4 +1,5 @@
-﻿using Android.Widget;
+﻿using System;
+using Android.Widget;
 using Android.Views;
 using Qoden.UI.Wrappers;
 
@@ -19,6 +20,11 @@ namespace Qoden.UI
         #endregion
         
         #region Redirects from Android API to IPlainListContent methods
+        
+        protected PlainListContent(ViewBuilder builder)
+        {
+            Builder = builder;
+        }
 
         public sealed override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
@@ -31,6 +37,8 @@ namespace Qoden.UI
             return GetCell(context);
         }
 
+        public ViewBuilder Builder { get; }
+        
         public sealed override int ViewTypeCount => CellTypeCount;
 
         public sealed override int GetItemViewType(int position)

@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace Qoden.UI.Wrappers
-{
 #if __IOS__
-    using UIKit;
-    using PlatformCellView = UIKit.UITableViewCell;
-    using PlatformView = UIKit.UIView;
-
+using UIKit;
+using PlatformCellView = UIKit.UITableViewCell;
+using PlatformView = UIKit.UIView;
 #endif
+
 #if __ANDROID__
-using Android.Views;
 using PlatformCellView = Android.Views.View;
 using PlatformView = Android.Views.View;
 #endif
 
+namespace Qoden.UI.Wrappers
+{
     public struct TableViewCell
     {
         public static implicit operator PlatformCellView(TableViewCell area)
@@ -33,7 +32,7 @@ using PlatformView = Android.Views.View;
             return new View(PlatformView);
         }
 
-        public static TableViewCell Create(int type)
+        public static TableViewCell Create(ViewBuilder b, int type)
         {
 #if __IOS__
             var view = new TableViewCell()
@@ -43,7 +42,7 @@ using PlatformView = Android.Views.View;
             view.PlatformView.SelectionStyle = UITableViewCellSelectionStyle.None;
 #endif
 #if __ANDROID__
-            var view = new TableViewCell() { PlatformView = new PlatformView(b.Context) };
+            var view = new TableViewCell { PlatformView = new PlatformView(b.Context) };
 #endif
             return view;
         }
@@ -75,7 +74,7 @@ using PlatformView = Android.Views.View;
         public static TableViewCell AsCell(this PlatformView view, int cellTypeId)
         {
 #if __ANDROID__
-            return new TableViewCell(view.PlatformView);
+            return new TableViewCell(view);
     #endif
 #if __IOS__
             return new TableViewCell(TableViewUtil.ToTableViewCell(view, cellTypeId));
