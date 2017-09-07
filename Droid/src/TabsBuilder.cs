@@ -66,7 +66,7 @@ namespace Qoden.UI
 
         public void SelectTab(int index)
         {
-            View.SelectedTabPosition = index;
+            View.GetTabAt(index).Select();
             OnTabSelected(index);
         }
 
