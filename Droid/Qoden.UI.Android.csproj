@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\Shared\Qoden.UI.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\Qoden.UI.Shared.projitems')" />
-	<Import Project="..\Common.props" />
+  <Import Project="..\Common.props" />
   <Import Project="..\Build\Mobile.csproj" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;__ANDROID__</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
@@ -37,6 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <DefineConstants>__ANDROID__</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -92,15 +93,15 @@
       <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
-		<PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
-		<PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
-		<PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
     <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
     <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
     <PackageReference Include="System.ComponentModel" Version="$(ComponentModelVersion)" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="$(ReflectionVersion)" />
-    <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)"/>
+    <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
