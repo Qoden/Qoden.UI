@@ -73,9 +73,9 @@ namespace Qoden.UI
             };
         }
 
-        static void SetViewEnabled(AdapterView view, bool enabled)
+        static void SetViewEnabled(object view, bool enabled)
         {
-            view.Enabled = enabled;
+            ((AdapterView)view).Enabled = enabled;
         }
 
         public static AdapterBinding<T> Adapter<T>(this AdapterView<T> view) where T : IAdapter

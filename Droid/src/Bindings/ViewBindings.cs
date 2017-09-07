@@ -29,9 +29,9 @@ namespace Qoden.UI
             };
         }
 
-        static void SetViewEnabled(Android.Views.View view, bool enabled)
+        static void SetViewEnabled(object view, bool enabled)
         {
-            view.Enabled = enabled;
+            ((View)view).Enabled = enabled;
         }
     }
 }
