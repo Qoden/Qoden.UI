@@ -154,11 +154,11 @@ namespace Qoden.UI
         {
         }
 
-        public virtual void ViewWillAppear()
+        protected virtual void ViewWillAppear()
         {
         }
 
-        public virtual void ViewWillDisappear()
+        protected virtual void ViewWillDisappear()
         {            
         }
 
