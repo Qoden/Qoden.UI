@@ -45,7 +45,7 @@ namespace Qoden.UI.Wrappers
             set => PlatformView.Text = value;
         }
 
-        public void SetTextAlignment(TextAlignment value)
+        public void SetTextAlignment(QodenTextAlignment value)
         {
 #if __IOS__
             PlatformView.TextAlignment = value.ToUITextAlignment();

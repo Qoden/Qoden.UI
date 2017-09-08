@@ -66,7 +66,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
 
-        public void SetTextAlignment(TextAlignment alignment)
+        public void SetTextAlignment(QodenTextAlignment alignment)
         {
 #if __IOS__
             PlatformView.TitleLabel.TextAlignment = alignment.ToUITextAlignment();
