@@ -127,10 +127,17 @@ namespace Qoden.UI
         /// </summary>
         public RectangleF BoundingFrame(params PlatformView[] views)
         {
-            var frames = _boxes.Where(x => views.Any(y => y == x.Key)).Select(x => x.Value.Frame);
+            return BoundingFrame(views.AsEnumerable());
+        }
+        /// <summary>
+        /// Returns bounding frame for views. Frame coordinates is in view coordinates.
+        /// </summary>        
+        public RectangleF BoundingFrame(IEnumerable<PlatformView> views)
+        {
+            var frames = _boxes.Where(x => views.Any(y => ReferenceEquals(y, x.Key))).Select(x => x.Value.Frame);
             return frames.Aggregate(RectangleF.Union);
         }
-
+        
         /// <summary>
         /// Get or set Preferred layout width in pixels
         /// </summary>
