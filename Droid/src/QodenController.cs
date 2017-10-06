@@ -114,6 +114,17 @@ namespace Qoden.UI
             ViewWillDisappear();
         }
 
+        public void Push(QodenController controller) 
+        {
+            FragmentManager.BeginTransaction()
+                           .Replace((View.Parent as ViewGroup).Id, controller)
+                           .AddToBackStack(controller.ToString())
+                           .Commit();
+        }
+
+		public void Pop() => FragmentManager.PopBackStack();
+		
+
         /// <summary>
         /// Override this instead on OnResume
         /// </summary>
