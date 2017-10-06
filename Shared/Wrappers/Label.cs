@@ -1,10 +1,11 @@
 ﻿using System;
+using Qoden.Binding;
 #if __IOS__
 using Foundation;
 using PlatformLabel = UIKit.UILabel;
 #endif
 #if __ANDROID__
-    using PlatformLabel = Android.Widget.TextView;
+using PlatformLabel = Android.Widget.TextView;
 #endif
 
 namespace Qoden.UI.Wrappers
@@ -66,6 +67,10 @@ namespace Qoden.UI.Wrappers
             PlatformView.AttributedText = text;
         }
 #endif
+		public IProperty<string> TextProperty()
+		{
+			return PlatformView.TextProperty();
+		}
     }
 
     public static class LabelExtensions
