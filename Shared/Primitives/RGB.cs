@@ -42,6 +42,8 @@ namespace Qoden.UI
         public byte Alpha { get; private set; }
 
         public static readonly RGB Clear = new RGB(0, 0, 0, 0);
+
+        public RGB WithAlpha(float newAlpha) => new RGB(Red, Green, Blue, (byte) Math.Round(255 * newAlpha));
     }
 
 
