@@ -6,20 +6,22 @@ namespace Qoden.UI
 #if __IOS__
     using UIKit;
     using PlatformView = UIKit.UITableViewCell;
+    using PlatformCellView = UIKit.UITableViewCell;
 #endif
 #if __ANDROID__
 using Android.Views;
 using PlatformView = Android.Views.View;
+using PlatformCellView = Android.Views.View;
 #endif
     
     public struct PlainListCellContext
     {
-        public TableViewCell ReusableCell;
+        public PlatformCellView ReusableCell;
         public int Row;
 #if __ANDROID__
         public View Parent;
 #endif
-        public bool IsFresh => ReusableCell.PlatformView == null;
+        public bool IsFresh => ReusableCell == null;
     }
     public interface IPlainListContent
     {
