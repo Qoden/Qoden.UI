@@ -16,15 +16,23 @@ namespace Qoden.UI.Wrappers
 
         public View AsView() { return new View() { PlatformView = PlatformView }; }
 
+        public void SetImage(Image image) 
+        {
+#if __IOS__
+            PlatformView.Image = value.PlatformImage;
+#endif
+#if __ANDROID__
+            PlatformView.SetImageDrawable(image.PlatformImage);
+            PlatformView.Invalidate();
+#endif
+        }
         public Image Image
         {
 #if __IOS__
             get => new Image() { PlatformImage = PlatformView.Image };
-            set => PlatformView.Image = value.PlatformImage;
 #endif
 #if __ANDROID__
             get => new Image() { PlatformImage = PlatformView.Drawable };
-            set => PlatformView.SetImageDrawable(value.PlatformImage);
 #endif
         }
     }
