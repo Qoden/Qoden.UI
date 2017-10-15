@@ -180,17 +180,20 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             get => PlatformView is UIControl ? ((UIControl)PlatformView).Enabled : true;
-            set
-            {
-                if (PlatformView is UIControl)
-                { 
-                    ((UIControl)PlatformView).Enabled = value;
-                }
-            }
 #endif
 #if __ANDROID__
             get => PlatformView.Enabled;
-            set => PlatformView.Enabled = value;
+#endif
+        }
+
+        public void SetEnabled(bool enabled) 
+        {
+#if __IOS__
+            if (PlatformView is UIControl) 
+                ((UIControl)PlatformView).Enabled = enabled;
+#endif
+#if __ANDROID__
+            PlatformView.Enabled = enabled;
 #endif
         }
 
