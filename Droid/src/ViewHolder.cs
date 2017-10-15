@@ -12,7 +12,10 @@ namespace Qoden.UI
         {            
             this._host = host ?? throw new ArgumentNullException(nameof(host));
             this._view = null;
+            DidLoad = false;
         }
+
+        public bool DidLoad { get; set; }
 
         public View Value
         {

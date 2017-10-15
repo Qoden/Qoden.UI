@@ -49,7 +49,6 @@ namespace Qoden.UI
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
                 Logger.LogInformation("OnCreateView");
-
             return _view.Value;
         }
 
@@ -59,7 +58,11 @@ namespace Qoden.UI
                 Logger.LogInformation("OnViewCreated (ViewDidLoad)");
 
             base.OnViewCreated(view, savedInstanceState);
-            ViewDidLoad();
+            if (!_view.DidLoad)
+            {
+                _view.DidLoad = true;
+                ViewDidLoad();
+            }
         }
 
         public new View View
@@ -117,8 +120,8 @@ namespace Qoden.UI
         public void Push(QodenController controller) 
         {
             FragmentManager.BeginTransaction()
-                           .Replace((View.Parent as ViewGroup).Id, controller)
-                           .AddToBackStack(controller.ToString())
+                           .Replace((View.Parent as View).Id, controller)
+                           .AddToBackStack(controller.Tag)
                            .Commit();
         }
 

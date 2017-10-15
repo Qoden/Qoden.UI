@@ -68,7 +68,11 @@ namespace Qoden.UI
                 Logger.LogInformation("{controller} OnViewCreated (ViewDidLoad)", GetType().Name);
 
             base.OnViewCreated(view, savedInstanceState);
-            ViewDidLoad();
+            if (!_view.DidLoad)
+            {
+                _view.DidLoad = true;
+                ViewDidLoad();
+            }
         }
         
         public override void OnDismiss(IDialogInterface dialog)
