@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Qoden.UI</RootNamespace>
     <AssemblyName>Qoden.UI.Android</AssemblyName>
-    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
@@ -90,12 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
+      <Project>{27E0B7BE-D8C5-40DA-A32E-76BC36900351}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
-    <PackageReference Include="Xamarin.Android.Support.Design" Version="25.3.1" />
-    <PackageReference Include="Xamarin.Android.Support.v4" Version="25.3.1" />
-    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.3.1" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="26.0.2" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="26.0.2" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="26.0.2" />
     <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
     <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
     <PackageReference Include="System.ComponentModel" Version="$(ComponentModelVersion)" />
