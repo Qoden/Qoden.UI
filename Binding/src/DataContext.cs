@@ -12,6 +12,8 @@ namespace Qoden.Binding
         IValidator Validator { get; }
 
         bool Validate();
+
+        bool IsValid { get; }
     }
 
     /// <summary>
@@ -126,6 +128,7 @@ namespace Qoden.Binding
                 if (_validator == null)
                 {
                     _validator = new Validator();
+                    _validator.ErrorsChanged += _validator_ErrorsChanged;
                     if (!Validating)
                     {
                         Validate();
@@ -133,6 +136,16 @@ namespace Qoden.Binding
                 }
                 return _validator;
             }
+        }
+
+        private void _validator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(IsValid));
+        }
+
+        public bool IsValid
+        {
+            get => Validator.IsValid;
         }
 
         /// <summary>
