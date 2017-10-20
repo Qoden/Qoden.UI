@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Qoden.Validation;
 using Qoden.Util;
+using System.Linq;
 
 namespace Qoden.Binding
 {
@@ -24,12 +25,12 @@ namespace Qoden.Binding
     /// </remarks>
     public class DataContext : IDataContext, IEditableObject
     {
-        private Validator _validator;
+        private IValidator _validator;        
         private Dictionary<string, object> _originals;
         private readonly IKeyValueCoding _kvc;
 
         public DataContext()
-        {
+        {            
             _kvc = KeyValueCoding.Impl(GetType());
         }
 
@@ -119,6 +120,32 @@ namespace Qoden.Binding
         }
 
         /// <summary>
+        /// Indicate if data context performs validation when property changes.
+        /// </summary>
+        public bool PerformsValidation
+        {
+            get => _validator != DevNullValidator.Instance;
+            set
+            {
+                if (value)
+                {
+                    //If validator is DevNull not then nullify it. It will be created lazily when needed.
+                    //Otherwise there is already validator available and we should not do anything
+                    if (_validator == DevNullValidator.Instance)
+                    {
+                        _validator = null;
+                    }
+                }
+                else
+                {
+                    if (_validator != null)
+                        _validator.ErrorsChanged -= _validator_ErrorsChanged;
+                    _validator = DevNullValidator.Instance;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get <see cref="DataContext"/> Validator
         /// </summary>
         public IValidator Validator
@@ -140,9 +167,13 @@ namespace Qoden.Binding
 
         private void _validator_ErrorsChanged(object sender, DataErrorsChangedEventArgs e)
         {
+            ErrorsChanged?.Invoke(this, e);
             RaisePropertyChanged(nameof(IsValid));
         }
 
+        /// <summary>
+        /// Indicate if data context is valid.
+        /// </summary>
         public bool IsValid
         {
             get => Validator.IsValid;
@@ -231,11 +262,7 @@ namespace Qoden.Binding
         /// <summary>
         /// Fired when new <see cref="Validator"/> detect new error or errors removed from <see cref="Validator"/>
         /// </summary>
-		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
-        {
-            add => Validator.ErrorsChanged += value;
-            remove => Validator.ErrorsChanged -= value;
-        }
+		public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         /// <summary>
         /// Convenience method to get errors from <see cref="Validator"/>. Pass null as argument to get all errors.

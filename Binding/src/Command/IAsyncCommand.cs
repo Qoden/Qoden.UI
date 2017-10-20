@@ -78,7 +78,7 @@ namespace Qoden.Binding
     
     public static class AsyncCommandExtensions
     {
-        public static async Task ExecuteAsync(this IAsyncCommand command, object parameter)
+        public static async Task ExecuteAsync(this IAsyncCommand command, object parameter, bool throwOnError = false)
         {
             command.Execute(parameter);
             var task = command.Task;
@@ -86,15 +86,15 @@ namespace Qoden.Binding
             {
                 await task;
             }
-            if (command.Error != null)
+            if (command.Error != null && throwOnError)
             {
                 ExceptionDispatchInfo.Capture(command.Error).Throw();
             }
         }
 
-        public static Task ExecuteAsync(this IAsyncCommand command)
+        public static Task ExecuteAsync(this IAsyncCommand command, bool throwOnError = false)
         {
-            return command.ExecuteAsync(null);
+            return command.ExecuteAsync(null, throwOnError);
         }
     }
     
