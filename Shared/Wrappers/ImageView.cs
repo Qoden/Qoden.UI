@@ -19,7 +19,7 @@ namespace Qoden.UI.Wrappers
         public void SetImage(Image image) 
         {
 #if __IOS__
-            PlatformView.Image = value.PlatformImage;
+            PlatformView.Image = image.PlatformImage;
 #endif
 #if __ANDROID__
             PlatformView.SetImageDrawable(image.PlatformImage);
