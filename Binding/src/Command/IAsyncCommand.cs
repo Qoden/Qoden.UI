@@ -84,11 +84,15 @@ namespace Qoden.Binding
             var task = command.Task;
             if (task != null)
             {
-                await task;
-            }
-            if (command.Error != null && throwOnError)
-            {
-                ExceptionDispatchInfo.Capture(command.Error).Throw();
+                try
+                {
+                    await task;
+                }
+                catch (Exception)
+                {
+                    if (throwOnError)
+                        throw;
+                }
             }
         }
 
