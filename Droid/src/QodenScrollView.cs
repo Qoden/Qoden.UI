@@ -9,7 +9,7 @@ namespace Qoden.UI
     {
         public ViewBuilder Builder { get => InnerView.Builder; }
 
-        public Action<LayoutBuilder> InnerLayout 
+        public Func<LayoutBuilder, SizeF> InnerLayout 
         {
             get => InnerView.LayoutAction;
             set => InnerView.LayoutAction = value;
@@ -59,7 +59,7 @@ namespace Qoden.UI
         {
             public ScrollViewLayout(Context context) : base(context) {}
 
-            public Action<LayoutBuilder> LayoutAction { get; set; }
+            public Func<LayoutBuilder, SizeF> LayoutAction { get; set; }
 
             protected override void OnLayout(LayoutBuilder layout)
             {
