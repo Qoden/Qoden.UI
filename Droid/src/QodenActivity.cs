@@ -1,4 +1,6 @@
 ﻿using System;
+using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Microsoft.Extensions.Logging;
@@ -70,6 +72,17 @@ namespace Qoden.UI
             base.OnPause();
             Bindings.Unbind();
             ViewWillDisappear();
+        }
+
+        public void Push(Type type)
+        {
+            var intent = new Intent(this, type);
+            StartActivity(intent);
+        }
+
+        public void Pop()
+        {
+            OnBackPressed();
         }
 
         protected override void Dispose(bool disposing)

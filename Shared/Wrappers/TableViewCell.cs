@@ -62,7 +62,7 @@ namespace Qoden.UI.Wrappers
 #endif
 #if __ANDROID__
             var cell = builder.Create(cellType);
-            #endif
+#endif
             return new TableViewCell(cell);
         }
 
@@ -75,7 +75,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __ANDROID__
             return new TableViewCell(view);
-    #endif
+#endif
 #if __IOS__
             return new TableViewCell(TableViewUtil.ToTableViewCell(view, cellTypeId));
 #endif
