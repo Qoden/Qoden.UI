@@ -73,9 +73,9 @@ namespace Qoden.UI
             ViewWillDisappear();
 		}
 
-        public void Push(QodenController controller) => NavigationController.PushViewController(controller, true);
+        public void Push(UIViewController controller, bool animated = true) => NavigationController.PushViewController(controller, animated);
 
-        public void Pop() => NavigationController.PopViewController(true);
+        public void Pop(bool animated = true) => NavigationController.PopViewController(animated);
 
         protected virtual void ViewWillAppear()
         { }
