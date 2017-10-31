@@ -102,6 +102,7 @@
     <Compile Include="src\PhoneNumberFormatter.cs" />
     <Compile Include="src\QodenDialog.cs" />
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
+    <Compile Include="src\UIViewControllerExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />
@@ -111,8 +112,8 @@
     <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
     <PackageReference Include="System.ComponentModel" Version="$(ComponentModelVersion)" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="$(ReflectionVersion)" />
-    <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)"/>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)"/>
+    <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
       <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
       <Name>Qoden.Binding</Name>
