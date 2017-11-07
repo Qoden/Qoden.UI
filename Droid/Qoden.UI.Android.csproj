@@ -74,6 +74,7 @@
     <Compile Include="src\IViewHost.cs" />
     <Compile Include="src\QodenApplication.cs" />
     <Compile Include="src\IDetachedController.cs" />
+    <Compile Include="src\QodenScrollView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
