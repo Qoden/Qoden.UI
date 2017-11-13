@@ -48,7 +48,7 @@ namespace Qoden.UI
             {
                 var impl = Drawable.CreateFromStream(stream, null);
                 token.ThrowIfCancellationRequested();
-                return new Image() {PlatformImage = impl };
+                return new Image() { PlatformImage = impl };
             });
 #endif
         }
@@ -65,12 +65,12 @@ namespace Qoden.UI
             if (impl == null) throw new ImageOperationException();
             return Task.Run(() =>
             {
-                
+
                 var b = impl.Bitmap;
                 var sizeX = Math.Round(impl.IntrinsicWidth * sx);
                 var sizeY = Math.Round(impl.IntrinsicHeight * sy);
                 var resized = Bitmap.CreateScaledBitmap(b, (int)sizeX, (int)sizeY, false);
-                return new Image() {PlatformImage = new BitmapDrawable(resized) };
+                return new Image() { PlatformImage = new BitmapDrawable(resized) };
             });
 #endif
         }
@@ -95,6 +95,16 @@ namespace Qoden.UI
                 await bitmap.CompressAsync(Bitmap.CompressFormat.Png, 100, stream);
                 token.ThrowIfCancellationRequested();
             });
+#endif
+        }
+
+        public static Image GetByName(string name)
+        {
+#if __ANDROID__
+            var drawable = ImageFactory.GetDrawable(name);
+            return new Image() { PlatformImage = drawable };
+#elif __IOS__
+            return new Image { PlatformImage = UIImage.FromBundle(name) };
 #endif
         }
     }
