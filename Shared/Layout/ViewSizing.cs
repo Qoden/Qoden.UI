@@ -20,11 +20,6 @@ namespace Qoden.UI
         public static SizeF PreferredSize(this PlatformView v, SizeF size)
         {
 #if __IOS__
-            if (v is UILabel)
-            {
-                var rect = ((UILabel)v).TextRectForBounds(new CGRect(0, 0, size.Width, size.Height), 0);
-                return new SizeF((float)rect.Width, (float)rect.Height);
-            }
             return (SizeF)v.SizeThatFits((CGSize)size);
 #elif __ANDROID__
             var ws = MeasureSpec.MakeMeasureSpec((int)Math.Round(size.Width), MeasureSpecMode.AtMost);
