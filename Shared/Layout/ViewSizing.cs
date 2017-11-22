@@ -23,7 +23,7 @@ namespace Qoden.UI
             return (SizeF)v.SizeThatFits((CGSize)size);
 #elif __ANDROID__
             var ws = MeasureSpec.MakeMeasureSpec((int)Math.Round(size.Width), MeasureSpecMode.AtMost);
-            var hs = MeasureSpec.MakeMeasureSpec((int)Math.Round(size.Height), MeasureSpecMode.AtMost);
+            var hs = MeasureSpec.MakeMeasureSpec((int)Math.Round(size.Height), MeasureSpecMode.Unspecified);
             v.Measure(ws, hs);
             return new SizeF(v.MeasuredWidth, v.MeasuredHeight);
 #else
