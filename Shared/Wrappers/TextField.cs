@@ -73,6 +73,9 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.TextColor = color.ToColor();
+            //https://stackoverflow.com/questions/46742074/uitextfield-text-color-is-not-changing-while-not-in-focus
+            if (!PlatformView.IsFirstResponder)
+                PlatformView.AttributedText = PlatformView.AttributedText;
 #endif
 #if __ANDROID__
             PlatformView.SetTextColor(color.ToColor());
