@@ -73,6 +73,8 @@ namespace Qoden.UI
             ViewWillDisappear();
 		}
 
+        public void ClearStackAndPush(UIViewController controller, bool animated = true) => NavigationController.SetViewControllers(new UIViewController[] { controller }, animated);
+
         public void Push(UIViewController controller, bool animated = true) => NavigationController.PushViewController(controller, animated);
 
         public void Pop(bool animated = true) => NavigationController.PopViewController(animated);

@@ -117,6 +117,16 @@ namespace Qoden.UI
             ViewWillDisappear();
         }
 
+        public void ClearStackAndPush(QodenController controller) 
+        {
+            if (FragmentManager.BackStackEntryCount > 0)
+            {
+                var id = FragmentManager.GetBackStackEntryAt(0).Id;
+                FragmentManager.PopBackStackImmediate(id, FragmentManager.PopBackStackInclusive);
+            }
+            Push(controller);
+        }
+
         public void Push(QodenController controller) 
         {
             FragmentManager.BeginTransaction()
