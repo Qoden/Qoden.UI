@@ -81,6 +81,7 @@ namespace Qoden.UI
                 Logger.LogInformation("{controller} OnDismiss", GetType().Name);
 
             base.OnDismiss(dialog);
+            DidHide?.Invoke(this, EventArgs.Empty);
             IsDisplayed = false;
         }
         
@@ -126,6 +127,7 @@ namespace Qoden.UI
         public event EventHandler WillShow;
 
         public event EventHandler WillHide;
+        public event EventHandler DidHide;
 
         public void Show()
         {
