@@ -75,6 +75,11 @@ namespace Qoden.UI.Wrappers
 #if __ANDROID__
             if (PlatformView.Adapter == null) return;
             var adapter = PlatformView.Adapter as BaseAdapter;
+            if (adapter == null)
+            {
+                var wrappingAdapter = PlatformView.Adapter as HeaderViewListAdapter;
+                adapter = wrappingAdapter?.WrappedAdapter as BaseAdapter;
+            }
             if (adapter == null) throw new InvalidOperationException("Cannot reload table view");
             adapter.NotifyDataSetChanged();
 #endif
