@@ -52,6 +52,7 @@ namespace Qoden.UI.Wrappers
             PlatformView.TableHeaderView = view;
 #endif
 #if __ANDROID__
+            if (PlatformView.HeaderViewsCount > 0) throw new InvalidOperationException("Cannot add more than one header");
             PlatformView.AddHeaderView(view);
 #endif
         }
@@ -63,6 +64,7 @@ namespace Qoden.UI.Wrappers
             PlatformView.TableFooterView = view;
 #endif
 #if __ANDROID__
+            if (PlatformView.FooterViewsCount > 0) throw new InvalidOperationException("Cannot add more than one footer");
             PlatformView.AddFooterView(view);
 #endif
         }
