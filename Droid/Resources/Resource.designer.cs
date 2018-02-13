@@ -3728,6 +3728,9 @@ namespace Qoden.UI
 			// aapt resource value: 0x7f09016b
 			public static int Base_Widget_Design_TabLayout = 2131296619;
 			
+			// aapt resource value: 0x7f09018a
+			public static int FullscreenDialog = 2131296650;
+			
 			// aapt resource value: 0x7f09001e
 			public static int Platform_AppCompat = 2131296286;
 			
