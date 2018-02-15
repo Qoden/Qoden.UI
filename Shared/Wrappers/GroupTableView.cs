@@ -12,6 +12,8 @@
     using PlatformView = Android.Views.View;
     using PlatformGroupTableView = Android.Widget.ExpandableListView;
     using PlatformTableViewContent = Android.Widget.IExpandableListAdapter;
+    using Android.Widget;
+    using System;
 #endif
 
     public struct GroupTableView
@@ -45,6 +47,20 @@
             PlatformView.SetAdapter(value);
 #endif
         }
+
+        public void ReloadData()
+        {
+#if __IOS__
+            PlatformView.ReloadData();
+#endif
+#if __ANDROID__
+            if (PlatformView.ExpandableListAdapter == null) return;
+            var adapter = PlatformView.ExpandableListAdapter as BaseExpandableListAdapter;
+            if (adapter == null) throw new InvalidOperationException("Cannot reload table view");
+            adapter.NotifyDataSetChanged();
+#endif
+        }
+
     }
 
     public static class GroupedTableViewExtensions
