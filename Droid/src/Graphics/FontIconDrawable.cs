@@ -39,7 +39,9 @@ namespace Qoden.UI
             var size = Size.IntValue;
             if (bounds.Width() != size || bounds.Height() != size)
             {
-                SetBounds(0, 0, size, size);
+                var left = (int) ((bounds.Width() - size) / 2f);
+                var top = (int) ((bounds.Height() - size) / 2f);
+                SetBounds(left, top, left + size, top + size);
                 bounds = Bounds;
             }
 
@@ -47,8 +49,8 @@ namespace Qoden.UI
             using (var textBounds = new Rect())
             {
                 _paint.GetTextBounds(_icon, 0, 1, textBounds);
-                float textBottom = (bounds.Height() - textBounds.Height()) / 2f + textBounds.Height() - textBounds.Bottom;
-                canvas.DrawText(_icon, bounds.Width() / 2f, textBottom, _paint);
+                float textBottom = textBounds.Height();
+                canvas.DrawText(_icon, bounds.CenterX(), bounds.Bottom, _paint);
             }
         }
 
