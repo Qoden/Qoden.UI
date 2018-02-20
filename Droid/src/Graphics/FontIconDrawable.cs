@@ -33,6 +33,22 @@ namespace Qoden.UI
         const int PixelFormat_OPAQUE = -1;
         public override int Opacity => PixelFormat_OPAQUE;
 
+        public override int IntrinsicWidth
+        {
+            get
+            {
+                return Size.IntValue;
+            }
+        }
+
+        public override int IntrinsicHeight
+        {
+            get
+            {
+                return Size.IntValue;
+            }
+        }
+
         public override void Draw(Canvas canvas)
         {
             var bounds = Bounds;
