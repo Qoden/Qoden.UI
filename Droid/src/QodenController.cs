@@ -130,7 +130,7 @@ namespace Qoden.UI
         public void Push(QodenController controller) 
         {
             FragmentManager.BeginTransaction()
-                           .Replace((View.Parent as View).Id, controller)
+                           .Replace(Id, controller)
                            .AddToBackStack(controller.Tag)
                            .Commit();
         }

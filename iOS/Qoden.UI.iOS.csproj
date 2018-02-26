@@ -115,7 +115,7 @@
     <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{27E0B7BE-D8C5-40DA-A32E-76BC36900351}</Project>
+      <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
 		<PackageReference Include="libphonenumber-csharp" Version="8.7.0.1" />
