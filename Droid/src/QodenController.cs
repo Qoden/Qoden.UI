@@ -12,7 +12,7 @@ namespace Qoden.UI
     public class QodenController : Fragment, IControllerHost, IViewHost
     {
         public ILogger Logger { get; set; }
-        
+
         ViewHolder _view;
 
         protected QodenController(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
@@ -29,10 +29,10 @@ namespace Qoden.UI
         {
             _view = new ViewHolder(this);
             Logger = CreateLogger();
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("Created");
         }
-        
+
         protected virtual ILogger CreateLogger()
         {
             return Config.LoggerFactory?.CreateLogger(GetType().Name);
@@ -47,14 +47,14 @@ namespace Qoden.UI
 
         public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnCreateView");
             return _view.Value;
         }
 
         public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
         {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnViewCreated (ViewDidLoad)");
 
             base.OnViewCreated(view, savedInstanceState);
@@ -72,8 +72,8 @@ namespace Qoden.UI
         }
 
         ChildViewControllersList _childControllers;
-        public ChildViewControllersList ChildControllers 
-        { 
+        public ChildViewControllersList ChildControllers
+        {
             get
             {
                 Assert.State(Context == null || ChildFragmentManager == null, nameof(ChildControllers))
@@ -90,12 +90,12 @@ namespace Qoden.UI
         /// Override this instead on OnViewCreated
         /// </summary>
         public virtual void ViewDidLoad()
-        {                        
+        {
         }
 
         public sealed override void OnResume()
         {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnResume (ViewWillAppear)");
 
             base.OnResume();
@@ -109,7 +109,7 @@ namespace Qoden.UI
 
         public sealed override void OnPause()
         {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnPause (ViewWillDisappear)");
 
             base.OnPause();
@@ -117,7 +117,7 @@ namespace Qoden.UI
             ViewWillDisappear();
         }
 
-        public void ClearStackAndPush(QodenController controller) 
+        public void ClearStackAndPush(QodenController controller)
         {
             if (FragmentManager.BackStackEntryCount > 0)
             {
@@ -127,7 +127,7 @@ namespace Qoden.UI
             Push(controller);
         }
 
-        public void Push(QodenController controller) 
+        public void Push(QodenController controller)
         {
             FragmentManager.BeginTransaction()
                            .Replace((View.Parent as View).Id, controller)
@@ -135,8 +135,18 @@ namespace Qoden.UI
                            .Commit();
         }
 
-		public void Pop() => FragmentManager.PopBackStack();
-		
+        public void Pop() => FragmentManager.PopBackStack();
+
+        public void Present(QodenController controller)
+        {
+            //TODO: implement
+        }
+
+        public void Dismiss()
+        {
+            //TODO: implement
+        }
+
 
         /// <summary>
         /// Override this instead on OnResume
