@@ -54,6 +54,12 @@ namespace Qoden.UI
             ChildControllers = new ChildViewControllersList(context, ChildFragmentManager);
         }
 
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetStyle(DialogFragment.StyleNormal, Resource.Style.FullscreenDialog);
+        }
+
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
@@ -74,7 +80,19 @@ namespace Qoden.UI
                 ViewDidLoad();
             }
         }
-        
+
+        public override void OnStart()
+        {
+            base.OnStart();
+
+            if (Dialog != null)
+            {
+                int width = ViewGroup.LayoutParams.MatchParent;
+                int height = ViewGroup.LayoutParams.MatchParent;
+                Dialog.Window.SetLayout(width, height);
+            }
+        }
+
         public override void OnDismiss(IDialogInterface dialog)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
