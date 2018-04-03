@@ -137,16 +137,9 @@ namespace Qoden.UI
 
         public void Pop() => FragmentManager.PopBackStack();
 
-        public void Present(QodenController controller)
-        {
-            //TODO: implement
-        }
+        public void Present(QodenController controller) => Push(controller);
 
-        public void Dismiss()
-        {
-            //TODO: implement
-        }
-
+        public void Dismiss() => Pop();
 
         /// <summary>
         /// Override this instead on OnResume
