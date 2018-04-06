@@ -171,7 +171,7 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             PlatformView.BackgroundColor = color.ToColor();
 #elif __ANDROID__
-
+            PlatformView.Background = GetColoredDrawable(PlatformView.Background, color.ToColor());
             PlatformView.Invalidate();
 #endif
             return this;
@@ -191,7 +191,10 @@ namespace Qoden.UI.Wrappers
 #if __ANDROID__
         Drawable GetRoundedDrawable(Drawable drawable, float radius) 
         {
-            drawable = drawable.Mutate();
+            // ShapeDrawable crashes when Mutate() is executed if there is no Shape set
+            if (!(drawable is ShapeDrawable shapeDrawable) || shapeDrawable.Shape != null)
+                drawable = drawable?.Mutate();
+
             switch (drawable)
             {
                 case PaintDrawable paintDrawable:
@@ -242,7 +245,11 @@ namespace Qoden.UI.Wrappers
 
         Drawable GetColoredDrawable(Drawable drawable, Android.Graphics.Color color)
         {
-            drawable = drawable.Mutate();
+            if (drawable == null)
+                return new ColorDrawable(color);
+            
+            drawable = drawable?.Mutate();
+
             switch (drawable)
             {
                 case PaintDrawable paintDrawable:
@@ -260,11 +267,14 @@ namespace Qoden.UI.Wrappers
                     rippleDrawable.SetTint(color.ToArgb());
                     break;
                 case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetColoredDrawable(drawable, color);
+                    drawableWrapper.Drawable = GetColoredDrawable(drawableWrapper.Drawable, color);
+                    break;
+                case ColorDrawable colorDrawable:
+                    colorDrawable.Color = color;
                     break;
                 default:
                     var compatDrawable = DrawableCompat.Wrap(drawable);
-                    DrawableCompat.SetTint(compatDrawable, color.ToArgb());
+                    DrawableCompat.SetTint(compatDrawable, color.ToArgb());    
                     break;
             }
             return drawable;
