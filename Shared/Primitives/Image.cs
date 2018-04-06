@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Content;
 
 #if __IOS__
 using UIKit;
@@ -12,6 +13,7 @@ using PlatformImage = UIKit.UIImage;
 #if __ANDROID__
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Support.V4.Graphics.Drawable;
 using PlatformImage = Android.Graphics.Drawables.Drawable;
 #endif
 
@@ -115,6 +117,22 @@ namespace Qoden.UI
         {
             return new Image() { PlatformImage = image };
         }
+
+#if __ANDROID__
+        public static Image Rounded(this BitmapDrawable image, Context context, float radius)
+        {
+            var roundedBitmap = RoundedBitmapDrawableFactory.Create(context.Resources, image.Bitmap);
+            roundedBitmap.CornerRadius = radius;
+            return new Image() { PlatformImage = roundedBitmap };
+        }
+        public static Image Circular(this BitmapDrawable image, Context context)
+        {
+            var roundedBitmap = RoundedBitmapDrawableFactory.Create(context.Resources, image.Bitmap);
+            roundedBitmap.Circular = true;
+            return new Image() { PlatformImage = roundedBitmap };
+        }
+#endif
+
     }
 
     public class ImageOperationException : Exception
