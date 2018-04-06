@@ -13,6 +13,7 @@ using PlatformView = Android.Views.View;
 using PlatformViewGroup = Android.Views.ViewGroup;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
+using Android.Support.V4.Graphics.Drawable;
 #endif
 
 
@@ -262,7 +263,8 @@ namespace Qoden.UI.Wrappers
                     drawableWrapper.Drawable = GetColoredDrawable(drawable, color);
                     break;
                 default:
-                    PlatformView.Background.SetTint(color);
+                    var compatDrawable = DrawableCompat.Wrap(drawable);
+                    DrawableCompat.SetTint(compatDrawable, color.ToArgb());
                     break;
             }
             return drawable;
