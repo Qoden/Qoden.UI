@@ -14,6 +14,7 @@ using PlatformViewGroup = Android.Views.ViewGroup;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Android.Support.V4.Graphics.Drawable;
+using Android.Content;
 #endif
 
 
@@ -96,10 +97,10 @@ namespace Qoden.UI.Wrappers
             PlatformView.Frame = value;
 #endif
 #if __ANDROID__
-                PlatformView.Layout((int)Math.Round(value.Left),
-                        (int)Math.Round(value.Top),
-                        (int)Math.Round(value.Right),
-                        (int)Math.Round(value.Bottom));
+            PlatformView.Layout((int)Math.Round(value.Left),
+                    (int)Math.Round(value.Top),
+                    (int)Math.Round(value.Right),
+                    (int)Math.Round(value.Bottom));
 #endif
         }
 
@@ -182,16 +183,16 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             PlatformView.Layer.CornerRadius = radius;
 #elif __ANDROID__
-            PlatformView.Background = GetRoundedDrawable(PlatformView.Background, radius);
+            PlatformView.Background = GetRoundedDrawable(PlatformView.Context, PlatformView.Background, radius);
             PlatformView.Invalidate();
 #endif
             return this;
         }
 
 #if __ANDROID__
-        Drawable GetRoundedDrawable(Drawable drawable, float radius) 
+        Drawable GetRoundedDrawable(Context context, Drawable drawable, float radius)
         {
-            // ShapeDrawable crashes when Mutate() is executed if there is no Shape set
+            // ShapeDrawable crashes when Mutate() is executed if there is no Shape set (tries to clone() null)
             if (!(drawable is ShapeDrawable shapeDrawable) || shapeDrawable.Shape != null)
                 drawable = drawable?.Mutate();
 
@@ -206,10 +207,10 @@ namespace Qoden.UI.Wrappers
                 case RippleDrawable rippleDrawable:
                     {
                         var contentDrawable = rippleDrawable.GetDrawable(0);
-                        contentDrawable = GetRoundedDrawable(contentDrawable, radius);
+                        contentDrawable = GetRoundedDrawable(context, contentDrawable, radius);
 
                         rippleDrawable.SetDrawable(0, contentDrawable);
-                     
+
                         var radii = new float[8];
                         Array.Fill(radii, radius);
                         var maskShape = new RoundRectShape(radii, null, null);
@@ -218,7 +219,7 @@ namespace Qoden.UI.Wrappers
                     }
                     break;
                 case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetRoundedDrawable(drawableWrapper.Drawable, radius);
+                    drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
                     break;
                 case ColorDrawable colorDrawable:
                     {
@@ -227,10 +228,15 @@ namespace Qoden.UI.Wrappers
                         drawable = contentDrawable;
                     }
                     break;
+                case BitmapDrawable bitmapDrawable:
+                    var roundedBitmap = RoundedBitmapDrawableFactory.Create(context.Resources, bitmapDrawable.Bitmap);
+                    roundedBitmap.CornerRadius = radius;
+                    drawable = roundedBitmap;
+                    break;
                 case DrawableContainer drawableContainer:
                     var drawables = (drawableContainer.GetConstantState() as DrawableContainer.DrawableContainerState).GetChildren();
                     for (var i = 0; i < drawables.Length; i++)
-                        drawables[i] = GetRoundedDrawable(drawables[i], radius);
+                        drawables[i] = GetRoundedDrawable(context, drawables[i], radius);
                     break;
                 default:
                     {
@@ -247,7 +253,7 @@ namespace Qoden.UI.Wrappers
         {
             if (drawable == null)
                 return new ColorDrawable(color);
-            
+
             drawable = drawable?.Mutate();
 
             switch (drawable)
@@ -274,7 +280,7 @@ namespace Qoden.UI.Wrappers
                     break;
                 default:
                     var compatDrawable = DrawableCompat.Wrap(drawable);
-                    DrawableCompat.SetTint(compatDrawable, color.ToArgb());    
+                    DrawableCompat.SetTint(compatDrawable, color.ToArgb());
                     break;
             }
             return drawable;
@@ -291,7 +297,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
 
-        public void SetEnabled(bool enabled) 
+        public void SetEnabled(bool enabled)
         {
 #if __IOS__
             if (PlatformView is UIControl) 
