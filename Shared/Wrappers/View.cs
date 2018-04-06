@@ -170,47 +170,7 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             PlatformView.BackgroundColor = color.ToColor();
 #elif __ANDROID__
-            var background = PlatformView.Background;
-            DrawableWrapper wrapper = null;
-            if(background is DrawableWrapper) 
-            {
-                wrapper = background as DrawableWrapper;
-                background = wrapper.Drawable;
-            }
-            switch(PlatformView.Background)
-            {
-                case PaintDrawable paintDrawable:
-                    paintDrawable.Paint.Color = color.ToColor();
-                    break;
-                case GradientDrawable gradientDrawable:
-                    gradientDrawable.SetColor(color.ToColor());
-                    break;
-                case ShapeDrawable shapeDrawable:
-                    var shape = shapeDrawable.Shape;
-                    var newPaintDrawable = new PaintDrawable(color.ToColor()) { Shape = shape };
-                    if (wrapper != null)
-                    {
-                        wrapper.Drawable = newPaintDrawable;
-                    }
-                    else
-                    {
-                        PlatformView.Background = newPaintDrawable;
-                    }
-                    break;
-                case RippleDrawable rippleDrawable:
-                    rippleDrawable.SetTint(color.ToColor().ToArgb());
-                    break;
-                default:
-                    if (wrapper != null)
-                    {
-                        wrapper.Drawable = new PaintDrawable(color.ToColor());;
-                    }
-                    else
-                    {
-                        PlatformView.Background = new PaintDrawable(color.ToColor());;
-                    }
-                    break;
-            }
+
             PlatformView.Invalidate();
 #endif
             return this;
@@ -221,60 +181,30 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             PlatformView.Layer.CornerRadius = radius;
 #elif __ANDROID__
-            switch(PlatformView.Background)
+            PlatformView.Background = GetRoundedDrawable(PlatformView.Background, radius);
+            PlatformView.Invalidate();
+#endif
+            return this;
+        }
+
+#if __ANDROID__
+        Drawable GetRoundedDrawable(Drawable drawable, float radius) 
+        {
+            switch (drawable)
             {
-                case PaintDrawable paintDrawable: 
+                case PaintDrawable paintDrawable:
                     paintDrawable.SetCornerRadius(radius);
                     break;
-                case GradientDrawable gradientDrawable: 
+                case GradientDrawable gradientDrawable:
                     gradientDrawable.SetCornerRadius(radius);
                     break;
                 case RippleDrawable rippleDrawable:
                     {
-                        var drawable = rippleDrawable.GetDrawable(0);
-                        DrawableWrapper wrapper = null;
-                        if(drawable is DrawableWrapper) 
-                        {
-                            wrapper = drawable as DrawableWrapper;
-                            drawable = wrapper.Drawable;
-                        }
-                        switch(drawable) 
-                        {
-                            case PaintDrawable nestedPaintDrawable:
-                                nestedPaintDrawable.SetCornerRadius(radius);
-                                break;
-                            case ColorDrawable nestedColorDrawable:
-                                {
-                                    var nestedDrawable = new PaintDrawable(nestedColorDrawable.Color);
-                                    nestedDrawable.SetCornerRadius(radius);
-                                    if (wrapper != null)
-                                    {
-                                        wrapper.Drawable = nestedDrawable;
-                                    }
-                                    else
-                                    {
-                                        rippleDrawable.SetDrawable(0, nestedDrawable);
-                                    }
-                                }
-                                break;
-                            case GradientDrawable nestedGradientDrawable:
-                                nestedGradientDrawable.SetCornerRadius(radius);
-                                break;
-                            default:
-                                {
-                                    var nestedDrawable = new PaintDrawable();
-                                    nestedDrawable.SetCornerRadius(radius);
-                                    if (wrapper != null)
-                                    {
-                                        wrapper.Drawable = nestedDrawable;
-                                    }
-                                    else
-                                    {
-                                        rippleDrawable.SetDrawable(0, nestedDrawable);
-                                    }
-                                }
-                                break;
-                        }
+                        var contentDrawable = rippleDrawable.GetDrawable(0);
+                        contentDrawable = GetRoundedDrawable(contentDrawable, radius);
+
+                        rippleDrawable.SetDrawable(0, contentDrawable);
+                     
                         var radii = new float[8];
                         Array.Fill(radii, radius);
                         var maskShape = new RoundRectShape(radii, null, null);
@@ -282,25 +212,60 @@ namespace Qoden.UI.Wrappers
                         rippleDrawable.SetDrawableByLayerId(Android.Resource.Id.Mask, maskDrawable);
                     }
                     break;
+                case DrawableWrapper drawableWrapper:
+                    drawableWrapper.Drawable = GetRoundedDrawable(drawableWrapper.Drawable, radius);
+                    break;
                 case ColorDrawable colorDrawable:
                     {
-                        var drawable = new PaintDrawable(colorDrawable.Color);
-                        drawable.SetCornerRadius(radius);
-                        PlatformView.Background = drawable;
+                        var contentDrawable = new PaintDrawable(colorDrawable.Color);
+                        contentDrawable.SetCornerRadius(radius);
+                        drawable = contentDrawable;
                     }
+                    break;
+                case DrawableContainer drawableContainer:
+                    var drawables = (drawableContainer.GetConstantState() as DrawableContainer.DrawableContainerState).GetChildren();
+                    for (var i = 0; i < drawables.Length; i++)
+                        drawables[i] = GetRoundedDrawable(drawables[i], radius);
                     break;
                 default:
                     {
-                        var drawable = new PaintDrawable();
-                        drawable.SetCornerRadius(radius);
-                        PlatformView.Background = drawable;
+                        var contentDrawable = new PaintDrawable();
+                        contentDrawable.SetCornerRadius(radius);
+                        drawable = contentDrawable;
                     }
                     break;
             }
-            PlatformView.Invalidate();
-#endif
-            return this;
+            return drawable;
         }
+
+        Drawable GetColoredDrawable(Drawable drawable, Android.Graphics.Color color)
+        {
+            switch (drawable)
+            {
+                case PaintDrawable paintDrawable:
+                    paintDrawable.Paint.Color = color;
+                    break;
+                case GradientDrawable gradientDrawable:
+                    gradientDrawable.SetColor(color);
+                    break;
+                case ShapeDrawable shapeDrawable:
+                    var shape = shapeDrawable.Shape;
+                    var newPaintDrawable = new PaintDrawable(color) { Shape = shape };
+                    PlatformView.Background = newPaintDrawable;
+                    break;
+                case RippleDrawable rippleDrawable:
+                    rippleDrawable.SetTint(color.ToArgb());
+                    break;
+                case DrawableWrapper drawableWrapper:
+                    drawableWrapper.Drawable = GetColoredDrawable(drawable, color);
+                    break;
+                default:
+                    PlatformView.Background.SetTint(color);
+                    break;
+            }
+            return drawable;
+        }
+#endif
 
         public bool Enabled
         {
