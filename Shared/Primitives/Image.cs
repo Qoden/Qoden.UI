@@ -2,8 +2,6 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Content;
-
 #if __IOS__
 using UIKit;
 using Foundation;
@@ -11,6 +9,7 @@ using CoreGraphics;
 using PlatformImage = UIKit.UIImage;
 #endif
 #if __ANDROID__
+using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Support.V4.Graphics.Drawable;
