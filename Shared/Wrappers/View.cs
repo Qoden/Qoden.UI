@@ -17,7 +17,6 @@ using Android.Support.V4.Graphics.Drawable;
 using Android.Content;
 #endif
 
-
 namespace Qoden.UI.Wrappers
 {
     public struct View
@@ -36,8 +35,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.AddSubview(child);
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             var view = PlatformView as PlatformViewGroup;
             if (view == null) throw new InvalidOperationException("PlatformView is not ViewGroup");
             if (child.Parent != null) child.AsView().RemoveFromSuperview();
@@ -50,8 +48,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.RemoveFromSuperview();
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             var view = PlatformView.Parent as PlatformViewGroup;
             if (view == null) throw new InvalidOperationException("PlatformView.Parent is not ViewGroup");
             view.RemoveView(PlatformView);
@@ -66,8 +63,7 @@ namespace Qoden.UI.Wrappers
             {
                 yield return new View() { PlatformView = v };
             }
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             var view = PlatformView as PlatformViewGroup;
             if (view != null)
             {
@@ -85,8 +81,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             get => (RectangleF)PlatformView.Frame;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             get => new RectangleF(PlatformView.Left, PlatformView.Top, PlatformView.Width, PlatformView.Height);
 #endif
         }
@@ -95,8 +90,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.Frame = value;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             PlatformView.Layout((int)Math.Round(value.Left),
                     (int)Math.Round(value.Top),
                     (int)Math.Round(value.Right),
@@ -130,8 +124,7 @@ namespace Qoden.UI.Wrappers
                                                                         value.Bottom);
                 }
             }
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             get => new EdgeInsets(PlatformView.PaddingLeft,
                                   PlatformView.PaddingTop,
                                   PlatformView.PaddingRight,
@@ -151,8 +144,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             get => !PlatformView.Hidden;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             get => PlatformView.Visibility == ViewStates.Visible;
 #endif
         }
@@ -161,8 +153,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.Hidden = !value;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             PlatformView.Visibility = value ? ViewStates.Visible : ViewStates.Gone;
 #endif
         }
@@ -291,8 +282,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             get => PlatformView is UIControl ? ((UIControl)PlatformView).Enabled : true;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             get => PlatformView.Enabled;
 #endif
         }
@@ -302,8 +292,7 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             if (PlatformView is UIControl) 
                 ((UIControl)PlatformView).Enabled = enabled;
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             PlatformView.Enabled = enabled;
 #endif
         }
@@ -317,8 +306,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.SetNeedsLayout();
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             PlatformView.RequestLayout();
 #endif
         }
@@ -329,8 +317,7 @@ namespace Qoden.UI.Wrappers
             var control = PlatformView as UIControl;
             if (control == null) throw new InvalidOperationException("PlatformView is not UIControl");
             return control.ClickTarget();
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             return PlatformView.ClickTarget();
 #endif
         }
@@ -350,8 +337,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             var view = new View() { PlatformView = new PlatformView() };
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             //View in android cannot have children while in iOS this is ok.
             //Sometimes iOS code creates view and manage it by itself.
             //To make this case work in Android as well return not view, but something

@@ -56,6 +56,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QodenTableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\Switch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />
