@@ -27,7 +27,7 @@ namespace Qoden.UI
             _cache.AddOrUpdate(new Key(name, style), typeface, (arg1, arg2) => arg2);
         }
 
-        public static Typeface Get(string name, FontStyle style)
+        public static Typeface Get(string name, FontStyle style = FontStyle.Unknown)
         {
             Typeface face;
             if (!_cache.TryGetValue(new Key(name, style), out face))
