@@ -41,7 +41,7 @@ namespace Qoden.UI
 
         public byte Alpha { get; private set; }
 
-        public int IntARGB { get => 0xFF << 24 | Red << 16 | Green << 8 | Blue; }
+        public int IntARGB { get => Alpha << 24 | Red << 16 | Green << 8 | Blue; }
 
         public static readonly RGB Clear = new RGB(0, 0, 0, 0);
 
