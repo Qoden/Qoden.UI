@@ -10,9 +10,26 @@ namespace Qoden.UI.Wrappers
     public struct Switch
     {
         public static implicit operator PlatformSwitch(Switch view) { return view.PlatformView; }
-        public PlatformSwitch PlatformView { get; set; }
 
-        public Switch(object view)
+        PlatformSwitch platformView;
+        public PlatformSwitch PlatformView
+        {
+            get => platformView;
+            set
+            {
+                platformView = value;
+#if __IOS__
+                checkedThumbColor = uncheckedThumbColor = PlatformView.ThumbTintColor != null ? PlatformView.ThumbTintColor.ToRGB() : RGB.Clear;
+                var @switch = this;
+                platformView.AddTarget((object sender, EventArgs e) =>
+                {
+                    @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor.ToColor() : @switch.UncheckedThumbColor.ToColor();
+                }, UIKit.UIControlEvent.ValueChanged);
+#endif     
+            }
+        }
+
+        public Switch(object view) : this()
         {
             PlatformView = (PlatformSwitch)view;
         }
@@ -28,18 +45,94 @@ namespace Qoden.UI.Wrappers
             {
 #if __IOS__
                 PlatformView.On = value;
+                PlatformView.ThumbTintColor = value ? CheckedThumbColor.ToColor() : UncheckedThumbColor.ToColor();
 #elif __ANDROID__
                 PlatformView.Checked = value;
 #endif
             }
         }
 
-        public void SetThumbColor(RGB color)
+#if __IOS__
+        RGB checkedThumbColor, uncheckedThumbColor;
+
+        RGB CheckedThumbColor
+        {
+            get => checkedThumbColor;
+            set
+            {
+                checkedThumbColor = value;
+                if (Checked)
+                {
+                    PlatformView.ThumbTintColor = checkedThumbColor.ToColor();
+                }
+            }
+        }
+
+        RGB UncheckedThumbColor
+        {
+            get => uncheckedThumbColor;
+            set
+            {
+                uncheckedThumbColor = value;
+                if (!Checked)
+                {
+                    PlatformView.ThumbTintColor = uncheckedThumbColor.ToColor();
+                }
+            }
+        }
+#endif
+
+        public void SetThumbColors(RGB @checked, RGB @unchecked)
         {
 #if __IOS__
-            PlatformView.ThumbTintColor = color.ToColor();
+            SetCheckedThumbColor(@checked);
+            SetUncheckedThumbColor(@unchecked);
 #elif __ANDROID__
-            PlatformView.ThumbTintList = ColorStateList.ValueOf(color.ToColor());
+            PlatformView.ThumbTintList = new ColorStateList(new int[][]
+            {
+                new int[] { Android.Resource.Attribute.StateChecked },
+                new int[] { -Android.Resource.Attribute.StateChecked },
+            }, new int[]
+            {
+                @checked.IntARGB,
+                @unchecked.IntARGB
+            });
+#endif
+        }
+
+        public void SetTrackColors(RGB @checked, RGB @unchecked)
+        {
+#if __IOS__
+            SetCheckedTrackColor(@checked);
+            SetUncheckedTrackColor(@unchecked);
+#elif __ANDROID__
+            PlatformView.TrackTintList = new ColorStateList(new int[][]
+            {
+                new int[] { Android.Resource.Attribute.StateChecked },
+                new int[] { -Android.Resource.Attribute.StateChecked },
+            }, new int[]
+            {
+                @checked.IntARGB,
+                @unchecked.IntARGB
+            });
+#endif
+        }
+
+        public void SetCheckedThumbColor(RGB color)
+        {
+#if __IOS__
+            CheckedThumbColor = color;
+#elif __ANDROID__
+            PlatformView.ThumbTintList = GetSwitchTintColorStateList(color, true, PlatformView.ThumbTintList);
+#endif
+        }
+
+        public void SetUncheckedThumbColor(RGB color)
+        {
+#if __IOS__
+            UncheckedThumbColor = color;
+#elif __ANDROID__
+            PlatformView.ThumbTintList = GetSwitchTintColorStateList(color, false, PlatformView.ThumbTintList);
 #endif
         }
 
