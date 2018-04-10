@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Qoden.Binding;
 #if __IOS__
 using UIKit;
+using CoreAnimation;
+using CoreGraphics;
+using Foundation;
 using PlatformView = UIKit.UIView;
 using PlatformViewGroup = UIKit.UIView;
 #endif
@@ -277,6 +281,50 @@ namespace Qoden.UI.Wrappers
             return drawable;
         }
 #endif
+
+        public void SetupGradient(
+            RGB[] gradientColors,
+            PointF startPoint,
+            PointF endPoint,
+            float[] locations)
+        {
+#if __IOS__
+            var gradientLayer = new CAGradientLayer();
+
+            gradientLayer.Frame = PlatformView.Layer.Frame;
+
+            gradientLayer.Colors = gradientColors.Select(color => color.ToColor().CGColor).ToArray();
+            gradientLayer.StartPoint = new CGPoint(startPoint.X, startPoint.Y);
+            gradientLayer.EndPoint = new CGPoint(endPoint.X, endPoint.Y);
+            gradientLayer.Locations = locations.Select(number => new NSNumber(number)).ToArray();
+
+            var existingGradientLayer = PlatformView.Layer.Sublayers?.FirstOrDefault(layer => layer is CAGradientLayer);
+            if(existingGradientLayer == null)
+            {
+                PlatformView.Layer.InsertSublayer(gradientLayer, 0);   
+            }
+            else 
+            {
+                PlatformView.Layer.ReplaceSublayer(existingGradientLayer, gradientLayer);
+            }
+
+            gradientLayer.Delegate = new CALayerAutoResizeSublayersDelegate();
+
+#elif __ANDROID__
+            var shaderFactory = new GradientShaderFactory(
+                locations,
+                startPoint,
+                endPoint,
+                gradientColors);
+
+            var paintDrawable = new PaintDrawable();
+            paintDrawable.Shape = new RectShape();
+            paintDrawable.SetShaderFactory(shaderFactory);
+
+            PlatformView.Background = paintDrawable;
+#endif
+        }
+
 
         public bool Enabled
         {
