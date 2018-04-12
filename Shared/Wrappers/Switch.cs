@@ -18,14 +18,6 @@ namespace Qoden.UI.Wrappers
             set
             {
                 platformView = value;
-#if __IOS__
-                checkedThumbColor = uncheckedThumbColor = PlatformView.ThumbTintColor != null ? PlatformView.ThumbTintColor.ToRGB() : RGB.Clear;
-                var @switch = this;
-                platformView.AddTarget((object sender, EventArgs e) =>
-                {
-                    @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor.ToColor() : @switch.UncheckedThumbColor.ToColor();
-                }, UIKit.UIControlEvent.ValueChanged);
-#endif     
             }
         }
 
@@ -54,6 +46,7 @@ namespace Qoden.UI.Wrappers
 
 #if __IOS__
         RGB checkedThumbColor, uncheckedThumbColor;
+        EventHandler toggleHandler;
 
         RGB CheckedThumbColor
         {
@@ -65,6 +58,7 @@ namespace Qoden.UI.Wrappers
                 {
                     PlatformView.ThumbTintColor = checkedThumbColor.ToColor();
                 }
+                RefreshToggleHandler();
             }
         }
 
@@ -78,7 +72,29 @@ namespace Qoden.UI.Wrappers
                 {
                     PlatformView.ThumbTintColor = uncheckedThumbColor.ToColor();
                 }
+                RefreshToggleHandler();
             }
+        }
+
+        // Consider converting Switch struct to class. Maybe handler recreation and 
+        // reassigning is more expensive than allocating object and closure.
+        // N.Shalin 12.04
+        void RefreshToggleHandler() 
+        {
+            if (toggleHandler != null)
+            {
+                platformView.RemoveTarget(toggleHandler, UIKit.UIControlEvent.ValueChanged);
+            }
+            var @switch = this;
+            toggleHandler = async (object sender, EventArgs e) =>
+            {
+                // hack. changing thumb color during animation is broken
+                // https://stackoverflow.com/questions/47760418/animation-between-changes-of-on-off-state-of-uiswitch-broken-due-to-change-of-th
+                // N.Shalin 12.04
+                await System.Threading.Tasks.Task.Delay(100);
+                @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor.ToColor() : @switch.UncheckedThumbColor.ToColor();
+            };
+            platformView.AddTarget(toggleHandler, UIKit.UIControlEvent.ValueChanged);
         }
 #endif
 
