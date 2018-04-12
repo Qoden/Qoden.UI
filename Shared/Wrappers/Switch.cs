@@ -10,9 +10,18 @@ namespace Qoden.UI.Wrappers
     public struct Switch
     {
         public static implicit operator PlatformSwitch(Switch view) { return view.PlatformView; }
-        public PlatformSwitch PlatformView { get; set; }
 
-        public Switch(object view)
+        PlatformSwitch platformView;
+        public PlatformSwitch PlatformView
+        {
+            get => platformView;
+            set
+            {
+                platformView = value;
+            }
+        }
+
+        public Switch(object view) : this()
         {
             PlatformView = (PlatformSwitch)view;
         }
@@ -28,18 +37,118 @@ namespace Qoden.UI.Wrappers
             {
 #if __IOS__
                 PlatformView.On = value;
+                PlatformView.ThumbTintColor = value ? CheckedThumbColor.ToColor() : UncheckedThumbColor.ToColor();
 #elif __ANDROID__
                 PlatformView.Checked = value;
 #endif
             }
         }
 
-        public void SetThumbColor(RGB color)
+#if __IOS__
+        RGB checkedThumbColor, uncheckedThumbColor;
+        EventHandler toggleHandler;
+
+        RGB CheckedThumbColor
+        {
+            get => checkedThumbColor;
+            set
+            {
+                checkedThumbColor = value;
+                if (Checked)
+                {
+                    PlatformView.ThumbTintColor = checkedThumbColor.ToColor();
+                }
+                RefreshToggleHandler();
+            }
+        }
+
+        RGB UncheckedThumbColor
+        {
+            get => uncheckedThumbColor;
+            set
+            {
+                uncheckedThumbColor = value;
+                if (!Checked)
+                {
+                    PlatformView.ThumbTintColor = uncheckedThumbColor.ToColor();
+                }
+                RefreshToggleHandler();
+            }
+        }
+
+        // Consider converting Switch struct to class. Maybe handler recreation and 
+        // reassigning is more expensive than allocating object and closure.
+        // N.Shalin 12.04
+        void RefreshToggleHandler() 
+        {
+            if (toggleHandler != null)
+            {
+                platformView.RemoveTarget(toggleHandler, UIKit.UIControlEvent.ValueChanged);
+            }
+            var @switch = this;
+            toggleHandler = async (object sender, EventArgs e) =>
+            {
+                // hack. changing thumb color during animation is broken
+                // https://stackoverflow.com/questions/47760418/animation-between-changes-of-on-off-state-of-uiswitch-broken-due-to-change-of-th
+                // N.Shalin 12.04
+                await System.Threading.Tasks.Task.Delay(100);
+                @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor.ToColor() : @switch.UncheckedThumbColor.ToColor();
+            };
+            platformView.AddTarget(toggleHandler, UIKit.UIControlEvent.ValueChanged);
+        }
+#endif
+
+        public void SetThumbColors(RGB @checked, RGB @unchecked)
         {
 #if __IOS__
-            PlatformView.ThumbTintColor = color.ToColor();
+            SetCheckedThumbColor(@checked);
+            SetUncheckedThumbColor(@unchecked);
 #elif __ANDROID__
-            PlatformView.ThumbTintList = ColorStateList.ValueOf(color.ToColor());
+            PlatformView.ThumbTintList = new ColorStateList(new int[][]
+            {
+                new int[] { Android.Resource.Attribute.StateChecked },
+                new int[] { -Android.Resource.Attribute.StateChecked },
+            }, new int[]
+            {
+                @checked.IntARGB,
+                @unchecked.IntARGB
+            });
+#endif
+        }
+
+        public void SetTrackColors(RGB @checked, RGB @unchecked)
+        {
+#if __IOS__
+            SetCheckedTrackColor(@checked);
+            SetUncheckedTrackColor(@unchecked);
+#elif __ANDROID__
+            PlatformView.TrackTintList = new ColorStateList(new int[][]
+            {
+                new int[] { Android.Resource.Attribute.StateChecked },
+                new int[] { -Android.Resource.Attribute.StateChecked },
+            }, new int[]
+            {
+                @checked.IntARGB,
+                @unchecked.IntARGB
+            });
+#endif
+        }
+
+        public void SetCheckedThumbColor(RGB color)
+        {
+#if __IOS__
+            CheckedThumbColor = color;
+#elif __ANDROID__
+            PlatformView.ThumbTintList = GetSwitchTintColorStateList(color, true, PlatformView.ThumbTintList);
+#endif
+        }
+
+        public void SetUncheckedThumbColor(RGB color)
+        {
+#if __IOS__
+            UncheckedThumbColor = color;
+#elif __ANDROID__
+            PlatformView.ThumbTintList = GetSwitchTintColorStateList(color, false, PlatformView.ThumbTintList);
 #endif
         }
 
