@@ -307,9 +307,11 @@ namespace Qoden.UI.Wrappers
             {
                 PlatformView.Layer.ReplaceSublayer(existingGradientLayer, gradientLayer);
             }
-
-            gradientLayer.Delegate = new CALayerAutoResizeSublayersDelegate();
-
+            var superlayer = PlatformView.Layer;
+            superlayer.AddObserver("Frame", (NSKeyValueObservingOptions)0, (@event) => 
+            {
+                gradientLayer.Frame = superlayer.Frame;
+            });
 #elif __ANDROID__
             var shaderFactory = new GradientShaderFactory(
                 locations,
