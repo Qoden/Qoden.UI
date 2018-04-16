@@ -103,6 +103,7 @@
     <Compile Include="src\QodenDialog.cs" />
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
     <Compile Include="src\UIViewControllerExtensions.cs" />
+    <Compile Include="src\ObserverDisposingDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />

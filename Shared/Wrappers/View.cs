@@ -106,7 +106,7 @@ namespace Qoden.UI.Wrappers
         public EdgeInsets Padding
         {
 #if __IOS__
-            get 
+            get
             {
                 if (PlatformView is QodenView) return ((QodenView)PlatformView).Padding;
                 return new EdgeInsets((float)PlatformView.LayoutMargins.Left,
@@ -114,13 +114,13 @@ namespace Qoden.UI.Wrappers
                                   (float)PlatformView.LayoutMargins.Right,
                                   (float)PlatformView.LayoutMargins.Bottom);
             }
-            set 
+            set
             {
                 if (PlatformView is QodenView)
                 {
                     ((QodenView)PlatformView).Padding = value;
                 }
-                else 
+                else
                 {
                     PlatformView.LayoutMargins = new UIKit.UIEdgeInsets(value.Left,
                                                                         value.Top,
@@ -308,10 +308,12 @@ namespace Qoden.UI.Wrappers
                 PlatformView.Layer.ReplaceSublayer(existingGradientLayer, gradientLayer);
             }
             var superlayer = PlatformView.Layer;
-            superlayer.AddObserver("Frame", (NSKeyValueObservingOptions)0, (@event) => 
+            var disposable = superlayer.AddObserver("Bounds", (NSKeyValueObservingOptions)0, (@event) =>
             {
-                gradientLayer.Frame = superlayer.Frame;
+                gradientLayer.Frame = superlayer.Bounds;
             });
+
+            gradientLayer.Delegate = new ObserverDisposingDelegate(disposable);
 #elif __ANDROID__
             var shaderFactory = new GradientShaderFactory(
                 locations,
