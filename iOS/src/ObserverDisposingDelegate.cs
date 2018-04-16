@@ -13,12 +13,18 @@ namespace Qoden.UI
             DisposableObserver = disposableObserver;
         }
 
+        public void DisposeObserver()
+        {
+            DisposableObserver?.Dispose();
+            DisposableObserver = null;
+        }
+
         [Export("actionForLayer:forKey:")]
         public override Foundation.NSObject ActionForLayer(CALayer layer, string eventKey)
         {
             if(eventKey.Equals("onOrderOut")) 
             {
-                DisposableObserver?.Dispose();
+                DisposeObserver();
             }
             return null;
         }

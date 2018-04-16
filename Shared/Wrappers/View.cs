@@ -306,6 +306,11 @@ namespace Qoden.UI.Wrappers
             }
             else 
             {
+                if(existingGradientLayer.Delegate is ObserverDisposingDelegate observerDisposer)
+                {
+                    observerDisposer.DisposeObserver();
+                    existingGradientLayer.Delegate = null;
+                }
                 PlatformView.Layer.ReplaceSublayer(existingGradientLayer, gradientLayer);
             }
             var superlayer = PlatformView.Layer;
