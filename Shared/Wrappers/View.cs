@@ -292,7 +292,7 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             var gradientLayer = new CAGradientLayer();
 
-            gradientLayer.Frame = PlatformView.Layer.Frame;
+            gradientLayer.Frame = PlatformView.Layer.Bounds;
 
             gradientLayer.Colors = gradientColors.Select(color => color.ToColor().CGColor).ToArray();
             gradientLayer.StartPoint = new CGPoint(startPoint.X, startPoint.Y);
