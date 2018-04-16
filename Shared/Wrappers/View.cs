@@ -177,6 +177,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.Layer.CornerRadius = radius;
+            PlatformView.Layer.MasksToBounds = true;
 #elif __ANDROID__
             PlatformView.Background = GetRoundedDrawable(PlatformView.Context, PlatformView.Background, radius);
             PlatformView.Invalidate();
