@@ -103,6 +103,7 @@
     <Compile Include="src\QodenDialog.cs" />
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
     <Compile Include="src\UIViewControllerExtensions.cs" />
+    <Compile Include="src\ObserverDisposingDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />
@@ -115,7 +116,7 @@
     <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
+      <Project>{B75FA338-82E0-45B4-866F-BD8EA420C6E6}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
 		<PackageReference Include="libphonenumber-csharp" Version="8.7.0.1" />

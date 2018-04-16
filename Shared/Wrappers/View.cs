@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Qoden.Binding;
 #if __IOS__
 using UIKit;
+using CoreAnimation;
+using CoreGraphics;
+using Foundation;
 using PlatformView = UIKit.UIView;
 using PlatformViewGroup = UIKit.UIView;
 #endif
@@ -102,7 +106,7 @@ namespace Qoden.UI.Wrappers
         public EdgeInsets Padding
         {
 #if __IOS__
-            get 
+            get
             {
                 if (PlatformView is QodenView) return ((QodenView)PlatformView).Padding;
                 return new EdgeInsets((float)PlatformView.LayoutMargins.Left,
@@ -110,13 +114,13 @@ namespace Qoden.UI.Wrappers
                                   (float)PlatformView.LayoutMargins.Right,
                                   (float)PlatformView.LayoutMargins.Bottom);
             }
-            set 
+            set
             {
                 if (PlatformView is QodenView)
                 {
                     ((QodenView)PlatformView).Padding = value;
                 }
-                else 
+                else
                 {
                     PlatformView.LayoutMargins = new UIKit.UIEdgeInsets(value.Left,
                                                                         value.Top,
@@ -173,6 +177,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.Layer.CornerRadius = radius;
+            PlatformView.Layer.MasksToBounds = true;
 #elif __ANDROID__
             PlatformView.Background = GetRoundedDrawable(PlatformView.Context, PlatformView.Background, radius);
             PlatformView.Invalidate();
@@ -277,6 +282,59 @@ namespace Qoden.UI.Wrappers
             return drawable;
         }
 #endif
+
+        public void SetupGradient(
+            RGB[] gradientColors,
+            PointF startPoint,
+            PointF endPoint,
+            float[] locations)
+        {
+#if __IOS__
+            var gradientLayer = new CAGradientLayer();
+
+            gradientLayer.Frame = PlatformView.Layer.Bounds;
+
+            gradientLayer.Colors = gradientColors.Select(color => color.ToColor().CGColor).ToArray();
+            gradientLayer.StartPoint = new CGPoint(startPoint.X, startPoint.Y);
+            gradientLayer.EndPoint = new CGPoint(endPoint.X, endPoint.Y);
+            gradientLayer.Locations = locations.Select(number => new NSNumber(number)).ToArray();
+
+            var existingGradientLayer = PlatformView.Layer.Sublayers?.FirstOrDefault(layer => layer is CAGradientLayer);
+            if(existingGradientLayer == null)
+            {
+                PlatformView.Layer.InsertSublayer(gradientLayer, 0);   
+            }
+            else 
+            {
+                if(existingGradientLayer.Delegate is ObserverDisposingDelegate observerDisposer)
+                {
+                    observerDisposer.DisposeObserver();
+                    existingGradientLayer.Delegate = null;
+                }
+                PlatformView.Layer.ReplaceSublayer(existingGradientLayer, gradientLayer);
+            }
+            var superlayer = PlatformView.Layer;
+            var disposable = superlayer.AddObserver("Bounds", (NSKeyValueObservingOptions)0, (@event) =>
+            {
+                gradientLayer.Frame = superlayer.Bounds;
+            });
+
+            gradientLayer.Delegate = new ObserverDisposingDelegate(disposable);
+#elif __ANDROID__
+            var shaderFactory = new GradientShaderFactory(
+                locations,
+                startPoint,
+                endPoint,
+                gradientColors);
+
+            var paintDrawable = new PaintDrawable();
+            paintDrawable.Shape = new RectShape();
+            paintDrawable.SetShaderFactory(shaderFactory);
+
+            PlatformView.Background = paintDrawable;
+#endif
+        }
+
 
         public bool Enabled
         {

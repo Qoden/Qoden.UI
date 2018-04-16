@@ -76,6 +76,7 @@
     <Compile Include="src\IDetachedController.cs" />
     <Compile Include="src\QodenScrollView.cs" />
     <Compile Include="src\ImageFactory.cs" />
+    <Compile Include="src\Graphics\GradientShaderFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -93,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{319B9DC0-FFC0-4DB9-AA0C-42175CE7C5A6}</Project>
+      <Project>{B75FA338-82E0-45B4-866F-BD8EA420C6E6}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="26.0.2" />
