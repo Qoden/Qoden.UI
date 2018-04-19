@@ -2,6 +2,7 @@
 using Qoden.Binding;
 #if __IOS__
 using Foundation;
+using UIKit;
 using PlatformTextField = UIKit.UITextField;
 #endif
 #if __ANDROID__
@@ -44,10 +45,22 @@ namespace Qoden.UI.Wrappers
         public void SetHint(string value)
         {
 #if __IOS__
-            PlatformView.Placeholder = value;
+            //Set to attributedPlaceholder for color to save
+            var outRange = new NSRange();
+            PlatformView.AttributedPlaceholder = new NSAttributedString(value, null, (UIColor)PlatformView.AttributedPlaceholder?.GetAttribute(UIStringAttributeKey.ForegroundColor, 0, out outRange));
 #endif
 #if __ANDROID__
             PlatformView.Hint = value;
+#endif
+        }
+
+        public void SetHintColor(RGB color)
+        {
+#if __IOS__
+            PlatformView.AttributedPlaceholder = new NSAttributedString(PlatformView.Placeholder ?? "", null, color.ToColor());
+#endif
+#if __ANDROID__
+            PlatformView.SetHintTextColor(color.ToColor());
 #endif
         }
 
@@ -92,7 +105,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
 
-        public IProperty<string> TextProperty() 
+        public IProperty<string> TextProperty()
         {
             return PlatformView.TextProperty();
         }
