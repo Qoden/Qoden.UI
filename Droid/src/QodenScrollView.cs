@@ -64,7 +64,8 @@ namespace Qoden.UI
             protected override void OnLayout(LayoutBuilder layout)
             {
                 base.OnLayout(layout);
-                LayoutAction(layout);
+                var size = LayoutAction(layout);
+                layout.SetPreferredHeight(size.Height);
             }
         }
     }
