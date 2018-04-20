@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
@@ -69,6 +72,59 @@ namespace Qoden.UI
         {
             get => _view.Value;
             set => _view.Value = value;
+        }
+
+        public string Title
+        {
+            get => Activity?.Title;
+            set => Activity.Title = value;
+        }
+
+        List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
+        public List<MenuItemInfo> MenuItems 
+        {
+            private get => menuItems;
+            set
+            {
+                menuItems = value;
+                HasOptionsMenu = menuItems.Count > 0;
+                Activity.InvalidateOptionsMenu();
+            }
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            base.OnCreateOptionsMenu(menu, inflater);
+            foreach(var itemInfo in MenuItems)
+            {
+                var item = menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                item.SetShowAsAction(ShowAsAction.IfRoom);
+                item.SetIcon(itemInfo.Icon);
+            }
+        }
+
+        public override void OnPrepareOptionsMenu(IMenu menu)
+        {
+            base.OnPrepareOptionsMenu(menu);
+            foreach (var itemInfo in MenuItems)
+            {
+                var item = menu.FindItem(itemInfo.Id) ?? menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                item.SetIcon(itemInfo.Icon);
+                item.SetTitle(itemInfo.Title);
+                item.SetShowAsAction(ShowAsAction.IfRoom);
+            }
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            var itemInfo = MenuItems.Find(info => info.Id == item.ItemId);
+            var command = itemInfo.Command;
+            if(command != null) 
+            {
+                command.Execute();
+                return true;
+            }
+            return base.OnOptionsItemSelected(item);
         }
 
         ChildViewControllersList _childControllers;
@@ -177,5 +233,13 @@ namespace Qoden.UI
             }
             base.View = (T)Activator.CreateInstance(typeof(T), Context);
         }
+    }
+
+    public struct MenuItemInfo
+    {
+        public string Title { get; set; }
+        public Drawable Icon { get; set; }
+        public int Id { get; set; }
+        public Command Command { get; set; }
     }
 }
