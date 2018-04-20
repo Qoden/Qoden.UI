@@ -121,6 +121,15 @@ namespace Qoden.UI
         }
 
         internal IViewModelStore ViewModelStore = new ViewModelStore();
+
+        public bool ToolbarVisible
+        {
+            get => !NavigationController?.NavigationBarHidden ?? false;
+            set
+            {
+                NavigationController.SetNavigationBarHidden(!value, true);
+            }
+        }
 	}
 	
     public class QodenController<T> : QodenController where T : UIView, new()

@@ -5,6 +5,7 @@ using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
+using Android.Support.V7.App;
 using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
@@ -125,6 +126,28 @@ namespace Qoden.UI
                 return true;
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        public bool ToolbarVisible
+        {
+            get => ((AppCompatActivity)Activity).SupportActionBar?.IsShowing ?? false;
+            set
+            {
+                if(Activity is AppCompatActivity compatActivity)
+                {
+                    if (value && !ToolbarVisible)
+                    {
+                        compatActivity.SupportActionBar.Show();
+                    }
+                    else if (!value && ToolbarVisible)
+                    {
+                        compatActivity.SupportActionBar.Hide();
+                    }    
+                } else if(Activity is QodenActivity qodenActivity)
+                {
+                    qodenActivity.ToolbarVisible = value;
+                }
+            }
         }
 
         ChildViewControllersList _childControllers;
