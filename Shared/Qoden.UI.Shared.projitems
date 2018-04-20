@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)QodenTableViewCell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\Switch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\VisibilityChangeEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Layout\" />
