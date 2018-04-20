@@ -127,7 +127,10 @@ namespace Qoden.UI
             get => !NavigationController?.NavigationBarHidden ?? false;
             set
             {
-                NavigationController.SetNavigationBarHidden(!value, true);
+                if (NavigationController != null)
+                {
+                    NavigationController.SetNavigationBarHidden(!value, true);
+                }
             }
         }
 	}
