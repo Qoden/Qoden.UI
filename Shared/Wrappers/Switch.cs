@@ -44,6 +44,8 @@ namespace Qoden.UI.Wrappers
             }
         }
 
+        public Binding.IProperty<bool> CheckedProperty { get => PlatformView.CheckedProperty(); }
+
 #if __IOS__
         RGB checkedThumbColor, uncheckedThumbColor;
         EventHandler toggleHandler;

@@ -104,6 +104,7 @@
     <Compile Include="src\Bindings\UIViewClickEventSource.cs" />
     <Compile Include="src\UIViewControllerExtensions.cs" />
     <Compile Include="src\ObserverDisposingDelegate.cs" />
+    <Compile Include="src\Bindings\UISwitchBindings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />
