@@ -116,6 +116,7 @@ namespace Qoden.UI
 	        {
 		        childController = factory();
 		        _childControllers[key] = childController;
+                AddChildViewController(childController);
 	        }
 	        return (TController)childController;
         }
