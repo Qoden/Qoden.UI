@@ -1,10 +1,9 @@
 ﻿using System;
-using Android.App;
 using Android.Content;
 using Android.Content.Res;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Util;
+using Android.Support.V7.Widget;
 using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
@@ -13,6 +12,8 @@ namespace Qoden.UI
 {
     public abstract class QodenActivity : AppCompatActivity, IControllerHost, IViewHost
     {
+        public Toolbar Toolbar { get; set; }
+
         public ILogger Logger { get; set; }
         
         ViewHolder _view;
@@ -49,9 +50,9 @@ namespace Qoden.UI
             ChildControllers = new ChildViewControllersList(this, SupportFragmentManager);
             AddContentView(View, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
 
-            var toolbar = new Android.Support.V7.Widget.Toolbar(this);
-            AddContentView(toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, GetDefaultToolbarHeight(Theme)));
-            SetSupportActionBar(toolbar);
+            Toolbar = new Toolbar(this);
+            AddContentView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, GetDefaultToolbarHeight(Theme)));
+            SetSupportActionBar(Toolbar);
 
             ViewDidLoad();
         }
