@@ -122,18 +122,17 @@ namespace Qoden.UI
 	        return (TController)childController;
         }
 
-        List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
         public List<MenuItemInfo> MenuItems
         {
-            private get => menuItems;
             set
             {
-                menuItems = value;
+                var leftButtons = new List<UIBarButtonItem>();
                 var rightButtons = new List<UIBarButtonItem>();
-                foreach(var item in menuItems)
+                foreach(var item in value)
                 {
                     // todo: setup correctly. title, command etc...
-                    rightButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
+                    var sideButtons = item.Side == Side.Left ? leftButtons : rightButtons;
+                    sideButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
                 }
                 NavigationItem.SetRightBarButtonItems(rightButtons.ToArray(), true);
             }
