@@ -101,4 +101,12 @@ namespace Qoden.UI.Wrappers
 
         public static ActionBar AsActionBar(this PlatformBar bar) => new ActionBar() { PlatformView = bar };
     }
+
+    public struct MenuItemInfo
+    {
+        public string Title { get; set; }
+        public Image Icon { get; set; }
+        public int Id { get; set; }
+        public Binding.Command Command { get; set; }
+    }
 }

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
+using View = Android.Views.View;
 using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
+using Qoden.UI.Wrappers;
 using Qoden.Validation;
 
 namespace Qoden.UI
@@ -256,13 +257,5 @@ namespace Qoden.UI
             }
             base.View = (T)Activator.CreateInstance(typeof(T), Context);
         }
-    }
-
-    public struct MenuItemInfo
-    {
-        public string Title { get; set; }
-        public Drawable Icon { get; set; }
-        public int Id { get; set; }
-        public Command Command { get; set; }
     }
 }

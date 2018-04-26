@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Foundation;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
+using Qoden.UI.Wrappers;
 using UIKit;
 
 namespace Qoden.UI
@@ -119,6 +120,23 @@ namespace Qoden.UI
                 AddChildViewController(childController);
 	        }
 	        return (TController)childController;
+        }
+
+        List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
+        public List<MenuItemInfo> MenuItems
+        {
+            private get => menuItems;
+            set
+            {
+                menuItems = value;
+                var rightButtons = new List<UIBarButtonItem>();
+                foreach(var item in menuItems)
+                {
+                    // todo: setup correctly. title, command etc...
+                    rightButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
+                }
+                NavigationItem.SetRightBarButtonItems(rightButtons.ToArray(), true);
+            }
         }
 
         internal IViewModelStore ViewModelStore = new ViewModelStore();
