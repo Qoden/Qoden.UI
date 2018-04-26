@@ -37,7 +37,7 @@ namespace Qoden.UI.Wrappers
             {
 #if __IOS__
                 PlatformView.On = value;
-                PlatformView.ThumbTintColor = value ? CheckedThumbColor.ToColor() : UncheckedThumbColor.ToColor();
+                PlatformView.ThumbTintColor = value ? CheckedThumbColor?.ToColor() : UncheckedThumbColor?.ToColor();
 #elif __ANDROID__
                 PlatformView.Checked = value;
 #endif
@@ -47,10 +47,10 @@ namespace Qoden.UI.Wrappers
         public Binding.IProperty<bool> CheckedProperty { get => PlatformView.CheckedProperty(); }
 
 #if __IOS__
-        RGB checkedThumbColor, uncheckedThumbColor;
+        RGB? checkedThumbColor, uncheckedThumbColor;
         EventHandler toggleHandler;
 
-        RGB CheckedThumbColor
+        RGB? CheckedThumbColor
         {
             get => checkedThumbColor;
             set
@@ -58,13 +58,13 @@ namespace Qoden.UI.Wrappers
                 checkedThumbColor = value;
                 if (Checked)
                 {
-                    PlatformView.ThumbTintColor = checkedThumbColor.ToColor();
+                    PlatformView.ThumbTintColor = checkedThumbColor?.ToColor();
                 }
                 RefreshToggleHandler();
             }
         }
 
-        RGB UncheckedThumbColor
+        RGB? UncheckedThumbColor
         {
             get => uncheckedThumbColor;
             set
@@ -72,7 +72,7 @@ namespace Qoden.UI.Wrappers
                 uncheckedThumbColor = value;
                 if (!Checked)
                 {
-                    PlatformView.ThumbTintColor = uncheckedThumbColor.ToColor();
+                    PlatformView.ThumbTintColor = uncheckedThumbColor?.ToColor();
                 }
                 RefreshToggleHandler();
             }
@@ -94,7 +94,7 @@ namespace Qoden.UI.Wrappers
                 // https://stackoverflow.com/questions/47760418/animation-between-changes-of-on-off-state-of-uiswitch-broken-due-to-change-of-th
                 // N.Shalin 12.04
                 await System.Threading.Tasks.Task.Delay(100);
-                @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor.ToColor() : @switch.UncheckedThumbColor.ToColor();
+                @switch.PlatformView.ThumbTintColor = @switch.Checked ? @switch.CheckedThumbColor?.ToColor() : @switch.UncheckedThumbColor?.ToColor();
             };
             platformView.AddTarget(toggleHandler, UIKit.UIControlEvent.ValueChanged);
         }
