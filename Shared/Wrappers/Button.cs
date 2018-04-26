@@ -1,6 +1,5 @@
 ﻿using System;
 using Qoden.Binding;
-
 #if __IOS__
 using UIKit;
 using Foundation;
@@ -70,9 +69,17 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             PlatformView.TitleLabel.TextAlignment = alignment.ToUITextAlignment();
-#endif
-#if __ANDROID__
+#elif __ANDROID__
             PlatformView.Gravity = alignment.ToGravityFlags();
+#endif
+        }
+
+        public void SetImage(Image image)
+        {
+#if __ANDROID__
+            PlatformView.Background = image;
+#elif __IOS__
+            PlatformView.ImageView.Image = image;
 #endif
         }
 
