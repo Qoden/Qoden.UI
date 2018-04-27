@@ -77,6 +77,7 @@
     <Compile Include="src\QodenScrollView.cs" />
     <Compile Include="src\ImageFactory.cs" />
     <Compile Include="src\Graphics\GradientShaderFactory.cs" />
+    <Compile Include="src\View\ActivityIndicator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

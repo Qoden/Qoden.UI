@@ -105,6 +105,7 @@
     <Compile Include="src\UIViewControllerExtensions.cs" />
     <Compile Include="src\ObserverDisposingDelegate.cs" />
     <Compile Include="src\Bindings\UISwitchBindings.cs" />
+    <Compile Include="src\View\ActivityIndicator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Qoden.UI.iOS.csproj" />
