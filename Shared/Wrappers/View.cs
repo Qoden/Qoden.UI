@@ -214,9 +214,6 @@ namespace Qoden.UI.Wrappers
                         rippleDrawable.SetDrawableByLayerId(Android.Resource.Id.Mask, maskDrawable);
                     }
                     break;
-                case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
-                    break;
                 case ColorDrawable colorDrawable:
                     {
                         var contentDrawable = new PaintDrawable(colorDrawable.Color);
@@ -236,6 +233,12 @@ namespace Qoden.UI.Wrappers
                     break;
                 default:
                     {
+                        if(Android.OS.Build.VERSION.SdkInt > Android.OS.BuildVersionCodes.LollipopMr1 && // Drawablerapper added in api 22
+                           drawable is DrawableWrapper drawableWrapper)
+                        {
+                            drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
+                            break;   
+                        }
                         var contentDrawable = new PaintDrawable();
                         contentDrawable.SetCornerRadius(radius);
                         drawable = contentDrawable;
