@@ -79,7 +79,7 @@ namespace Qoden.UI.Wrappers
 #if __ANDROID__
             PlatformView.Background = image;
 #elif __IOS__
-            PlatformView.ImageView.Image = image;
+            PlatformView.SetImage(image, UIKit.UIControlState.Normal);
 #endif
         }
 
