@@ -1,4 +1,5 @@
-﻿using UIKit;
+﻿using Qoden.UI.Wrappers;
+using UIKit;
 
 namespace Qoden.UI
 {
@@ -11,7 +12,10 @@ namespace Qoden.UI
         {
             ActivityIndicator = Builder.Add<UIActivityIndicatorView>();
             ActivityIndicator.ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge;
-            ActivityIndicator.StartAnimating();    
+            this.AsView().SetBackgroundColor(new RGB(0, 0, 0, 0));
+            DimBackground = true;
+            ActivityIndicator.StartAnimating();
+            this.AsView().SetVisible(false);
         }
 
         protected override void OnLayout(LayoutBuilder layout)
