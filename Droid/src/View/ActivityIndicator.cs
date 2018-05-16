@@ -1,6 +1,8 @@
 ﻿using Android.Content;
-using Android.Widget;
 using Android.Graphics.Drawables;
+using Android.Support.V4.View;
+using ProgressBar = Android.Widget.ProgressBar;
+using Qoden.UI.Wrappers;
 
 
 namespace Qoden.UI
@@ -13,6 +15,9 @@ namespace Qoden.UI
         {
             ActivityIndicator = Builder.Add<ProgressBar>();
             ActivityIndicator.Indeterminate = true;
+            DimBackground = true;
+            this.AsView().SetVisible(false);
+            ViewCompat.SetElevation(this, 24.Dp());
         }
 
         protected override void OnLayout(LayoutBuilder layout)
