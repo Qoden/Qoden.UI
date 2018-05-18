@@ -135,6 +135,7 @@ namespace Qoden.UI
                     sideButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
                 }
                 NavigationItem.SetRightBarButtonItems(rightButtons.ToArray(), true);
+				NavigationItem.SetLeftBarButtonItems(leftButtons.ToArray(), true);
             }
         }
 
