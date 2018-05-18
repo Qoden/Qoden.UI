@@ -130,9 +130,14 @@ namespace Qoden.UI
                 var rightButtons = new List<UIBarButtonItem>();
                 foreach(var item in value)
                 {
-                    // todo: setup correctly. title, command etc...
+                    // todo: setup correctly. title etc...
                     var sideButtons = item.Side == Side.Left ? leftButtons : rightButtons;
-                    sideButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
+                    var barButtonItem = new UIBarButtonItem(item.Icon, UIBarButtonItemStyle.Plain,
+                        (sender, eventArgs) =>
+                        {
+                            item.Command?.Execute();
+                        });
+                    sideButtons.Add(barButtonItem);	
                 }
                 NavigationItem.SetRightBarButtonItems(rightButtons.ToArray(), true);
 				NavigationItem.SetLeftBarButtonItems(leftButtons.ToArray(), true);
@@ -164,7 +169,7 @@ namespace Qoden.UI
                     NavigationController.SetNavigationBarHidden(!value, true);
                 } else if (PresentingViewController != null)
                 {
-                    PresentingViewController.NavigationController.SetNavigationBarHidden(!value, true);
+                    PresentingViewController.NavigationController?.SetNavigationBarHidden(!value, true);
                 } else if (TabBarController?.PresentingViewController is UITabBarController)
                 {
                     TabBarController.NavigationController?.SetNavigationBarHidden(!value, true);
