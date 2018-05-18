@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Foundation;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
+using Qoden.UI.Wrappers;
 using UIKit;
 
 namespace Qoden.UI
@@ -116,11 +117,60 @@ namespace Qoden.UI
 	        {
 		        childController = factory();
 		        _childControllers[key] = childController;
+                AddChildViewController(childController);
 	        }
 	        return (TController)childController;
         }
 
+        public List<MenuItemInfo> MenuItems
+        {
+            set
+            {
+                var leftButtons = new List<UIBarButtonItem>();
+                var rightButtons = new List<UIBarButtonItem>();
+                foreach(var item in value)
+                {
+                    // todo: setup correctly. title, command etc...
+                    var sideButtons = item.Side == Side.Left ? leftButtons : rightButtons;
+                    sideButtons.Add(new UIBarButtonItem(new UIImageView(item.Icon)));
+                }
+                NavigationItem.SetRightBarButtonItems(rightButtons.ToArray(), true);
+				NavigationItem.SetLeftBarButtonItems(leftButtons.ToArray(), true);
+            }
+        }
+
         internal IViewModelStore ViewModelStore = new ViewModelStore();
+
+        public bool ToolbarVisible
+        {
+            get 
+			{
+				if(NavigationController != null)
+				{
+					return !NavigationController.NavigationBarHidden;
+				} else if(PresentingViewController != null) 
+				{
+					return !PresentingViewController.NavigationController.NavigationBarHidden;
+				} else if (TabBarController?.PresentingViewController is UITabBarController && TabBarController.NavigationController != null)
+                {
+					return !TabBarController.NavigationController.NavigationBarHidden;
+                }
+				return false;
+			}
+            set
+            {
+                if (NavigationController != null)
+                {
+                    NavigationController.SetNavigationBarHidden(!value, true);
+                } else if (PresentingViewController != null)
+                {
+                    PresentingViewController.NavigationController.SetNavigationBarHidden(!value, true);
+                } else if (TabBarController?.PresentingViewController is UITabBarController)
+                {
+                    TabBarController.NavigationController?.SetNavigationBarHidden(!value, true);
+                }
+            }
+        }
 	}
 	
     public class QodenController<T> : QodenController where T : UIView, new()

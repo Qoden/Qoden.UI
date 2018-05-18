@@ -1,8 +1,10 @@
 ﻿using System;
-using Android.App;
 using Android.Content;
+using Android.Content.Res;
 using Android.OS;
 using Android.Support.V7.App;
+using Android.Support.V7.Widget;
+using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
 
@@ -10,6 +12,8 @@ namespace Qoden.UI
 {
     public abstract class QodenActivity : AppCompatActivity, IControllerHost, IViewHost
     {
+        public Toolbar Toolbar { get; set; }
+
         public ILogger Logger { get; set; }
         
         ViewHolder _view;
@@ -36,15 +40,23 @@ namespace Qoden.UI
         protected sealed override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             Logger = CreateLogger();
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("{controller} Created", GetType().Name);
-             _view = new ViewHolder(this);
+
+            _view = new ViewHolder(this);
+
             ChildControllers = new ChildViewControllersList(this, SupportFragmentManager);
-            SetContentView(View);
+            AddContentView(View, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
+
+            Toolbar = new Toolbar(this);
+            AddContentView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, GetDefaultToolbarHeight(Theme)));
+            SetSupportActionBar(Toolbar);
+
             ViewDidLoad();
         }
-        
+
         protected virtual ILogger CreateLogger()
         {
             return Config.LoggerFactory?.CreateLogger(GetType().Name);
@@ -107,6 +119,33 @@ namespace Qoden.UI
         {
             get => _bindings.Value;
             set { _bindings.Value = value; }
+        }
+
+        public bool ToolbarVisible 
+        {
+            get => SupportActionBar?.IsShowing ?? false;
+            set
+            {
+                if(value && !ToolbarVisible) 
+                {
+                    SupportActionBar.Show();
+                } 
+                else if(!value && ToolbarVisible)
+                {
+                    SupportActionBar.Hide();
+                }
+                OnToolbarVisibilityChange?.Invoke(this, new VisibilityChangeEventArgs(value));
+            }
+        }
+
+        public event EventHandler<VisibilityChangeEventArgs> OnToolbarVisibilityChange;
+
+        public static int GetDefaultToolbarHeight(Resources.Theme theme)
+        {
+            var array = theme.ObtainStyledAttributes(new int[] { Resource.Attribute.actionBarSize });
+            var height = array.GetLayoutDimension(0, "actionBarSize");
+            array.Recycle();
+            return height;
         }
 
         public ChildViewControllersList ChildControllers { get; private set; }

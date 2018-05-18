@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
+using Android.Support.V7.App;
+using View = Android.Views.View;
 using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
+using Qoden.UI.Wrappers;
 using Qoden.Validation;
 
 namespace Qoden.UI
@@ -69,6 +74,81 @@ namespace Qoden.UI
         {
             get => _view.Value;
             set => _view.Value = value;
+        }
+
+        public string Title
+        {
+            get => Activity?.Title;
+            set => Activity.Title = value;
+        }
+
+        List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
+        public List<MenuItemInfo> MenuItems 
+        {
+            private get => menuItems;
+            set
+            {
+                menuItems = value;
+                HasOptionsMenu = menuItems.Count > 0;
+                Activity.InvalidateOptionsMenu();
+            }
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            base.OnCreateOptionsMenu(menu, inflater);
+            foreach(var itemInfo in MenuItems)
+            {
+                var item = menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                item.SetShowAsAction(ShowAsAction.IfRoom);
+                item.SetIcon(itemInfo.Icon);
+            }
+        }
+
+        public override void OnPrepareOptionsMenu(IMenu menu)
+        {
+            base.OnPrepareOptionsMenu(menu);
+            foreach (var itemInfo in MenuItems)
+            {
+                var item = menu.FindItem(itemInfo.Id) ?? menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                item.SetIcon(itemInfo.Icon);
+                item.SetTitle(itemInfo.Title);
+                item.SetShowAsAction(ShowAsAction.IfRoom);
+            }
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            var itemInfo = MenuItems.Find(info => info.Id == item.ItemId);
+            var command = itemInfo.Command;
+            if(command != null) 
+            {
+                command.Execute();
+                return true;
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
+        public bool ToolbarVisible
+        {
+            get => ((AppCompatActivity)Activity).SupportActionBar?.IsShowing ?? false;
+            set
+            {
+                if(Activity is AppCompatActivity compatActivity)
+                {
+                    if (value && !ToolbarVisible)
+                    {
+                        compatActivity.SupportActionBar.Show();
+                    }
+                    else if (!value && ToolbarVisible)
+                    {
+                        compatActivity.SupportActionBar.Hide();
+                    }    
+                } else if(Activity is QodenActivity qodenActivity)
+                {
+                    qodenActivity.ToolbarVisible = value;
+                }
+            }
         }
 
         ChildViewControllersList _childControllers;
