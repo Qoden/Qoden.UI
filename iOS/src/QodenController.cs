@@ -143,12 +143,31 @@ namespace Qoden.UI
 
         public bool ToolbarVisible
         {
-            get => !NavigationController?.NavigationBarHidden ?? false;
+            get 
+			{
+				if(NavigationController != null)
+				{
+					return !NavigationController.NavigationBarHidden;
+				} else if(PresentingViewController != null) 
+				{
+					return !PresentingViewController.NavigationController.NavigationBarHidden;
+				} else if (TabBarController?.PresentingViewController is UITabBarController && TabBarController.NavigationController != null)
+                {
+					return !TabBarController.NavigationController.NavigationBarHidden;
+                }
+				return false;
+			}
             set
             {
                 if (NavigationController != null)
                 {
                     NavigationController.SetNavigationBarHidden(!value, true);
+                } else if (PresentingViewController != null)
+                {
+                    PresentingViewController.NavigationController.SetNavigationBarHidden(!value, true);
+                } else if (TabBarController?.PresentingViewController is UITabBarController)
+                {
+                    TabBarController.NavigationController?.SetNavigationBarHidden(!value, true);
                 }
             }
         }
