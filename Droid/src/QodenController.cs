@@ -202,9 +202,11 @@ namespace Qoden.UI
             if (FragmentManager.BackStackEntryCount > 0)
             {
                 var id = FragmentManager.GetBackStackEntryAt(0).Id;
-                FragmentManager.PopBackStackImmediate(id, FragmentManager.PopBackStackInclusive);
+                FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
             }
-            Push(controller);
+            FragmentManager.BeginTransaction()
+                .Replace(Id, controller)
+                .Commit();
         }
 
         public void Push(QodenController controller)
