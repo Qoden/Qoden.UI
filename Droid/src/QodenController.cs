@@ -134,7 +134,11 @@ namespace Qoden.UI
             get => ((AppCompatActivity)Activity).SupportActionBar?.IsShowing ?? false;
             set
             {
-                if(Activity is AppCompatActivity compatActivity)
+                if(Activity is QodenActivity qodenActivity)
+                {
+                    qodenActivity.ToolbarVisible = value;
+                }
+                else if(Activity is AppCompatActivity compatActivity)
                 {
                     if (value && !ToolbarVisible)
                     {
@@ -143,10 +147,7 @@ namespace Qoden.UI
                     else if (!value && ToolbarVisible)
                     {
                         compatActivity.SupportActionBar.Hide();
-                    }    
-                } else if(Activity is QodenActivity qodenActivity)
-                {
-                    qodenActivity.ToolbarVisible = value;
+                    }
                 }
             }
         }
