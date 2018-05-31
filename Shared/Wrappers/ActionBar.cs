@@ -49,7 +49,10 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             PlatformView.TintColor = color.ToColor();
 #elif __ANDROID__
-            PlatformView.ForegroundTintList = Android.Content.Res.ColorStateList.ValueOf(color.ToColor());
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)
+            {
+                PlatformView.ForegroundTintList = Android.Content.Res.ColorStateList.ValueOf(color.ToColor());
+            }
 #endif
         }
 
