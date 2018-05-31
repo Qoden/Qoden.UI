@@ -45,7 +45,7 @@ namespace Qoden.UI
         {
             Views.Add(view);
 #if __ANDROID__
-            view.Id = Views.Count;
+            view.Id = Android.Views.View.GenerateViewId();
 #endif
             Parent.AsView().AddSubview(view);
             return view;
