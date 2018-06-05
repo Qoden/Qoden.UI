@@ -1,3 +1,6 @@
 [submodule "Build"]
 	path = Build
 	url = https://github.com/Qoden/Build.git
+[submodule "Validation"]
+	path = Validation
+	url = git@github.com:Qoden/Qoden.Validation.git

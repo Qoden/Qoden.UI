@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{97AA675C
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Qoden.UI.Shared", "Shared\Qoden.UI.Shared.shproj", "{D5300C65-55EE-4881-90C3-E58F21190F75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qoden.Validation", "Validation\Validation\Qoden.Validation.csproj", "{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,5 +47,9 @@ Global
 		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85A7A1D2-B325-4131-9EB1-9072ECD2BE3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

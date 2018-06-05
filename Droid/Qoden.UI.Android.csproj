@@ -95,18 +95,21 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Binding\Qoden.Binding.csproj">
-      <Project>{B75FA338-82E0-45B4-866F-BD8EA420C6E6}</Project>
+      <Project>{275AD67F-E85A-4BA9-AD48-08247E5E06DC}</Project>
       <Name>Qoden.Binding</Name>
     </ProjectReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="26.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="26.0.2" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="26.0.2" />
     <PackageReference Include="Qoden.Util" Version="$(QodenUtilVersion)" />
-    <PackageReference Include="Qoden.Validation" Version="$(QodenValidationVersion)" />
     <PackageReference Include="System.ComponentModel" Version="$(ComponentModelVersion)" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="$(ReflectionVersion)" />
     <PackageReference Include="System.Drawing.Primitives" Version="$(DrawingVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(LoggingVersion)" />
+    <ProjectReference Include="..\Validation\Validation\Qoden.Validation.csproj">
+      <Project>{CFF22B71-889A-48D1-B9E9-8EAB6069BD9E}</Project>
+      <Name>Qoden.Validation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
