@@ -1,10 +1,12 @@
 ﻿using System;
 using Qoden.Binding;
 #if __IOS__
+using UIKit;
 using Foundation;
 using PlatformLabel = UIKit.UILabel;
 #endif
 #if __ANDROID__
+using Android.Graphics;
 using PlatformLabel = Android.Widget.TextView;
 #endif
 
@@ -37,6 +39,16 @@ namespace Qoden.UI.Wrappers
 #endif
 #if __ANDROID__
             PlatformView.SetTextColor(color.ToColor());
+#endif
+        }
+        
+        public void SetUnderline()
+        {
+#if __IOS__
+            var underlineAttribute = new UIStringAttributes {UnderlineStyle = NSUnderlineStyle.Single};
+            PlatformView.AttributedText = new NSAttributedString(Text, underlineAttribute);
+#elif __ANDROID__
+            PlatformView.PaintFlags |= PaintFlags.UnderlineText;
 #endif
         }
 
