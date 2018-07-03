@@ -57,7 +57,9 @@ namespace Qoden.UI.Wrappers
         public void SetHintColor(RGB color)
         {
 #if __IOS__
-            PlatformView.AttributedPlaceholder = new NSAttributedString(PlatformView.Placeholder ?? "", null, color.ToColor());
+        	// If you set empty string for text in case Placeholder == null, then AttributedPlaceholder will be null,
+        	// and you cannot retreive the color later.
+            PlatformView.AttributedPlaceholder = new NSAttributedString(PlatformView.Placeholder ?? " ", null, color.ToColor());
 #endif
 #if __ANDROID__
             PlatformView.SetHintTextColor(color.ToColor());
