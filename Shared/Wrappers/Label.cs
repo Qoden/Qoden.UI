@@ -46,7 +46,7 @@ namespace Qoden.UI.Wrappers
         {
 #if __IOS__
             var underlineAttribute = new UIStringAttributes {UnderlineStyle = NSUnderlineStyle.Single};
-            PlatformView.AttributedText = new NSAttributedString(Text, underlineAttribute);
+            PlatformView.AttributedText = new NSAttributedString(Text ?? "", underlineAttribute);
 #elif __ANDROID__
             PlatformView.PaintFlags |= PaintFlags.UnderlineText;
 #endif
