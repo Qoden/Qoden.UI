@@ -5,8 +5,7 @@ namespace Qoden.UI
 {
     public class ActivityIndicatorView : QodenView
     {
-        UIActivityIndicatorView ActivityIndicator { get; }
-
+        public UIActivityIndicatorView ActivityIndicator { get; }
 
         public ActivityIndicatorView()
         {
@@ -39,7 +38,7 @@ namespace Qoden.UI
                 if (_dimBackground != value)
                 {
                     _dimBackground = value;
-                    BackgroundColor = BackgroundColor.ColorWithAlpha(_dimBackground ? 0.4f : 1);
+                    BackgroundColor = BackgroundColor.ColorWithAlpha(_dimBackground ? 0.4f : 0);
                 }
             }
         }
