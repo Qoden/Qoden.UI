@@ -9,9 +9,10 @@ using Android.Views;
 
 namespace Qoden.UI
 {
+    [Flags]
     public enum QodenTextAlignment
     {
-        Left, Center, Right
+        Left = 1, Center = 2, Right = 4
     }
 
     public static class TextAlignmentExtensions
@@ -28,6 +29,10 @@ namespace Qoden.UI
                     return UITextAlignment.Left;
                 case QodenTextAlignment.Right:
                     return UITextAlignment.Right;
+                case QodenTextAlignment.Center | QodenTextAlignment.Right:
+                    return UITextAlignment.Right;
+                case QodenTextAlignment.Center | QodenTextAlignment.Left:
+                    return UITextAlignment.Left;
                 default:
                     throw new ArgumentException(nameof(alignment));
             }
@@ -45,6 +50,10 @@ namespace Qoden.UI
                     return GravityFlags.Left;
                 case QodenTextAlignment.Right:
                     return GravityFlags.Right;
+                case QodenTextAlignment.Center | QodenTextAlignment.Right:
+                    return GravityFlags.Center | GravityFlags.Right;
+                case QodenTextAlignment.Center | QodenTextAlignment.Left:
+                    return GravityFlags.Center | GravityFlags.Left;
                 default:
                     throw new ArgumentException(nameof(alignment));
             }
