@@ -9,7 +9,7 @@ namespace Qoden.UI
 {
     public class ActivityIndicatorView : QodenView
     {
-        ProgressBar ActivityIndicator { get; }
+        public ProgressBar ActivityIndicator { get; }
 
         public ActivityIndicatorView(Context context) : base(context)
         {
@@ -23,7 +23,6 @@ namespace Qoden.UI
         protected override void OnLayout(LayoutBuilder layout)
         {
             base.OnLayout(layout);
-            layout.Padding = new EdgeInsets(0, 20.Dp(), 0, 20.Dp());
             var indicator = layout.View(ActivityIndicator)
                                   .CenterHorizontally()
                                   .CenterVertically()
@@ -48,7 +47,7 @@ namespace Qoden.UI
                         case ColorDrawable colorDrawable: bgColor = colorDrawable.Color; break;
                         default: bgColor = Android.Graphics.Color.Black; break;
                     }
-                    bgColor.A = _dimBackground ? (byte)105 : (byte)255;
+                    bgColor.A = _dimBackground ? (byte)105 : (byte)0;
                     var bg = new ColorDrawable(bgColor);
                     Background = bg;
                 }

@@ -20,7 +20,6 @@ namespace Qoden.UI
         protected override void OnLayout(LayoutBuilder layout)
         {
             base.OnLayout(layout);
-            layout.Padding = new EdgeInsets(0, 20.Dp(), 0, 20.Dp());
             var indicator = layout.View(ActivityIndicator)
                                   .CenterHorizontally()
                                   .CenterVertically()
