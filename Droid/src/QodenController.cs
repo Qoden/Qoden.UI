@@ -83,12 +83,36 @@ namespace Qoden.UI
         }
 
         List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
-        public List<MenuItemInfo> MenuItems 
+        public List<MenuItemInfo> MenuItems
         {
             private get => menuItems;
             set
             {
                 menuItems = value;
+
+                //If Side is left, then change Id to Android.Resource.Id.Home, to use it later as a HomeButton
+                for (var i = 0; i < menuItems.Count; i++)
+                {
+                    var menuItemInfo = menuItems[i];
+                    if (menuItemInfo.Side == Side.Left)
+                    {
+                        //Creating a new MenuItemInfo instead of changing Id is needed because MenuItemInfo is a struct
+                        menuItems[i] = new MenuItemInfo
+                        {
+                            Id = Android.Resource.Id.Home,
+                            Command = menuItemInfo.Command,
+                            Icon = menuItemInfo.Icon,
+                            Title = menuItemInfo.Title,
+                            Side = Side.Left
+                        };
+                    }
+                }
+
+                if (menuItems.All(menuItem => menuItem.Side != Side.Left))
+                {
+                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+                }
+
                 HasOptionsMenu = menuItems.Count > 0;
                 Activity.InvalidateOptionsMenu();
             }
@@ -97,18 +121,27 @@ namespace Qoden.UI
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
-            foreach(var itemInfo in MenuItems)
+
+            foreach (var itemInfo in MenuItems)
             {
-                var item = menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
-                item.SetShowAsAction(ShowAsAction.IfRoom);
-                item.SetIcon(itemInfo.Icon);
+                if (itemInfo.Side == Side.Left)
+                {
+                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+                    ((AppCompatActivity) Activity).SupportActionBar.SetHomeAsUpIndicator(itemInfo.Icon);
+                }
+                else
+                {
+                    var item = menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                    item.SetShowAsAction(ShowAsAction.IfRoom);
+                    item.SetIcon(itemInfo.Icon);
+                }
             }
         }
 
         public override void OnPrepareOptionsMenu(IMenu menu)
         {
             base.OnPrepareOptionsMenu(menu);
-            foreach (var itemInfo in MenuItems)
+            foreach (var itemInfo in MenuItems.Where(menuItem => menuItem.Side == Side.Right))
             {
                 var item = menu.FindItem(itemInfo.Id) ?? menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
                 item.SetIcon(itemInfo.Icon);
