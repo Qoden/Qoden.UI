@@ -6,7 +6,9 @@ using Foundation;
 using PlatformButton = UIKit.UIButton;
 #endif
 #if __ANDROID__
+using Android.Graphics.Drawables;
 using PlatformButton = Android.Widget.Button;
+using Android.Graphics;
 #endif
 
 namespace Qoden.UI.Wrappers
@@ -103,6 +105,8 @@ namespace Qoden.UI.Wrappers
 #if __ANDROID__
             var button = new Button() { PlatformView = new PlatformButton(b.Context) };
             button.PlatformView.SetAllCaps(false);
+            button.PlatformView.SetPadding(0, 0, 0, 0);
+            button.PlatformView.Background = new ColorDrawable(Color.Transparent);
 #endif
             if (addSubview) b.AddSubview(button.PlatformView);
             return button;
