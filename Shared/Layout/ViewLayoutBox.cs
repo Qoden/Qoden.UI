@@ -30,8 +30,8 @@ namespace Qoden.UI
 
         private SizeF BoundingSize(float? maxWidth = null, float? maxHeight = null)
         {
-            var w = maxWidth ?? OuterBounds.Width;
-            var h = maxHeight ?? OuterBounds.Height;
+            var w = maxWidth ?? OuterBounds.Width - MarginLeft - MarginRight;
+            var h = maxHeight ?? OuterBounds.Height - MarginTop - MarginBottom;
             return new SizeF(w, h);
         }
 
