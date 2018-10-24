@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Qoden.UI.Wrappers;
 using Qoden.Util;
 using Qoden.Validation;
 
@@ -62,6 +63,28 @@ namespace Qoden.UI
         public IViewLayoutBox Add(PlatformView v)
         {
             return Add(new LayoutParams(v));
+        }
+
+        public void AddLinearLayout(LinearLayoutDirection layoutDirection, ViewBuilder builder, Action<LinearLayoutBuilder> linearLayout)
+        {
+            if (layoutDirection == LinearLayoutDirection.RightLeft || layoutDirection == LinearLayoutDirection.BottomTop)
+            {
+                var message = $"Layout direction {layoutDirection} is not compatible with current method";
+                throw new ArgumentException(message);
+            }
+
+            //calculate linearLayout size
+            LinearLayoutBuilder b = _layoutBuilder.LinearLayout(layoutDirection, null, _layoutBuilder.PaddedOuterBounds);
+            linearLayout(b);
+
+            //create empty view to pass to current linearLayout for allocate position for new linear layout
+            View view = builder.View();
+            view.SetFrame(b.LayoutBounds);
+            var viewBox = this.Add(view);
+
+            //set linearLayout and its elements to calculated position
+            b = _layoutBuilder.LinearLayout(layoutDirection, null, viewBox.Frame);
+            linearLayout(b);
         }
 
         public IViewLayoutBox Add(LayoutParams layoutParams)
