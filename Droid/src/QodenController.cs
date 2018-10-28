@@ -247,7 +247,7 @@ namespace Qoden.UI
         {
             FragmentManager.BeginTransaction()
                            .Replace(Id, controller)
-                           .AddToBackStack(controller.Tag)
+                           .AddToBackStack(controller.GetType().Name)
                            .Commit();
         }
 
