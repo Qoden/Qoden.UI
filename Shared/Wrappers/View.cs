@@ -214,9 +214,6 @@ namespace Qoden.UI.Wrappers
                         rippleDrawable.SetDrawableByLayerId(Android.Resource.Id.Mask, maskDrawable);
                     }
                     break;
-                case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
-                    break;
                 case ColorDrawable colorDrawable:
                     {
                         var contentDrawable = new PaintDrawable(colorDrawable.Color);
@@ -236,6 +233,12 @@ namespace Qoden.UI.Wrappers
                     break;
                 default:
                     {
+                        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M &&
+                            drawable is DrawableWrapper drawableWrapper)
+                        {
+                            drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
+                            break;
+                        }
                         var contentDrawable = new PaintDrawable();
                         contentDrawable.SetCornerRadius(radius);
                         drawable = contentDrawable;
@@ -268,13 +271,17 @@ namespace Qoden.UI.Wrappers
                 case RippleDrawable rippleDrawable:
                     rippleDrawable.SetTint(color.ToArgb());
                     break;
-                case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetColoredDrawable(drawableWrapper.Drawable, color);
-                    break;
                 case ColorDrawable colorDrawable:
                     colorDrawable.Color = color;
                     break;
                 default:
+                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M &&
+                        drawable is DrawableWrapper drawableWrapper)
+                    {
+                        drawableWrapper.Drawable = GetColoredDrawable(drawableWrapper.Drawable, color);
+                        break;
+                    }
+
                     var compatDrawable = DrawableCompat.Wrap(drawable);
                     DrawableCompat.SetTint(compatDrawable, color.ToArgb());
                     break;
