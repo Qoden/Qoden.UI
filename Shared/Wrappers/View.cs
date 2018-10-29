@@ -203,9 +203,10 @@ namespace Qoden.UI.Wrappers
                 case RippleDrawable rippleDrawable:
                     {
                         var contentDrawable = rippleDrawable.GetDrawable(0);
+                        var contentDrawableId = rippleDrawable.GetId(0);
                         contentDrawable = GetRoundedDrawable(context, contentDrawable, radius);
 
-                        rippleDrawable.SetDrawable(0, contentDrawable);
+                        rippleDrawable.SetDrawableByLayerId(contentDrawableId, contentDrawable);
 
                         var radii = new float[8];
                         Array.Fill(radii, radius);
@@ -213,9 +214,6 @@ namespace Qoden.UI.Wrappers
                         var maskDrawable = new ShapeDrawable(maskShape);
                         rippleDrawable.SetDrawableByLayerId(Android.Resource.Id.Mask, maskDrawable);
                     }
-                    break;
-                case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
                     break;
                 case ColorDrawable colorDrawable:
                     {
@@ -236,6 +234,12 @@ namespace Qoden.UI.Wrappers
                     break;
                 default:
                     {
+                        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M &&
+                            drawable is DrawableWrapper drawableWrapper)
+                        {
+                            drawableWrapper.Drawable = GetRoundedDrawable(context, drawableWrapper.Drawable, radius);
+                            break;
+                        }
                         var contentDrawable = new PaintDrawable();
                         contentDrawable.SetCornerRadius(radius);
                         drawable = contentDrawable;
@@ -268,13 +272,17 @@ namespace Qoden.UI.Wrappers
                 case RippleDrawable rippleDrawable:
                     rippleDrawable.SetTint(color.ToArgb());
                     break;
-                case DrawableWrapper drawableWrapper:
-                    drawableWrapper.Drawable = GetColoredDrawable(drawableWrapper.Drawable, color);
-                    break;
                 case ColorDrawable colorDrawable:
                     colorDrawable.Color = color;
                     break;
                 default:
+                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M &&
+                        drawable is DrawableWrapper drawableWrapper)
+                    {
+                        drawableWrapper.Drawable = GetColoredDrawable(drawableWrapper.Drawable, color);
+                        break;
+                    }
+
                     var compatDrawable = DrawableCompat.Wrap(drawable);
                     DrawableCompat.SetTint(compatDrawable, color.ToArgb());
                     break;
