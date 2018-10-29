@@ -203,9 +203,10 @@ namespace Qoden.UI.Wrappers
                 case RippleDrawable rippleDrawable:
                     {
                         var contentDrawable = rippleDrawable.GetDrawable(0);
+                        var contentDrawableId = rippleDrawable.GetId(0);
                         contentDrawable = GetRoundedDrawable(context, contentDrawable, radius);
 
-                        rippleDrawable.SetDrawable(0, contentDrawable);
+                        rippleDrawable.SetDrawableByLayerId(contentDrawableId, contentDrawable);
 
                         var radii = new float[8];
                         Array.Fill(radii, radius);
