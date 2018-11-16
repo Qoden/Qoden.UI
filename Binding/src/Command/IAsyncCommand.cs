@@ -110,10 +110,10 @@ namespace Qoden.Binding
             return command.Property<T, bool>(nameof(command.IsRunning));
         }
 
-        public static IProperty<bool> ErrorProperty<T>(this T command)
+        public static IProperty<Exception> ErrorProperty<T>(this T command)
             where T : IAsyncCommand
         {
-            return command.Property<T, bool>(nameof(command.Error));
+            return command.Property<T, Exception>(nameof(command.Error));
         }
 
         public static Task WhenFinished(this IAsyncCommand command)
