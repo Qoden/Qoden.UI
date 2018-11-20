@@ -215,6 +215,14 @@ namespace Qoden.UI.Wrappers
                         rippleDrawable.SetDrawableByLayerId(Android.Resource.Id.Mask, maskDrawable);
                     }
                     break;
+                case LayerDrawable layerDrawable:
+                    {
+                        var contentDrawable = layerDrawable.GetDrawable(0);
+                        var contentDrawableId = layerDrawable.GetId(0);
+                        contentDrawable = GetRoundedDrawable(context, contentDrawable, radius);
+                        layerDrawable.SetDrawableByLayerId(contentDrawableId, contentDrawable);
+                    }
+                    break;
                 case ColorDrawable colorDrawable:
                     {
                         var contentDrawable = new PaintDrawable(colorDrawable.Color);
