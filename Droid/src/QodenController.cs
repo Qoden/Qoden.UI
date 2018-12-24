@@ -63,6 +63,7 @@ namespace Qoden.UI
                 Logger.LogInformation("OnViewCreated (ViewDidLoad)");
 
             base.OnViewCreated(view, savedInstanceState);
+            ToolbarVisible = false;
             if (!_view.DidLoad)
             {
                 _view.DidLoad = true;
@@ -76,11 +77,18 @@ namespace Qoden.UI
             set => _view.Value = value;
         }
 
+        private string _title = "";
         public string Title
         {
-            get => Activity?.Title;
-            set => Activity.Title = value;
+            get => _title;
+            set
+            {
+                _title = value;
+                Activity.Title = _title;
+            }
         }
+
+        public Action ConfigureActionBarAction { get; set; }
 
         List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
         public List<MenuItemInfo> MenuItems
@@ -106,11 +114,6 @@ namespace Qoden.UI
                             Side = Side.Left
                         };
                     }
-                }
-
-                if (menuItems.All(menuItem => menuItem.Side != Side.Left))
-                {
-                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
                 }
 
                 HasOptionsMenu = menuItems.Count > 0;
@@ -182,6 +185,13 @@ namespace Qoden.UI
                         compatActivity.SupportActionBar.Hide();
                     }
                 }
+
+                if (ConfigureActionBarAction == null)
+                    ConfigureActionBarAction = () =>
+                    {
+                        ToolbarVisible = true;
+                        Activity.Title = Title ?? "";
+                    };
             }
         }
 
@@ -219,6 +229,7 @@ namespace Qoden.UI
                 Bindings.UpdateTarget();
             }
             ViewWillAppear();
+            ConfigureActionBarAction?.Invoke();
         }
 
         public sealed override void OnPause()
@@ -229,6 +240,12 @@ namespace Qoden.UI
             base.OnPause();
             Bindings.Unbind();
             ViewWillDisappear();
+        }
+
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
         }
 
         public void ClearStackAndPush(QodenController controller)
