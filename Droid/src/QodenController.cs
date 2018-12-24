@@ -157,7 +157,7 @@ namespace Qoden.UI
         {
             var itemInfo = MenuItems.Find(info => info.Id == item.ItemId);
             var command = itemInfo.Command;
-            if(command != null) 
+            if (command != null)
             {
                 command.Execute();
                 return true;
@@ -256,8 +256,8 @@ namespace Qoden.UI
                 FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
             }
             FragmentManager.BeginTransaction()
-                .Replace(Id, controller)
-                .Commit();
+                           .Replace(Id, controller)
+                           .Commit();
         }
 
         public void Push(QodenController controller)
@@ -290,8 +290,7 @@ namespace Qoden.UI
         /// Override this instead on CreateView
         /// </summary>
         public virtual void LoadView()
-        {
-        }
+        { }
     }
 
     public class QodenController<T> : QodenController where T : Android.Views.View
