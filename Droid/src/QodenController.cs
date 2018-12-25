@@ -186,12 +186,14 @@ namespace Qoden.UI
                     }
                 }
 
-                if (ConfigureActionBarAction == null)
+                if (value && ConfigureActionBarAction == null)
                     ConfigureActionBarAction = () =>
                     {
                         ToolbarVisible = true;
                         Activity.Title = Title ?? "";
                     };
+                else if (!value)
+                    ConfigureActionBarAction = null;
             }
         }
 
