@@ -63,7 +63,10 @@ namespace Qoden.UI
                 Logger.LogInformation("OnViewCreated (ViewDidLoad)");
 
             base.OnViewCreated(view, savedInstanceState);
-            ToolbarVisible = false;
+
+            if (ConfigureActionBarAction == null)
+                ToolbarVisible = false;
+
             if (!_view.DidLoad)
             {
                 _view.DidLoad = true;
