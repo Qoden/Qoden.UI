@@ -33,12 +33,12 @@ namespace Qoden.UI.Wrappers
                 };
             }
 #elif __ANDROID__
-            var typeface = TypefaceCollection.Get(font.Name, font.Style);
-            var fontSize = new AbsoluteSizeSpan((int) font.Size.Dp());
+            var typefaceSpan = new CustomTypefaceSpan(TypefaceCollection.Get(font.Name, font.Style));
+            var fontSizeSpan = new AbsoluteSizeSpan((int) font.Size.Dp());
 
             var spannableString = new SpannableString(PlatformView.Title);
-            spannableString.SetSpan(new CustomTypefaceSpan(typeface), 0, spannableString.Length(), 0);
-            spannableString.SetSpan(fontSize, 0, spannableString.Length(), 0);
+            spannableString.SetSpan(typefaceSpan, 0, spannableString.Length(), 0);
+            spannableString.SetSpan(fontSizeSpan, 0, spannableString.Length(), 0);
 
             PlatformView.TitleFormatted = spannableString;
 #endif
@@ -92,7 +92,7 @@ namespace Qoden.UI.Wrappers
     }
     public static class ActionBarExtensions
     {
-        public static ActionBar GetActionBar(this QodenController controller, bool addSubview = true)
+        public static ActionBar GetActionBar(this QodenController controller)
         {
 #if __IOS__
             return controller.NavigationController.NavigationBar.AsActionBar();
