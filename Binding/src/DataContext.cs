@@ -1,10 +1,9 @@
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq.Expressions;
-using Qoden.Validation;
 using Qoden.Util;
-using System.Linq;
+using Qoden.Validation;
 
 namespace Qoden.Binding
 {
@@ -17,21 +16,28 @@ namespace Qoden.Binding
         bool IsValid { get; }
     }
 
+    public interface IDisposeBag : IDisposable
+    {
+        void AddDisposable(IDisposable disposable);
+    }
+    
     /// <summary>
     /// Holds data and objects to be displayed or edited.
     /// </summary>
     /// <remarks>
     /// <see cref="DataContext"/> provides minimal infrastructure for interactive object editing. 
     /// </remarks>
-    public class DataContext : IDataContext, IEditableObject
+    public class DataContext : IDataContext, IEditableObject, IDisposeBag
     {
         private IValidator _validator;        
         private Dictionary<string, object> _originals;
         private readonly IKeyValueCoding _kvc;
+        private readonly List<IDisposable> _disposeBag;
 
         public DataContext()
         {            
             _kvc = KeyValueCoding.Impl(GetType());
+            _disposeBag = new List<IDisposable>();
         }
 
         protected void RememberAndBeginEdit(string key)
@@ -278,6 +284,20 @@ namespace Qoden.Binding
         /// Indicate if <see cref="DataContext"/> has errors in it <see cref="Validator"/>.
         /// </summary>
 		public bool HasErrors => Validator.HasErrors;
+
+        public void AddDisposable(IDisposable disposable)
+        {
+            _disposeBag.Add(disposable);
+        }
+        
+        public void Dispose()
+        {
+            foreach (var disposable in _disposeBag)
+            {
+                disposable?.Dispose();
+            }
+            _disposeBag.Clear();
+        }
     }
 
     public static class DataContextExtensions
