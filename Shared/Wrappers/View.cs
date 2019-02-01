@@ -103,43 +103,40 @@ namespace Qoden.UI.Wrappers
         }
 
 
-        public EdgeInsets Padding
+        public EdgeInsets GetPadding()
         {
 #if __IOS__
-            get
+            if (PlatformView is QodenView) return ((QodenView)PlatformView).Padding;
+            return new EdgeInsets((float)PlatformView.LayoutMargins.Left,
+                              (float)PlatformView.LayoutMargins.Top,
+                              (float)PlatformView.LayoutMargins.Right,
+                              (float)PlatformView.LayoutMargins.Bottom);
+#elif __ANDROID__
+            return new EdgeInsets(PlatformView.PaddingLeft,
+                             PlatformView.PaddingTop,
+                              PlatformView.PaddingRight,
+                              PlatformView.PaddingBottom);
+#endif
+        }
+        public void SetPadding(EdgeInsets paddings)
+        {
+#if __IOS__
+            if (PlatformView is QodenView)
             {
-                if (PlatformView is QodenView) return ((QodenView)PlatformView).Padding;
-                return new EdgeInsets((float)PlatformView.LayoutMargins.Left,
-                                  (float)PlatformView.LayoutMargins.Top,
-                                  (float)PlatformView.LayoutMargins.Right,
-                                  (float)PlatformView.LayoutMargins.Bottom);
+                ((QodenView)PlatformView).Padding = paddings;
             }
-            set
+            else
             {
-                if (PlatformView is QodenView)
-                {
-                    ((QodenView)PlatformView).Padding = value;
-                }
-                else
-                {
-                    PlatformView.LayoutMargins = new UIKit.UIEdgeInsets(value.Left,
-                                                                        value.Top,
-                                                                        value.Right,
-                                                                        value.Bottom);
-                }
+                PlatformView.LayoutMargins = new UIKit.UIEdgeInsets(paddings.Left,
+                                                                    paddings.Top,
+                                                                    paddings.Right,
+                                                                    paddings.Bottom);
             }
 #elif __ANDROID__
-            get => new EdgeInsets(PlatformView.PaddingLeft,
-                                  PlatformView.PaddingTop,
-                                  PlatformView.PaddingRight,
-                                  PlatformView.PaddingBottom);
-            set
-            {
-                PlatformView.SetPadding((int)Math.Round(value.Left),
-                                        (int)Math.Round(value.Top),
-                                        (int)Math.Round(value.Right),
-                                        (int)Math.Round(value.Bottom));
-            }
+            PlatformView.SetPadding((int)Math.Round(paddings.Left),
+                                    (int)Math.Round(paddings.Top),
+                                    (int)Math.Round(paddings.Right),
+                                    (int)Math.Round(paddings.Bottom));
 #endif
         }
 
