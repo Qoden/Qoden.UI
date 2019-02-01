@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewLayoutUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layout\ViewSizing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\ImageButton.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TextField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\ImageView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Wrappers\TableView.cs" />
