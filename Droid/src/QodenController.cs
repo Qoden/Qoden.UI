@@ -19,6 +19,33 @@ namespace Qoden.UI
         public ILogger Logger { get; set; }
 
         ViewHolder _view;
+        public new View View
+        {
+            get => _view.Value;
+            set => _view.Value = value;
+        }
+
+        BindingListHolder _bindings;
+        public BindingList Bindings
+        {
+            get => _bindings.Value;
+            set => _bindings.Value = value;
+        }
+
+        ChildViewControllersList _childControllers;
+        public ChildViewControllersList ChildControllers
+        {
+            get
+            {
+                Assert.State(Context == null || ChildFragmentManager == null, nameof(ChildControllers))
+                    .IsFalse("Cannot access {Key} wen fragment detached");
+                if (_childControllers == null)
+                {
+                    _childControllers = new ChildViewControllersList(Context, ChildFragmentManager);
+                }
+                return _childControllers;
+            }
+        }
 
         protected QodenController(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
         {
@@ -41,13 +68,6 @@ namespace Qoden.UI
         protected virtual ILogger CreateLogger()
         {
             return Config.LoggerFactory?.CreateLogger(GetType().Name);
-        }
-
-        BindingListHolder _bindings;
-        public BindingList Bindings
-        {
-            get => _bindings.Value;
-            set => _bindings.Value = value;
         }
 
         public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,11 +94,66 @@ namespace Qoden.UI
             }
         }
 
-        public new View View
+        public sealed override void OnResume()
         {
-            get => _view.Value;
-            set => _view.Value = value;
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
+                Logger.LogInformation("OnResume (ViewWillAppear)");
+
+            base.OnResume();
+            if (!Bindings.Bound)
+            {
+                Bindings.Bind();
+                Bindings.UpdateTarget();
+            }
+            ViewWillAppear();
+            ConfigureActionBarAction?.Invoke();
         }
+
+        public sealed override void OnPause()
+        {
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
+                Logger.LogInformation("OnPause (ViewWillDisappear)");
+
+            base.OnPause();
+            Bindings.Unbind();
+            ViewWillDisappear();
+        }
+
+        public override void OnDestroyView()
+        {
+            base.OnDestroyView();
+            ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+        }
+
+
+        public void Push(QodenController controller)
+        {
+            FragmentManager.BeginTransaction()
+                .Replace(Id, controller)
+                .AddToBackStack(controller.GetType().Name)
+                .Commit();
+        }
+
+        public void ClearStackAndPush(QodenController controller)
+        {
+            if (FragmentManager.BackStackEntryCount > 0)
+            {
+                var id = FragmentManager.GetBackStackEntryAt(0).Id;
+                FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
+            }
+            FragmentManager.BeginTransaction()
+                .Replace(Id, controller)
+                .Commit();
+        }
+
+        public void Pop() => FragmentManager.PopBackStack();
+
+        public void Present(QodenController controller) => Push(controller);
+
+        public void Dismiss() => Pop();
+
+
+        public Action ConfigureActionBarAction { get; set; }
 
         private string _title = "";
         public string Title
@@ -90,8 +165,6 @@ namespace Qoden.UI
                 Activity.Title = _title;
             }
         }
-
-        public Action ConfigureActionBarAction { get; set; }
 
         List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
         public List<MenuItemInfo> MenuItems
@@ -170,14 +243,14 @@ namespace Qoden.UI
 
         public bool ToolbarVisible
         {
-            get => ((AppCompatActivity)Activity).SupportActionBar?.IsShowing ?? false;
+            get => ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
             set
             {
-                if(Activity is QodenActivity qodenActivity)
+                if (Activity is QodenActivity qodenActivity)
                 {
                     qodenActivity.ToolbarVisible = value;
                 }
-                else if(Activity is AppCompatActivity compatActivity)
+                else if (Activity is AppCompatActivity compatActivity)
                 {
                     if (value && !ToolbarVisible)
                     {
@@ -200,84 +273,12 @@ namespace Qoden.UI
             }
         }
 
-        ChildViewControllersList _childControllers;
-        public ChildViewControllersList ChildControllers
-        {
-            get
-            {
-                Assert.State(Context == null || ChildFragmentManager == null, nameof(ChildControllers))
-                      .IsFalse("Cannot access {Key} wen fragment detached");
-                if (_childControllers == null)
-                {
-                    _childControllers = new ChildViewControllersList(Context, ChildFragmentManager);
-                }
-                return _childControllers;
-            }
-        }
 
         /// <summary>
         /// Override this instead on OnViewCreated
         /// </summary>
         public virtual void ViewDidLoad()
-        {
-        }
-
-        public sealed override void OnResume()
-        {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
-                Logger.LogInformation("OnResume (ViewWillAppear)");
-
-            base.OnResume();
-            if (!Bindings.Bound)
-            {
-                Bindings.Bind();
-                Bindings.UpdateTarget();
-            }
-            ViewWillAppear();
-            ConfigureActionBarAction?.Invoke();
-        }
-
-        public sealed override void OnPause()
-        {
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
-                Logger.LogInformation("OnPause (ViewWillDisappear)");
-
-            base.OnPause();
-            Bindings.Unbind();
-            ViewWillDisappear();
-        }
-
-        public override void OnDestroyView()
-        {
-            base.OnDestroyView();
-            ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
-        }
-
-        public void ClearStackAndPush(QodenController controller)
-        {
-            if (FragmentManager.BackStackEntryCount > 0)
-            {
-                var id = FragmentManager.GetBackStackEntryAt(0).Id;
-                FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
-            }
-            FragmentManager.BeginTransaction()
-                           .Replace(Id, controller)
-                           .Commit();
-        }
-
-        public void Push(QodenController controller)
-        {
-            FragmentManager.BeginTransaction()
-                           .Replace(Id, controller)
-                           .AddToBackStack(controller.GetType().Name)
-                           .Commit();
-        }
-
-        public void Pop() => FragmentManager.PopBackStack();
-
-        public void Present(QodenController controller) => Push(controller);
-
-        public void Dismiss() => Pop();
+        { }
 
         /// <summary>
         /// Override this instead on OnResume
