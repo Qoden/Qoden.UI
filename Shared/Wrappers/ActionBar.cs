@@ -2,9 +2,6 @@
 #if __IOS__
 using PlatformBar = UIKit.UINavigationBar;
 #elif __ANDROID__
-using Android.Text;
-using Android.Text.Style;
-using Android.Graphics;
 using PlatformBar = Android.Support.V7.Widget.Toolbar;
 #endif
 namespace Qoden.UI.Wrappers
@@ -33,14 +30,7 @@ namespace Qoden.UI.Wrappers
                 };
             }
 #elif __ANDROID__
-            var typefaceSpan = new CustomTypefaceSpan(TypefaceCollection.Get(font.Name, font.Style));
-            var fontSizeSpan = new AbsoluteSizeSpan((int) font.Size.Dp());
-
-            var spannableString = new SpannableString(PlatformView.Title);
-            spannableString.SetSpan(typefaceSpan, 0, spannableString.Length(), 0);
-            spannableString.SetSpan(fontSizeSpan, 0, spannableString.Length(), 0);
-
-            PlatformView.TitleFormatted = spannableString;
+            PlatformView.TitleFormatted = PlatformView.Title.WithFont(font);
 #endif
         }
 
@@ -90,6 +80,7 @@ namespace Qoden.UI.Wrappers
 #endif
         }
     }
+
     public static class ActionBarExtensions
     {
         public static ActionBar GetActionBar(this QodenController controller)
@@ -115,32 +106,4 @@ namespace Qoden.UI.Wrappers
         public Binding.Command Command { get; set; }
         public Side Side { get; set; }
     }
-
-#if __ANDROID__
-    // Such class is required to apply custom typeface
-    public class CustomTypefaceSpan : MetricAffectingSpan
-    {
-        private readonly Typeface _typeface;
-
-        public CustomTypefaceSpan(Typeface typeface)
-        {
-            _typeface = typeface;
-        }
-
-        public override void UpdateDrawState(TextPaint tp)
-        {
-            ApplyCustomTypeface(tp, _typeface);
-        }
-
-        public override void UpdateMeasureState(TextPaint tp)
-        {
-            ApplyCustomTypeface(tp, _typeface);
-        }
-
-        private static void ApplyCustomTypeface(Paint paint, Typeface typeface)
-        {
-            paint.SetTypeface(typeface);
-        }
-    }
-#endif
 }
