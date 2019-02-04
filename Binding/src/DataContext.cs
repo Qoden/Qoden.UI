@@ -289,6 +289,11 @@ namespace Qoden.Binding
         {
             _disposeBag.Add(disposable);
         }
+
+        public void AddDisposable(IEnumerable<IDisposable> disposables)
+        {
+            _disposeBag.AddRange(disposables);
+        }
         
         public void Dispose()
         {
