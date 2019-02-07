@@ -68,6 +68,7 @@ namespace Qoden.UI
             {
                 box.Layout();
             }
+            AfterLayout(layoutBuilder);
         }
 
         EdgeInsets _padding;
@@ -151,6 +152,7 @@ namespace Qoden.UI
             {
                 box.Layout();
             }
+            AfterLayout(layoutBuilder);
         }
 
         protected virtual void OnLayout(LayoutBuilder layout)
@@ -256,6 +258,13 @@ namespace Qoden.UI
             }
         }
 #endif
+        
+        /// <summary>
+        /// This method calls after native layout execute. Here you can get native views size.
+        /// </summary>
+        protected virtual void AfterLayout(LayoutBuilder layout)
+        {
+        }
 
         protected override void Dispose(bool disposing)
         {
