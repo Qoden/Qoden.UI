@@ -66,6 +66,7 @@
     <Compile Include="src\Bindings\ViewBindings.cs" />
     <Compile Include="src\Bindings\ViewPagerBindings.cs" />
     <Compile Include="src\Bindings\AdapterViewBindings.cs" />
+    <Compile Include="src\View\CustomViewToolbar.cs" />
     <Compile Include="src\View\PlainListContent.cs" />
     <Compile Include="src\View\GroupedListContent.cs" />
     <Compile Include="src\Graphics\FontIconDrawable.cs" />

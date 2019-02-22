@@ -2,7 +2,7 @@
 #if __IOS__
 using PlatformBar = UIKit.UINavigationBar;
 #elif __ANDROID__
-using PlatformBar = Android.Support.V7.Widget.Toolbar;
+using PlatformBar = Qoden.UI.CustomViewToolbar;
 #endif
 namespace Qoden.UI.Wrappers
 {
@@ -10,7 +10,7 @@ namespace Qoden.UI.Wrappers
     {
         public static implicit operator PlatformBar(ActionBar area) { return area.PlatformView; }
         public PlatformBar PlatformView { get; set; }
-        public View AsView() { return new View() { PlatformView = PlatformView }; }
+        public View AsView() { return new View { PlatformView = PlatformView }; }
 
         public void SetFont(Font font)
         {
@@ -30,7 +30,7 @@ namespace Qoden.UI.Wrappers
                 };
             }
 #elif __ANDROID__
-            PlatformView.TitleFormatted = PlatformView.Title.WithFont(font);
+            PlatformView.TitleView.AsLabel().SetFont(font);
 #endif
         }
 
@@ -76,7 +76,7 @@ namespace Qoden.UI.Wrappers
             PlatformView.TitleTextAttributes.ForegroundColor = color.ToColor();
             PlatformView.SetNeedsDisplay();
 #elif __ANDROID__
-            PlatformView.SetTitleTextColor(color.ToColor());
+            PlatformView.SetTitleTextColor(color.IntARGB);
 #endif
         }
     }
@@ -88,12 +88,11 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             return controller.NavigationController.NavigationBar.AsActionBar();
 #elif __ANDROID__
-            // todo: unbound from QodenActivity type somehow
             return ((QodenActivity)controller.Activity).Toolbar.AsActionBar();
 #endif
         }
 
-        public static ActionBar AsActionBar(this PlatformBar bar) => new ActionBar() { PlatformView = bar };
+        public static ActionBar AsActionBar(this PlatformBar bar) => new ActionBar { PlatformView = bar };
     }
 
     public enum Side { None, Left, Right }

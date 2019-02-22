@@ -10,11 +10,9 @@ using Qoden.Binding;
 
 namespace Qoden.UI
 {
-    public abstract class QodenActivity : AppCompatActivity, IControllerHost, IViewHost
+    public abstract partial class QodenActivity : AppCompatActivity, IControllerHost, IViewHost
     {
-        public Toolbar Toolbar { get; set; }
-
-        public ILogger Logger { get; set; }
+        public ChildViewControllersList ChildControllers { get; private set; }
         
         ViewHolder _view;
         public Android.Views.View View
@@ -22,7 +20,37 @@ namespace Qoden.UI
             get => _view.Value;
             set => _view.Value = value;
         }
+        
+        BindingListHolder _bindings;
+        public BindingList Bindings
+        {
+            get => _bindings.Value;
+            set { _bindings.Value = value; }
+        }
 
+        public void Push(Type type)
+        {
+            var intent = new Intent(this, type);
+            StartActivity(intent);
+        }
+
+        public void Pop()
+        {
+            OnBackPressed();
+        }
+        
+        /// <summary>
+        /// Override this instead on OnResume
+        /// </summary>
+        protected virtual void ViewWillAppear()
+        { }
+
+        /// <summary>
+        /// Override this instead on OnPause
+        /// </summary>
+        protected virtual void ViewWillDisappear()
+        { }
+        
         /// <summary>
         /// Override this instead of OnCreate
         /// </summary>
@@ -36,7 +64,7 @@ namespace Qoden.UI
         public virtual void LoadView()
         {
         }
-
+        
         protected sealed override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -50,16 +78,11 @@ namespace Qoden.UI
             ChildControllers = new ChildViewControllersList(this, SupportFragmentManager);
             AddContentView(View, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
 
-            Toolbar = new Toolbar(this);
+            Toolbar = new CustomViewToolbar(this, GravityFlags.CenterHorizontal | GravityFlags.CenterVertical);
             AddContentView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, GetDefaultToolbarHeight(Theme)));
             SetSupportActionBar(Toolbar);
 
             ViewDidLoad();
-        }
-
-        protected virtual ILogger CreateLogger()
-        {
-            return Config.LoggerFactory?.CreateLogger(GetType().Name);
         }
 
         protected sealed override void OnResume()
@@ -85,41 +108,31 @@ namespace Qoden.UI
             Bindings.Unbind();
             ViewWillDisappear();
         }
+    }
+    
+    public partial class QodenActivity 
+    {
+        public ILogger Logger { get; set; }
 
-        public void Push(Type type)
+        protected virtual ILogger CreateLogger()
         {
-            var intent = new Intent(this, type);
-            StartActivity(intent);
+            return Config.LoggerFactory?.CreateLogger(GetType().Name);
         }
+    }
 
-        public void Pop()
+    public partial class QodenActivity
+    {
+        public static int GetDefaultToolbarHeight(Resources.Theme theme)
         {
-            OnBackPressed();
+            var array = theme.ObtainStyledAttributes(new int[] { Resource.Attribute.actionBarSize });
+            var height = array.GetLayoutDimension(0, "actionBarSize");
+            array.Recycle();
+            return height;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Override this instead on OnResume
-        /// </summary>
-        protected virtual void ViewWillAppear()
-        { }
-
-        /// <summary>
-        /// Override this instead on OnPause
-        /// </summary>
-        protected virtual void ViewWillDisappear()
-        { }
-
-        BindingListHolder _bindings;
-        public BindingList Bindings
-        {
-            get => _bindings.Value;
-            set { _bindings.Value = value; }
-        }
+        
+        public CustomViewToolbar Toolbar { get; private set; }
+        
+        public event EventHandler<VisibilityChangeEventArgs> OnToolbarVisibilityChange;
 
         public bool ToolbarVisible 
         {
@@ -137,20 +150,8 @@ namespace Qoden.UI
                 OnToolbarVisibilityChange?.Invoke(this, new VisibilityChangeEventArgs(value));
             }
         }
-
-        public event EventHandler<VisibilityChangeEventArgs> OnToolbarVisibilityChange;
-
-        public static int GetDefaultToolbarHeight(Resources.Theme theme)
-        {
-            var array = theme.ObtainStyledAttributes(new int[] { Resource.Attribute.actionBarSize });
-            var height = array.GetLayoutDimension(0, "actionBarSize");
-            array.Recycle();
-            return height;
-        }
-
-        public ChildViewControllersList ChildControllers { get; private set; }
     }
-
+    
     public class QodenActivity<T> : QodenActivity where T : Android.Views.View
     {
         public new T View

@@ -84,9 +84,6 @@ namespace Qoden.UI
 
             base.OnViewCreated(view, savedInstanceState);
 
-            if (ConfigureActionBarAction == null)
-                ToolbarVisible = false;
-
             if (!_view.DidLoad)
             {
                 _view.DidLoad = true;
@@ -106,7 +103,6 @@ namespace Qoden.UI
                 Bindings.UpdateTarget();
             }
             ViewWillAppear();
-            ConfigureActionBarAction?.Invoke();
         }
 
         public sealed override void OnPause()
@@ -152,9 +148,6 @@ namespace Qoden.UI
 
         public void Dismiss() => Pop();
 
-
-        public Action ConfigureActionBarAction { get; set; }
-
         private string _title = "";
         public string Title
         {
@@ -162,7 +155,7 @@ namespace Qoden.UI
             set
             {
                 _title = value;
-                Activity.Title = _title;
+                ((QodenActivity) Activity).Toolbar.TitleView.Text = value;
             }
         }
 
@@ -174,13 +167,13 @@ namespace Qoden.UI
             {
                 menuItems = value;
 
-                //If Side is left, then change Id to Android.Resource.Id.Home, to use it later as a HomeButton
+                // If Side is left, then change Id to Android.Resource.Id.Home, to use it later as a HomeButton
                 for (var i = 0; i < menuItems.Count; i++)
                 {
                     var menuItemInfo = menuItems[i];
                     if (menuItemInfo.Side == Side.Left)
                     {
-                        //Creating a new MenuItemInfo instead of changing Id is needed because MenuItemInfo is a struct
+                        // Creating a new MenuItemInfo instead of changing Id is needed because MenuItemInfo is a struct
                         menuItems[i] = new MenuItemInfo
                         {
                             Id = Android.Resource.Id.Home,
@@ -246,30 +239,18 @@ namespace Qoden.UI
             get => ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
             set
             {
-                if (Activity is QodenActivity qodenActivity)
+                switch (Activity)
                 {
-                    qodenActivity.ToolbarVisible = value;
-                }
-                else if (Activity is AppCompatActivity compatActivity)
-                {
-                    if (value && !ToolbarVisible)
-                    {
+                    case QodenActivity qodenActivity:
+                        qodenActivity.ToolbarVisible = value;
+                        break;
+                    case AppCompatActivity compatActivity when value && !ToolbarVisible:
                         compatActivity.SupportActionBar.Show();
-                    }
-                    else if (!value && ToolbarVisible)
-                    {
+                        break;
+                    case AppCompatActivity compatActivity when !value && ToolbarVisible:
                         compatActivity.SupportActionBar.Hide();
-                    }
+                        break;
                 }
-
-                if (value && ConfigureActionBarAction == null)
-                    ConfigureActionBarAction = () =>
-                    {
-                        ToolbarVisible = true;
-                        Activity.Title = Title ?? "";
-                    };
-                else if (!value)
-                    ConfigureActionBarAction = null;
             }
         }
 
