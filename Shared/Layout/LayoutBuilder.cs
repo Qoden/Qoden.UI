@@ -151,13 +151,13 @@ namespace Qoden.UI
             set => _preferredWidth = value;
         }
 
-        public LayoutBuilder SetPreferredWidth(float width, bool addPadding = false)
+        public LayoutBuilder SetPreferredWidth(float width, bool addPadding = true)
         {
             PreferredWidth = width + (addPadding ? Padding.Left + Padding.Right : 0);
             return this;
         }
         
-        public LayoutBuilder SetPreferredHeight(float height, bool addPadding = false)
+        public LayoutBuilder SetPreferredHeight(float height, bool addPadding = true)
         {
             PreferredHeight = height + (addPadding ? Padding.Top + Padding.Bottom: 0);
             return this;
