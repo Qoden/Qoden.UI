@@ -27,13 +27,13 @@ namespace Qoden.UI
 
         private void OnTabSelected(object sender, TabLayout.TabSelectedEventArgs e)
         {
-            int position = e.Tab.Position;
+            var position = e.Tab.Position;
             OnTabSelected(position);
         }
 
         private void OnTabSelected(int position)
         {
-            for (int i = 0; i < _tabs.Count; ++i)
+            for (var i = 0; i < _tabs.Count; ++i)
             {
                 _tabs[i].Visibility = i == position ? ViewStates.Visible : ViewStates.Gone;
                 if (i == position)

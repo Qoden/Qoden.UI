@@ -5,19 +5,18 @@ using Android.OS;
 using Android.Runtime;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
-using View = Android.Views.View;
 using Android.Views;
 using Microsoft.Extensions.Logging;
 using Qoden.Binding;
 using Qoden.UI.Wrappers;
 using Qoden.Validation;
+using View = Android.Views.View;
 
 namespace Qoden.UI
 {
-    public class QodenController : Fragment, IControllerHost, IViewHost
+    // Bindings, children and initialization
+    public partial class QodenController : Fragment, IControllerHost, IViewHost
     {
-        public ILogger Logger { get; set; }
-
         ViewHolder _view;
         public new View View
         {
@@ -56,28 +55,25 @@ namespace Qoden.UI
         {
             Initialize();
         }
-
+        
         private void Initialize()
         {
             _view = new ViewHolder(this);
-            Logger = CreateLogger();
-            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
-                Logger.LogInformation("Created");
+            InitializeLogger();   
         }
+    }
 
-        protected virtual ILogger CreateLogger()
-        {
-            return Config.LoggerFactory?.CreateLogger(GetType().Name);
-        }
-
-        public sealed override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    // Lifecycle
+    public partial class QodenController
+    {
+        public sealed override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnCreateView");
             return _view.Value;
         }
 
-        public sealed override void OnViewCreated(Android.Views.View view, Bundle savedInstanceState)
+        public sealed override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             if (Logger != null && Logger.IsEnabled(LogLevel.Information))
                 Logger.LogInformation("OnViewCreated (ViewDidLoad)");
@@ -120,34 +116,54 @@ namespace Qoden.UI
             base.OnDestroyView();
             ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
         }
+        
+        /// <summary>
+        /// Override this instead on CreateView
+        /// </summary>
+        public virtual void LoadView()
+        { }
+        
+        /// <summary>
+        /// Override this instead on OnViewCreated
+        /// </summary>
+        public virtual void ViewDidLoad()
+        { }
 
+        /// <summary>
+        /// Override this instead on OnResume
+        /// </summary>
+        protected virtual void ViewWillAppear()
+        { }
 
-        public void Push(QodenController controller)
+        /// <summary>
+        /// Override this instead on OnPause
+        /// </summary>
+        protected virtual void ViewWillDisappear()
+        { }
+        
+    }
+
+    // Logger
+    public partial class QodenController
+    {
+        public ILogger Logger { get; set; }
+
+        protected virtual ILogger CreateLogger()
         {
-            FragmentManager.BeginTransaction()
-                .Replace(Id, controller)
-                .AddToBackStack(controller.GetType().Name)
-                .Commit();
+            return Config.LoggerFactory?.CreateLogger(GetType().Name);
         }
-
-        public void ClearStackAndPush(QodenController controller)
+        
+        private void InitializeLogger()
         {
-            if (FragmentManager.BackStackEntryCount > 0)
-            {
-                var id = FragmentManager.GetBackStackEntryAt(0).Id;
-                FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
-            }
-            FragmentManager.BeginTransaction()
-                .Replace(Id, controller)
-                .Commit();
+            Logger = CreateLogger();
+            if (Logger != null && Logger.IsEnabled(LogLevel.Information))
+                Logger.LogInformation("Created");
         }
+    }
 
-        public void Pop() => FragmentManager.PopBackStack();
-
-        public void Present(QodenController controller) => Push(controller);
-
-        public void Dismiss() => Pop();
-
+    // Toolbar
+    public partial class QodenController
+    {
         private string _title = "";
         public string Title
         {
@@ -159,22 +175,23 @@ namespace Qoden.UI
             }
         }
 
-        List<MenuItemInfo> menuItems = new List<MenuItemInfo>();
+        private List<MenuItemInfo> _menuItems = new List<MenuItemInfo>();
         public List<MenuItemInfo> MenuItems
         {
-            private get => menuItems;
+            private get => _menuItems;
             set
             {
-                menuItems = value;
-
-                // If Side is left, then change Id to Android.Resource.Id.Home, to use it later as a HomeButton
-                for (var i = 0; i < menuItems.Count; i++)
+                _menuItems = value;
+                // If Side is left, then change Id to
+                // Android.Resource.Id.Home, to use it later as a HomeButton
+                for (var i = 0; i < _menuItems.Count; i++)
                 {
-                    var menuItemInfo = menuItems[i];
+                    var menuItemInfo = _menuItems[i];
                     if (menuItemInfo.Side == Side.Left)
                     {
-                        // Creating a new MenuItemInfo instead of changing Id is needed because MenuItemInfo is a struct
-                        menuItems[i] = new MenuItemInfo
+                        // Creating a new MenuItemInfo instead of changing Id
+                        // is needed because MenuItemInfo is a struct
+                        _menuItems[i] = new MenuItemInfo
                         {
                             Id = Android.Resource.Id.Home,
                             Command = menuItemInfo.Command,
@@ -184,16 +201,34 @@ namespace Qoden.UI
                         };
                     }
                 }
-
-                HasOptionsMenu = menuItems.Count > 0;
+                HasOptionsMenu = _menuItems.Count > 0;
                 Activity.InvalidateOptionsMenu();
+            }
+        }
+        
+        public bool ToolbarVisible
+        {
+            get => ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
+            set
+            {
+                switch (Activity)
+                {
+                    case QodenActivity qodenActivity:
+                        qodenActivity.ToolbarVisible = value;
+                        break;
+                    case AppCompatActivity compatActivity when value && !ToolbarVisible:
+                        compatActivity.SupportActionBar.Show();
+                        break;
+                    case AppCompatActivity compatActivity when !value && ToolbarVisible:
+                        compatActivity.SupportActionBar.Hide();
+                        break;
+                }
             }
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
-
             foreach (var itemInfo in MenuItems)
             {
                 if (itemInfo.Side == Side.Left)
@@ -226,61 +261,44 @@ namespace Qoden.UI
         {
             var itemInfo = MenuItems.Find(info => info.Id == item.ItemId);
             var command = itemInfo.Command;
-            if (command != null)
-            {
-                command.Execute();
-                return true;
-            }
-            return base.OnOptionsItemSelected(item);
+            if (command == null)
+                return base.OnOptionsItemSelected(item);
+            command.Execute();
+            return true;
         }
-
-        public bool ToolbarVisible
-        {
-            get => ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
-            set
-            {
-                switch (Activity)
-                {
-                    case QodenActivity qodenActivity:
-                        qodenActivity.ToolbarVisible = value;
-                        break;
-                    case AppCompatActivity compatActivity when value && !ToolbarVisible:
-                        compatActivity.SupportActionBar.Show();
-                        break;
-                    case AppCompatActivity compatActivity when !value && ToolbarVisible:
-                        compatActivity.SupportActionBar.Hide();
-                        break;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Override this instead on OnViewCreated
-        /// </summary>
-        public virtual void ViewDidLoad()
-        { }
-
-        /// <summary>
-        /// Override this instead on OnResume
-        /// </summary>
-        protected virtual void ViewWillAppear()
-        { }
-
-        /// <summary>
-        /// Override this instead on OnPause
-        /// </summary>
-        protected virtual void ViewWillDisappear()
-        { }
-
-        /// <summary>
-        /// Override this instead on CreateView
-        /// </summary>
-        public virtual void LoadView()
-        { }
     }
 
-    public class QodenController<T> : QodenController where T : Android.Views.View
+    // navigation
+    public partial class QodenController
+    {
+        public void Push(QodenController controller)
+        {
+            FragmentManager.BeginTransaction()
+                           .Replace(Id, controller)
+                           .AddToBackStack(controller.GetType().Name)
+                           .Commit();
+        }
+
+        public void ClearStackAndPush(QodenController controller)
+        {
+            if (FragmentManager.BackStackEntryCount > 0)
+            {
+                var id = FragmentManager.GetBackStackEntryAt(0).Id;
+                FragmentManager.PopBackStack(id, FragmentManager.PopBackStackInclusive);
+            }
+            FragmentManager.BeginTransaction()
+                           .Replace(Id, controller)
+                           .Commit();
+        }
+
+        public void Pop() => FragmentManager.PopBackStack();
+
+        public void Present(QodenController controller) => Push(controller);
+
+        public void Dismiss() => Pop();
+    }
+
+    public class QodenController<T> : QodenController where T : View
     {
         public new T View
         {
