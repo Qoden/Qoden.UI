@@ -81,6 +81,7 @@ namespace Qoden.UI
             Toolbar = new CustomViewToolbar(this, GravityFlags.CenterHorizontal | GravityFlags.CenterVertical);
             AddContentView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, GetDefaultToolbarHeight(Theme)));
             SetSupportActionBar(Toolbar);
+            ToolbarVisible = false;
 
             ViewDidLoad();
         }
