@@ -151,15 +151,14 @@ namespace Qoden.UI
             get 
 			{
 				if(NavigationController != null)
-				{
 					return !NavigationController.NavigationBarHidden;
-				} else if(PresentingViewController != null) 
-				{
+				
+				if(PresentingViewController?.NavigationController != null) 
 					return !PresentingViewController.NavigationController.NavigationBarHidden;
-				} else if (TabBarController?.PresentingViewController is UITabBarController && TabBarController.NavigationController != null)
-                {
+				
+				if (TabBarController?.PresentingViewController is UITabBarController && TabBarController.NavigationController != null)
 					return !TabBarController.NavigationController.NavigationBarHidden;
-                }
+				
 				return false;
 			}
             set
