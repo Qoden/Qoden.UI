@@ -229,6 +229,7 @@ namespace Qoden.UI
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
+            menu.Clear(); 
             foreach (var itemInfo in MenuItems)
             {
                 if (itemInfo.Side == Side.Left)
