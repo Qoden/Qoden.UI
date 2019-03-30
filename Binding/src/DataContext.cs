@@ -294,6 +294,21 @@ namespace Qoden.Binding
         {
             _disposeBag.AddRange(disposables);
         }
+
+        public void RemoveDisposable(IDisposable disposable)
+        {
+            disposable?.Dispose();
+            _disposeBag.Remove(disposable);
+        }
+
+        public void RemoveDisposable(IEnumerable<IDisposable> disposables)
+        {
+            foreach (var disposable in disposables)
+            {
+                disposable?.Dispose();
+                _disposeBag.Remove(disposable);
+            }
+        }
         
         public void Dispose()
         {
