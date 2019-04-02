@@ -294,9 +294,13 @@ namespace Qoden.UI
 
         public void Pop() => FragmentManager.PopBackStack();
 
-        public void Present(QodenController controller) => Push(controller);
+        public void Present(QodenController controller, Action completionHandler = null)
+        {
+            var presenter = QodenControllerPresenter.Wrap(controller, completionHandler);
+            presenter.Show(ChildFragmentManager, "presenter");
+        }
 
-        public void Dismiss() => Pop();
+        public void Dismiss() => ((QodenControllerPresenter)ParentFragment).Dismiss();
     }
 
     public class QodenController<T> : QodenController where T : View

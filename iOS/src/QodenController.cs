@@ -80,7 +80,7 @@ namespace Qoden.UI
 
         public void Pop(bool animated = true) => NavigationController.PopViewController(animated);
 
-        public void Present(UIViewController controller, bool animated = true) => PresentViewController(controller, animated, null);
+        public void Present(UIViewController controller, bool animated = true, Action completionHandler = null) => PresentViewController(controller, animated, completionHandler);
 
         public void Dismiss(bool animated = true) => DismissViewController(animated, null);
 
