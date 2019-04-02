@@ -88,6 +88,8 @@ namespace Qoden.UI.Wrappers
 #if __IOS__
             return controller.NavigationController.NavigationBar.AsActionBar();
 #elif __ANDROID__
+            if (controller.IsPresented)
+                return controller.Presenter.Toolbar.AsActionBar();
             return ((QodenActivity)controller.Activity).Toolbar.AsActionBar();
 #endif
         }

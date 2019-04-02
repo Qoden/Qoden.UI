@@ -171,6 +171,11 @@ namespace Qoden.UI
             set
             {
                 _title = value;
+                if (IsPresented)
+                {
+                    Presenter.Toolbar.TitleView.Text = value;
+                    return;
+                }
                 ((QodenActivity) Activity).Toolbar.TitleView.Text = value;
             }
         }
@@ -202,15 +207,30 @@ namespace Qoden.UI
                     }
                 }
                 HasOptionsMenu = _menuItems.Count > 0;
+                if (IsPresented)
+                {
+                    Presenter.CreateAndSetOptionsMenu(_menuItems);
+                    return;
+                }
                 Activity.InvalidateOptionsMenu();
             }
         }
         
         public bool ToolbarVisible
         {
-            get => ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
+            get
+            {
+                if (IsPresented)
+                    return Presenter.Toolbar?.Visibility == ViewStates.Visible;
+                return ((AppCompatActivity) Activity).SupportActionBar?.IsShowing ?? false;
+            }
             set
             {
+                if (IsPresented)
+                {
+                    Presenter.Toolbar.Visibility = value ? ViewStates.Visible : ViewStates.Gone;
+                    return;
+                }
                 switch (Activity)
                 {
                     case QodenActivity qodenActivity:
@@ -272,6 +292,10 @@ namespace Qoden.UI
     // navigation
     public partial class QodenController
     {
+        public QodenControllerPresenter Presenter => ParentFragment as QodenControllerPresenter;
+
+        public bool IsPresented => Presenter != null;
+        
         public void Push(QodenController controller)
         {
             FragmentManager.BeginTransaction()
@@ -294,9 +318,9 @@ namespace Qoden.UI
 
         public void Pop() => FragmentManager.PopBackStack();
 
-        public void Present(QodenController controller, Action completionHandler = null)
+        public void Present(QodenController controller, Action completionHandler = null, bool withNavigation = false)
         {
-            var presenter = QodenControllerPresenter.Wrap(controller, completionHandler);
+            var presenter = QodenControllerPresenter.Wrap(controller, completionHandler, withNavigation);
             presenter.Show(ChildFragmentManager, "presenter");
         }
 
