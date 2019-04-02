@@ -118,22 +118,21 @@ namespace Qoden.Binding
 
         public static Task WhenFinished(this IAsyncCommand command)
         {
-            if (command.IsRunning)
-            {
-                var tcs = new TaskCompletionSource<object>();
-                void Done(object sender, PropertyChangedEventArgs p)
-                {
-                    if (!command.IsRunning)
-                    {
-                        tcs.SetResult(null);
-                        command.PropertyChanged -= Done;
-                    }
-                }
+            if (!command.IsRunning)
+                return Task.FromResult(0);
 
-                command.PropertyChanged += Done;
-                return tcs.Task;
+            var tcs = new TaskCompletionSource<object>();
+            void Done(object sender, PropertyChangedEventArgs p)
+            {
+                if (command.IsRunning)
+                    return;
+
+                tcs.SetResult(null);
+                command.PropertyChanged -= Done;
             }
-            return Task.FromResult(0);
+
+            command.PropertyChanged += Done;
+            return tcs.Task;
         }        
     }
 }

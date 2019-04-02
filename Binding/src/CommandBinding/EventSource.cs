@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Qoden.Util;
 using Qoden.Validation;
 
 namespace Qoden.Binding
 {
 
-    public delegate void CommandHandler(object parameter); 
+    public delegate Task CommandHandler(object parameter); 
     
     /// <summary>
     /// Represent event in an object. This could be .NET event or something more complicated like NSNotificationCenter
@@ -16,7 +17,7 @@ namespace Qoden.Binding
     public interface ICommandTrigger
     {
         /// <summary>
-        /// Proxy event handler to susbcribe/unsubscribe underlying event.
+        /// Proxy event handler to subscribe/unsubscribe underlying event.
         /// </summary>
         event CommandHandler Trigger;
 

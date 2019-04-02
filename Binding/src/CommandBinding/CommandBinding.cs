@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Qoden.Validation;
 
 namespace Qoden.Binding
@@ -72,22 +73,22 @@ namespace Qoden.Binding
 
         public object Parameter { get; set; }
 
-        void DefaultUpdateTargetAction(ICommandBinding binding)
+        private static void DefaultUpdateTargetAction(ICommandBinding binding)
         {
-            if (binding.Trigger != null)
-            {
-                var parameter = binding.Parameter;
-                binding.Trigger.SetEnabled(binding.Command.CanExecute(parameter));
-            }
+            if (binding.Trigger == null)
+                return;
+
+            var parameter = binding.Parameter;
+            binding.Trigger.SetEnabled(binding.Command.CanExecute(parameter));
         }
 
         public void Bind()
         {
-            if (!Bound)
-            {
-                OnBind();
-                Bound = true;
-            }
+            if (Bound)
+                return;
+
+            OnBind();
+            Bound = true;
         }
 
         protected virtual void OnBind()
@@ -97,21 +98,15 @@ namespace Qoden.Binding
 
             if (Trigger != null)
                 Trigger.Trigger += Target_ExecuteCommand;
-
-            var asyncCommand = Command as IAsyncCommand;
-            if (asyncCommand != null)
-            {
-                asyncCommand.PropertyChanged += AsyncCommand_PropertyChanged;
-            }
         }
 
         public void Unbind()
         {
-            if (Bound)
-            {
-                OnUnbind();
-                Bound = false;
-            }
+            if (!Bound)
+                return;
+
+            OnUnbind();
+            Bound = false;
         }
 
         protected virtual void OnUnbind()
@@ -119,69 +114,54 @@ namespace Qoden.Binding
             Command.CanExecuteChanged -= Source_CanExecuteChanged;
             if (Trigger != null)
                 Trigger.Trigger -= Target_ExecuteCommand;
-            var asyncCommand = Command as IAsyncCommand;
-            if (asyncCommand != null)
-            {
-                asyncCommand.PropertyChanged -= AsyncCommand_PropertyChanged;
-            }
         }
 
-        void Source_CanExecuteChanged(object sender, EventArgs e)
+        private void Source_CanExecuteChanged(object sender, EventArgs e)
         {
             UpdateTarget();
         }
 
-        void Target_ExecuteCommand(object parameter)
+        private async Task Target_ExecuteCommand(object parameter)
         {
-            if (Enabled)
-            {
-                parameter = Parameter ?? parameter;
-                var isAsyncCommand = Command is IAsyncCommand;
+            if (!Enabled)
+                return;
 
-                BeforeExecuteAction?.Invoke(this);
-                if (!isAsyncCommand)
-                    CommandStarted?.Invoke(this);
-                try
-                {
-                    Command.Execute(parameter);
-                }
-                finally
-                {
-                    AfterExecuteAction?.Invoke(this);
-                    if (!isAsyncCommand)
-                        CommandFinished?.Invoke(this);
-                }
-            }
-        }
-
-        void AsyncCommand_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            var command = (IAsyncCommand)sender;
-            if (e.PropertyName == nameof(IAsyncCommand.IsRunning))
+            parameter = Parameter ?? parameter;
+            var asyncCommand = Command as IAsyncCommand;
+            var isAsyncCommand = asyncCommand != null;
+            Task execution = null;
+            
+            BeforeExecuteAction?.Invoke(this);
+            CommandStarted?.Invoke(this);
+            try
             {
-                if (command.IsRunning)
+                if (isAsyncCommand)
                 {
-                    CommandStarted?.Invoke(this);
+                    execution = asyncCommand.ExecuteAsync();
                 }
                 else
                 {
-                    CommandFinished?.Invoke(this);
+                    Command.Execute(parameter);
                 }
+            }
+            finally
+            {
+                AfterExecuteAction?.Invoke(this);
+                if (isAsyncCommand && execution != null)
+                    await execution;
+                CommandFinished?.Invoke(this);
             }
         }
 
         public void UpdateTarget()
         {
-            if (Enabled && UpdateTargetAction != null)
+            if (Enabled)
             {
-                UpdateTargetAction(this);
+                UpdateTargetAction?.Invoke(this);
             }
         }
 
-        public void UpdateSource()
-        {
-            throw new NotSupportedException();
-        }
+        public void UpdateSource() => throw new NotSupportedException();
 
         private ICommandTrigger _target;
 
