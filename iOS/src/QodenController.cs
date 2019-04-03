@@ -10,6 +10,8 @@ namespace Qoden.UI
 {
 	public class QodenController : UIViewController
 	{
+		private Action _onDismissHandler;
+		
 		public ILogger Logger { get; set; }
 
 		public QodenController()
@@ -80,10 +82,18 @@ namespace Qoden.UI
 
         public void Pop(bool animated = true) => NavigationController.PopViewController(animated);
 
-        public void Present(UIViewController controller, bool animated = true, Action completionHandler = null, bool withNavigation = false) 
-	        => PresentViewController(withNavigation ? new UINavigationController(controller) : controller, animated, completionHandler);
+        public void Present(QodenController controller, bool animated = true, Action onDismissHandler = null, bool withNavigation = false)
+        {
+	        controller._onDismissHandler = onDismissHandler;
+	        PresentViewController(withNavigation ? (UIViewController) new UINavigationController(controller) : controller, animated, null);
+        }
 
-		public void Dismiss(bool animated) => DismissViewController(animated, null);
+		public void Dismiss(bool animated)
+		{
+			DismissViewController(animated, null);
+			_onDismissHandler?.Invoke();
+		}
+
 		public void Dismiss() => Dismiss(true);
 
         protected virtual void ViewWillAppear()

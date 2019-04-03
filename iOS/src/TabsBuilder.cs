@@ -47,6 +47,7 @@ namespace Qoden.UI
             var tab = new UITabBarItem();
             if (tabConfig.Title != null) tab.Title = tabConfig.Title;
             if (tabConfig.Image != null) tab.Image = tabConfig.Image;
+            tab.Tag = _tabs.Count;
 
             tabConfig.Customization?.Invoke(tab);
             _tabs.Add(tabConfig.Content);
