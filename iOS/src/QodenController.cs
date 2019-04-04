@@ -90,8 +90,9 @@ namespace Qoden.UI
 
 		public void Dismiss(bool animated)
 		{
-			DismissViewController(animated, null);
-			_onDismissHandler?.Invoke();
+			// if ViewControllers hierarchy is being presented, then dismiss handler is contained in first controller.
+			var originallyPresentedController = (QodenController) (NavigationController?.ViewControllers[0] ?? this);
+			DismissViewController(animated, originallyPresentedController._onDismissHandler);
 		}
 
 		public void Dismiss() => Dismiss(true);
