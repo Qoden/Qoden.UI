@@ -14,6 +14,8 @@ namespace Qoden.UI
 {
     public sealed partial class QodenControllerPresenter : DialogFragment
     {
+        private const int ContainerId = 1;
+        
         public static QodenControllerPresenter Wrap(QodenController controller, Action completionHandler, bool withNavigation) => 
             new QodenControllerPresenter { _viewController = controller, _completionHandler = completionHandler, _withNavigation = withNavigation};
 
@@ -25,14 +27,6 @@ namespace Qoden.UI
             SetStyle(StyleNoTitle, Resource.Style.FullscreenDialog);
         }
         
-        public override void OnAttach(Context context)
-        {
-            base.OnAttach(context);
-            ChildFragmentManager.BeginTransaction()
-                                .Add(_viewController, "child")
-                                .Commit();
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             var linearLayout = new LinearLayout(Context) { Orientation = Orientation.Vertical };
@@ -40,7 +34,13 @@ namespace Qoden.UI
             Toolbar = new CustomViewToolbar(Context, GravityFlags.CenterHorizontal | GravityFlags.CenterVertical) 
                 { Visibility = _withNavigation ? ViewStates.Visible : ViewStates.Gone };
             linearLayout.AddView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, QodenActivity.GetDefaultToolbarHeight(Context.Theme)));
-            linearLayout.AddView(_viewController.View, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent));
+
+            var contentFrameLayout = new FrameLayout(Context) { Id = ContainerId };
+            linearLayout.AddView(contentFrameLayout, ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
+            
+            ChildFragmentManager.BeginTransaction()
+                                .Add(contentFrameLayout.Id, _viewController)
+                                .Commit();
 
             return linearLayout;
         }
