@@ -65,6 +65,7 @@ namespace Qoden.UI
             var menu = Toolbar.Menu;
             menu.Clear();
             Toolbar.NavigationClick -= _navigationHandler;
+            Toolbar.NavigationIcon = null;
             foreach (var itemInfo in menuItems)
             {
                 if (itemInfo.Side == Side.Left)
@@ -80,6 +81,7 @@ namespace Qoden.UI
                     item.SetIcon(itemInfo.Icon);
                 }
             }
+            
         }
     }
 }
