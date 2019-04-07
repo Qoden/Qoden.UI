@@ -33,6 +33,7 @@ namespace Qoden.UI
 
             Toolbar = new CustomViewToolbar(Context, GravityFlags.CenterHorizontal | GravityFlags.CenterVertical) 
                 { Visibility = _withNavigation ? ViewStates.Visible : ViewStates.Gone };
+            Toolbar.MenuItemClick += OnOptionsItemSelected;
             linearLayout.AddView(Toolbar, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, QodenActivity.GetDefaultToolbarHeight(Context.Theme)));
 
             var contentFrameLayout = new FrameLayout(Context) { Id = ContainerId };
@@ -44,6 +45,8 @@ namespace Qoden.UI
 
             return linearLayout;
         }
+
+        private void OnOptionsItemSelected(object sender, Toolbar.MenuItemClickEventArgs e) => _viewController.OnOptionsItemSelected(e.Item);
 
         public override void OnDismiss(IDialogInterface dialog)
         {
