@@ -207,6 +207,9 @@ namespace Qoden.UI
                     }
                 }
                 HasOptionsMenu = _menuItems.Count > 0;
+                if (_menuItems.All(menuItem => menuItem.Side != Side.Left))
+                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
                 if (IsPresented)
                 {
                     Presenter.CreateAndSetOptionsMenu(_menuItems);
