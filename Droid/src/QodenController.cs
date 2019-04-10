@@ -116,7 +116,20 @@ namespace Qoden.UI
             base.OnDestroyView();
             ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
         }
-        
+
+        public override bool UserVisibleHint
+        {
+            get => base.UserVisibleHint;
+            set
+            {
+                if (value) // isVisible
+                    ViewWillAppear();
+                else
+                    ViewWillDisappear();
+                base.UserVisibleHint = value;
+            }
+        }
+
         /// <summary>
         /// Override this instead on CreateView
         /// </summary>
