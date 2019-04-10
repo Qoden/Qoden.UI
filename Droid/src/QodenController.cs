@@ -333,7 +333,13 @@ namespace Qoden.UI
 
         public void Present(QodenController controller, Action onDismissHandler = null, bool withNavigation = false)
         {
-            var presenter = QodenControllerPresenter.Wrap(controller, onDismissHandler, withNavigation);
+            void OnDismiss()
+            {
+                UserVisibleHint = true;
+                onDismissHandler?.Invoke();
+            }
+            var presenter = QodenControllerPresenter.Wrap(controller, OnDismiss, withNavigation);
+            UserVisibleHint = false;
             presenter.Show(ChildFragmentManager, "presenter");
         }
 
