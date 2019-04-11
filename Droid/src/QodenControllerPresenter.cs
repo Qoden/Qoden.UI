@@ -51,7 +51,6 @@ namespace Qoden.UI
         public override void OnDismiss(IDialogInterface dialog)
         {
             base.OnDismiss(dialog);
-            Activity.InvalidateOptionsMenu();
             _completionHandler?.Invoke();
         }
     }
