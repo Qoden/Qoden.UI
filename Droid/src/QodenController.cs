@@ -122,10 +122,13 @@ namespace Qoden.UI
             get => base.UserVisibleHint;
             set
             {
-                if (value) // isVisible
-                    ViewWillAppear();
-                else
-                    ViewWillDisappear();
+                if(value ^ UserVisibleHint) // hasChanged
+                {
+                    if (value) // isVisible
+                        ViewWillAppear();
+                    else
+                        ViewWillDisappear();
+                }
                 base.UserVisibleHint = value;
             }
         }
