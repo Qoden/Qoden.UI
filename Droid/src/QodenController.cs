@@ -114,7 +114,7 @@ namespace Qoden.UI
         public override void OnDestroyView()
         {
             base.OnDestroyView();
-            ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+            Activity.InvalidateOptionsMenu();
         }
 
         public override bool UserVisibleHint
@@ -223,6 +223,9 @@ namespace Qoden.UI
                     }
                 }
                 HasOptionsMenu = _menuItems.Count > 0;
+                if (_menuItems.All(menuItem => menuItem.Side != Side.Left))
+                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
                 if (IsPresented)
                 {
                     Presenter.CreateAndSetOptionsMenu(_menuItems);
@@ -265,7 +268,11 @@ namespace Qoden.UI
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
-            menu.Clear(); 
+
+            menu.Clear();
+            if (MenuItems.All(menuItem => menuItem.Side != Side.Left))
+                ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+
             foreach (var itemInfo in MenuItems)
             {
                 if (itemInfo.Side == Side.Left)
