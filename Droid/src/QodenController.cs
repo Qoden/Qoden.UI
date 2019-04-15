@@ -122,7 +122,7 @@ namespace Qoden.UI
             get => base.UserVisibleHint;
             set
             {
-                if(value ^ UserVisibleHint) // hasChanged
+                if(value != UserVisibleHint) // hasChanged
                 {
                     if (value) // isVisible
                         ViewWillAppear();
