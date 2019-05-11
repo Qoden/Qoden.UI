@@ -203,28 +203,26 @@ namespace Qoden.UI
             set
             {
                 _menuItems = value;
-                // If Side is left, then change Id to
-                // Android.Resource.Id.Home, to use it later as a HomeButton
+                // If Side is left, then change Id to Android.Resource.Id.Home to use it later in OnOptionsItemSelected
                 for (var i = 0; i < _menuItems.Count; i++)
                 {
                     var menuItemInfo = _menuItems[i];
                     if (menuItemInfo.Side == Side.Left)
                     {
-                        // Creating a new MenuItemInfo instead of changing Id
-                        // is needed because MenuItemInfo is a struct
+                        // Creating a new MenuItemInfo instead of changing Id is needed because MenuItemInfo is a struct
                         _menuItems[i] = new MenuItemInfo
                         {
                             Id = Android.Resource.Id.Home,
                             Command = menuItemInfo.Command,
                             Icon = menuItemInfo.Icon,
                             Title = menuItemInfo.Title,
-                            Side = Side.Left
+                            Side = menuItemInfo.Side
                         };
                     }
                 }
                 HasOptionsMenu = _menuItems.Count > 0;
                 if (_menuItems.All(menuItem => menuItem.Side != Side.Left))
-                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+                    this.GetActionBar().PlatformView.NavigationIcon = null;
 
                 if (IsPresented)
                 {
@@ -234,7 +232,7 @@ namespace Qoden.UI
                 Activity.InvalidateOptionsMenu();
             }
         }
-        
+
         public bool ToolbarVisible
         {
             get
@@ -268,21 +266,21 @@ namespace Qoden.UI
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             base.OnCreateOptionsMenu(menu, inflater);
+            var toolbar = this.GetActionBar().PlatformView;
 
-            menu.Clear();
+            toolbar.Menu.Clear();
             if (MenuItems.All(menuItem => menuItem.Side != Side.Left))
-                ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(false);
+                toolbar.NavigationIcon = null;
 
             foreach (var itemInfo in MenuItems)
             {
                 if (itemInfo.Side == Side.Left)
                 {
-                    ((AppCompatActivity) Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-                    ((AppCompatActivity) Activity).SupportActionBar.SetHomeAsUpIndicator(itemInfo.Icon);
+                    toolbar.NavigationIcon = itemInfo.Icon;
                 }
                 else
                 {
-                    var item = menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                    var item = toolbar.Menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
                     item.SetShowAsAction(ShowAsAction.IfRoom);
                     item.SetIcon(itemInfo.Icon);
                 }
@@ -292,9 +290,11 @@ namespace Qoden.UI
         public override void OnPrepareOptionsMenu(IMenu menu)
         {
             base.OnPrepareOptionsMenu(menu);
+            var toolbar = this.GetActionBar().PlatformView;
+
             foreach (var itemInfo in MenuItems.Where(menuItem => menuItem.Side == Side.Right))
             {
-                var item = menu.FindItem(itemInfo.Id) ?? menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
+                var item = toolbar.Menu.FindItem(itemInfo.Id) ?? menu.Add(Menu.None, itemInfo.Id, Menu.None, itemInfo.Title);
                 item.SetIcon(itemInfo.Icon);
                 item.SetTitle(itemInfo.Title);
                 item.SetShowAsAction(ShowAsAction.IfRoom);
