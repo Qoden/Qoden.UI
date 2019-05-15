@@ -81,7 +81,7 @@ namespace Qoden.UI
 
         void IPlatformRemoteImageView.SetImage(UIImage image)
         {
-            ImageView.Image = image;
+            InvokeOnMainThread(() => ImageView.Image = image);
         }
 
         void IPlatformRemoteImageView.OnFireImageChanged()
