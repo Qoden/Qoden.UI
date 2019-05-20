@@ -32,6 +32,9 @@ namespace Qoden.UI
         {
             var w = maxWidth ?? OuterBounds.Width - MarginLeft - MarginRight;
             var h = maxHeight ?? OuterBounds.Height - MarginTop - MarginBottom;
+
+            w = Math.Max(w, 0);
+            h = Math.Max(h, 0);
             return new SizeF(w, h);
         }
 
