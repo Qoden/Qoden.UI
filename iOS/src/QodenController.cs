@@ -13,8 +13,9 @@ namespace Qoden.UI
 		private Action _onDismissHandler;
 		
 		public ILogger Logger { get; set; }
+        public UIStatusBarStyle StatusBarStyle { get; set; } = UIStatusBarStyle.DarkContent;
 
-		public QodenController()
+        public QodenController()
 		{
 			Initialize();
 		}
@@ -50,8 +51,13 @@ namespace Qoden.UI
 		{
 			return Config.LoggerFactory?.CreateLogger(GetType().Name);
 		}
-		
-		public override void ViewDidLoad()
+
+        public override UIStatusBarStyle PreferredStatusBarStyle()
+        {
+            return StatusBarStyle;
+        }
+
+        public override void ViewDidLoad()
 		{
 			if (Logger != null && Logger.IsEnabled(LogLevel.Information)) 
 				Logger.LogInformation("View did load");
