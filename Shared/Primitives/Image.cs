@@ -13,6 +13,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Support.V4.Graphics.Drawable;
+using Bitmap = Android.Graphics.Bitmap;
 using PlatformImage = Android.Graphics.Drawables.Drawable;
 #endif
 
