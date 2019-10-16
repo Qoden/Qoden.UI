@@ -85,7 +85,9 @@ namespace Qoden.UI
         public void Present(QodenController controller, bool animated = true, Action onDismissHandler = null, bool withNavigation = false)
         {
 	        controller._onDismissHandler = onDismissHandler;
-	        PresentViewController(withNavigation ? (UIViewController) new UINavigationController(controller) : controller, animated, null);
+            var controllerToPresent = withNavigation ? (UIViewController)new UINavigationController(controller) : controller;
+            controllerToPresent.ModalPresentationStyle = UIModalPresentationStyle.FullScreen;
+            PresentViewController(controllerToPresent, animated, null);
         }
 
 		public void Dismiss(bool animated)
